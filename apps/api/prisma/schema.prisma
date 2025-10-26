@@ -71,6 +71,7 @@ model Claim {
 
   // Relations
   user                 User           @relation(fields: [userId], references: [id])
+  documents            Document[]
 
   @@index([userId])
   @@index([claimNumber])
@@ -120,4 +121,32 @@ model Airport {
 
   @@index([iata])
   @@index([country])
+}
+
+// ============================================
+// DOCUMENTS (supporting documents for claims)
+// ============================================
+
+model Document {
+  id              String      @id @default(cuid())
+  claimId         String
+  fileName        String      // Original filename
+  fileType        String      // MIME type (image/jpeg, application/pdf, etc.)
+  fileSize        Int         // Size in bytes
+  filePath        String      // Storage path
+  documentType    DocumentType
+  uploadedAt      DateTime    @default(now())
+
+  // Relations
+  claim           Claim       @relation(fields: [claimId], references: [id], onDelete: Cascade)
+
+  @@index([claimId])
+}
+
+enum DocumentType {
+  BOARDING_PASS       // Carte d'embarquement
+  BOOKING_CONFIRMATION // Confirmation de réservation
+  ID_DOCUMENT         // Pièce d'identité
+  PROOF_OF_DELAY      // Preuve du retard (certificat de retard)
+  OTHER               // Autre document
 }

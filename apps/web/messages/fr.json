@@ -108,7 +108,14 @@
     "resultIlAmount": "Loi israélienne",
     "resultReasoning": "Explication",
     "backToDashboard": "Retour au tableau de bord",
-    "createError": "Erreur lors de la création de la réclamation"
+    "createError": "Erreur lors de la création de la réclamation",
+    "documentsDescription": "Téléversez les documents nécessaires pour soutenir votre réclamation. La carte d'embarquement est obligatoire.",
+    "boardingPassDescription": "Votre carte d'embarquement originale (obligatoire)",
+    "bookingConfirmationDescription": "Confirmation de réservation de votre vol",
+    "idDocumentDescription": "Copie de votre pièce d'identité ou passeport",
+    "proofOfDelayDescription": "Certificat de retard délivré par la compagnie aérienne",
+    "otherDocumentDescription": "Tout autre document pertinent",
+    "skipDocuments": "Passer et téléverser plus tard"
   },
   "dashboard": {
     "title": "Mes réclamations",
@@ -208,5 +215,30 @@
     "EU": "Union Européenne",
     "ISRAEL": "Israël",
     "BOTH": "EU et Israël"
+  },
+  "documents": {
+    "selectFile": "Sélectionner un fichier",
+    "dragAndDrop": "ou glisser-déposer ici",
+    "allowedFormats": "Formats autorisés",
+    "upload": "Téléverser",
+    "uploading": "Téléversement...",
+    "cancel": "Annuler",
+    "invalidFileType": "Type de fichier non autorisé. Formats acceptés: JPG, PNG, WEBP, PDF",
+    "fileTooLarge": "Fichier trop volumineux. Taille maximale: 5MB",
+    "uploadError": "Erreur lors du téléversement",
+    "uploadSuccess": "Document téléversé avec succès",
+    "deleteConfirm": "Êtes-vous sûr de vouloir supprimer ce document?",
+    "deleteSuccess": "Document supprimé avec succès",
+    "deleteError": "Erreur lors de la suppression",
+    "boardingPass": "Carte d'embarquement",
+    "bookingConfirmation": "Confirmation de réservation",
+    "idDocument": "Pièce d'identité",
+    "proofOfDelay": "Preuve du retard",
+    "other": "Autre document",
+    "noDocuments": "Aucun document téléversé",
+    "uploadDocuments": "Téléverser des documents",
+    "uploadedDocuments": "Documents téléversés",
+    "required": "Document requis",
+    "optional": "Document optionnel"
   }
 }

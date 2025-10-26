@@ -6,6 +6,9 @@ import { useRouter } from '@/i18n/routing';
 import { Link } from '@/i18n/routing';
 import { useTranslations } from 'next-intl';
 import LanguageSelector from '@/components/LanguageSelector';
+import FileUpload from '@/components/FileUpload';
+import DocumentList from '@/components/DocumentList';
+import { DocumentType } from '@/types/document';
 
 interface Claim {
   id: string;
@@ -48,6 +51,7 @@ export default function ClaimDetailsPage() {
   const router = useRouter();
   const params = useParams();
   const t = useTranslations('claimDetail');
+  const tDocs = useTranslations('documents');
   const tStatus = useTranslations('status');
   const tDisruption = useTranslations('disruption');
   const tCommon = useTranslations('common');
@@ -317,6 +321,86 @@ export default function ClaimDetailsPage() {
                 </div>
               )}
             </div>
+          </div>
+
+          {/* Documents */}
+          <div className="bg-white rounded-lg shadow-lg p-8">
+            <h2 className="text-xl font-bold text-gray-900 mb-6">{tDocs('uploadedDocuments')}</h2>
+
+            {/* Document List */}
+            <div className="mb-6">
+              <DocumentList claimId={claim.id} />
+            </div>
+
+            {/* Upload New Documents (only if not submitted) */}
+            {claim.status === 'DRAFT' && (
+              <div className="border-t pt-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">{tDocs('uploadDocuments')}</h3>
+                <div className="space-y-4">
+                  <details className="border border-gray-200 rounded-lg p-4">
+                    <summary className="cursor-pointer font-medium text-gray-900">
+                      {tDocs('boardingPass')} <span className="text-red-500">*</span>
+                    </summary>
+                    <div className="mt-4">
+                      <FileUpload
+                        claimId={claim.id}
+                        documentType={DocumentType.BOARDING_PASS}
+                      />
+                    </div>
+                  </details>
+
+                  <details className="border border-gray-200 rounded-lg p-4">
+                    <summary className="cursor-pointer font-medium text-gray-900">
+                      {tDocs('bookingConfirmation')}
+                    </summary>
+                    <div className="mt-4">
+                      <FileUpload
+                        claimId={claim.id}
+                        documentType={DocumentType.BOOKING_CONFIRMATION}
+                      />
+                    </div>
+                  </details>
+
+                  <details className="border border-gray-200 rounded-lg p-4">
+                    <summary className="cursor-pointer font-medium text-gray-900">
+                      {tDocs('idDocument')}
+                    </summary>
+                    <div className="mt-4">
+                      <FileUpload
+                        claimId={claim.id}
+                        documentType={DocumentType.ID_DOCUMENT}
+                      />
+                    </div>
+                  </details>
+
+                  {claim.disruptionType === 'DELAY' && (
+                    <details className="border border-gray-200 rounded-lg p-4">
+                      <summary className="cursor-pointer font-medium text-gray-900">
+                        {tDocs('proofOfDelay')}
+                      </summary>
+                      <div className="mt-4">
+                        <FileUpload
+                          claimId={claim.id}
+                          documentType={DocumentType.PROOF_OF_DELAY}
+                        />
+                      </div>
+                    </details>
+                  )}
+
+                  <details className="border border-gray-200 rounded-lg p-4">
+                    <summary className="cursor-pointer font-medium text-gray-900">
+                      {tDocs('other')}
+                    </summary>
+                    <div className="mt-4">
+                      <FileUpload
+                        claimId={claim.id}
+                        documentType={DocumentType.OTHER}
+                      />
+                    </div>
+                  </details>
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Timeline */}

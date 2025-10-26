@@ -4,6 +4,9 @@ import { useState } from 'react';
 import { useRouter } from '@/i18n/routing';
 import { Link } from '@/i18n/routing';
 import { useTranslations } from 'next-intl';
+import FileUpload from '@/components/FileUpload';
+import DocumentList from '@/components/DocumentList';
+import { DocumentType } from '@/types/document';
 
 const AIRPORTS = [
   { code: 'CDG', name: 'Paris Charles de Gaulle', city: 'Paris', country: 'France' },
@@ -29,10 +32,12 @@ export default function NewClaimPage() {
   const t = useTranslations('claim');
   const tCommon = useTranslations('common');
   const tDetail = useTranslations('claimDetail');
+  const tDocs = useTranslations('documents');
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [result, setResult] = useState<any>(null);
+  const [uploadSuccess, setUploadSuccess] = useState('');
 
   // Parse and translate reasoning from backend
   const translateReasoning = (reasoning: string): string => {
@@ -177,12 +182,20 @@ export default function NewClaimPage() {
       }
 
       setResult(data);
-      setStep(4); // Results step
+      setStep(4); // Documents upload step
     } catch (err: any) {
       setError(err.message || tCommon('error'));
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleSkipDocuments = () => {
+    setStep(5); // Skip to results
+  };
+
+  const handleContinueToResults = () => {
+    setStep(5); // Go to results after uploading documents
   };
 
   return (
@@ -500,8 +513,169 @@ export default function NewClaimPage() {
                 </div>
               )}
 
-              {/* Step 4: Results */}
+              {/* Step 4: Upload Documents */}
               {step === 4 && result && (
+                <div>
+                  <h2 className="text-2xl font-bold text-gray-900 mb-2">
+                    {tDocs('uploadDocuments')}
+                  </h2>
+                  <p className="text-gray-600 mb-6">
+                    {t('documentsDescription')}
+                  </p>
+
+                  {uploadSuccess && (
+                    <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-6">
+                      <p className="text-green-800">{uploadSuccess}</p>
+                    </div>
+                  )}
+
+                  {error && (
+                    <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+                      <p className="text-red-800">{error}</p>
+                    </div>
+                  )}
+
+                  {/* Uploaded Documents */}
+                  <div className="mb-6">
+                    <h3 className="text-lg font-semibold text-gray-900 mb-3">
+                      {tDocs('uploadedDocuments')}
+                    </h3>
+                    <DocumentList
+                      claimId={result.id}
+                      onDocumentsChange={() => {
+                        setUploadSuccess('');
+                        setError('');
+                      }}
+                    />
+                  </div>
+
+                  {/* Upload New Documents */}
+                  <div className="space-y-6">
+                    {/* Boarding Pass */}
+                    <div className="border border-gray-200 rounded-lg p-4">
+                      <h3 className="text-md font-semibold text-gray-900 mb-2">
+                        {tDocs('boardingPass')} <span className="text-red-500">*</span>
+                      </h3>
+                      <p className="text-sm text-gray-600 mb-3">{t('boardingPassDescription')}</p>
+                      <FileUpload
+                        claimId={result.id}
+                        documentType={DocumentType.BOARDING_PASS}
+                        onUploadSuccess={() => {
+                          setUploadSuccess(tDocs('uploadSuccess'));
+                          setError('');
+                          // Trigger DocumentList refresh by changing key
+                        }}
+                        onUploadError={(err) => {
+                          setError(err);
+                          setUploadSuccess('');
+                        }}
+                      />
+                    </div>
+
+                    {/* Booking Confirmation */}
+                    <div className="border border-gray-200 rounded-lg p-4">
+                      <h3 className="text-md font-semibold text-gray-900 mb-2">
+                        {tDocs('bookingConfirmation')}
+                      </h3>
+                      <p className="text-sm text-gray-600 mb-3">{t('bookingConfirmationDescription')}</p>
+                      <FileUpload
+                        claimId={result.id}
+                        documentType={DocumentType.BOOKING_CONFIRMATION}
+                        onUploadSuccess={() => {
+                          setUploadSuccess(tDocs('uploadSuccess'));
+                          setError('');
+                        }}
+                        onUploadError={(err) => {
+                          setError(err);
+                          setUploadSuccess('');
+                        }}
+                      />
+                    </div>
+
+                    {/* ID Document */}
+                    <div className="border border-gray-200 rounded-lg p-4">
+                      <h3 className="text-md font-semibold text-gray-900 mb-2">
+                        {tDocs('idDocument')}
+                      </h3>
+                      <p className="text-sm text-gray-600 mb-3">{t('idDocumentDescription')}</p>
+                      <FileUpload
+                        claimId={result.id}
+                        documentType={DocumentType.ID_DOCUMENT}
+                        onUploadSuccess={() => {
+                          setUploadSuccess(tDocs('uploadSuccess'));
+                          setError('');
+                        }}
+                        onUploadError={(err) => {
+                          setError(err);
+                          setUploadSuccess('');
+                        }}
+                      />
+                    </div>
+
+                    {/* Proof of Delay */}
+                    {formData.disruptionType === 'DELAY' && (
+                      <div className="border border-gray-200 rounded-lg p-4">
+                        <h3 className="text-md font-semibold text-gray-900 mb-2">
+                          {tDocs('proofOfDelay')}
+                        </h3>
+                        <p className="text-sm text-gray-600 mb-3">{t('proofOfDelayDescription')}</p>
+                        <FileUpload
+                          claimId={result.id}
+                          documentType={DocumentType.PROOF_OF_DELAY}
+                          onUploadSuccess={() => {
+                            setUploadSuccess(tDocs('uploadSuccess'));
+                            setError('');
+                          }}
+                          onUploadError={(err) => {
+                            setError(err);
+                            setUploadSuccess('');
+                          }}
+                        />
+                      </div>
+                    )}
+
+                    {/* Other Documents */}
+                    <div className="border border-gray-200 rounded-lg p-4">
+                      <h3 className="text-md font-semibold text-gray-900 mb-2">
+                        {tDocs('other')}
+                      </h3>
+                      <p className="text-sm text-gray-600 mb-3">{t('otherDocumentDescription')}</p>
+                      <FileUpload
+                        claimId={result.id}
+                        documentType={DocumentType.OTHER}
+                        onUploadSuccess={() => {
+                          setUploadSuccess(tDocs('uploadSuccess'));
+                          setError('');
+                        }}
+                        onUploadError={(err) => {
+                          setError(err);
+                          setUploadSuccess('');
+                        }}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="mt-8 flex gap-4">
+                    <button
+                      type="button"
+                      onClick={handleSkipDocuments}
+                      className="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-3 px-4 rounded-md transition-colors"
+                    >
+                      {t('skipDocuments')}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handleContinueToResults}
+                      className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-md transition-colors"
+                    >
+                      {tCommon('next')}
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {/* Step 5: Results */}
+              {step === 5 && result && (
                 <div>
                   <div className="text-center mb-8">
                     <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">

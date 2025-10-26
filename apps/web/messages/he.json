@@ -108,7 +108,14 @@
     "resultIlAmount": "חוק ישראלי",
     "resultReasoning": "הסבר",
     "backToDashboard": "חזור ללוח הבקרה",
-    "createError": "שגיאה ביצירת התביעה"
+    "createError": "שגיאה ביצירת התביעה",
+    "documentsDescription": "העלה את המסמכים הדרושים לתמיכה בתביעה שלך. כרטיס עלייה למטוס הוא חובה.",
+    "boardingPassDescription": "כרטיס העלייה המקורי שלך (חובה)",
+    "bookingConfirmationDescription": "אישור הזמנת הטיסה שלך",
+    "idDocumentDescription": "עותק של תעודת הזהות או דרכון",
+    "proofOfDelayDescription": "אישור עיכוב מחברת התעופה",
+    "otherDocumentDescription": "כל מסמך רלוונטי אחר",
+    "skipDocuments": "דלג והעלה מאוחר יותר"
   },
   "dashboard": {
     "title": "התביעות שלי",
@@ -208,5 +215,30 @@
     "EU": "האיחוד האירופי",
     "ISRAEL": "ישראל",
     "BOTH": "EU וישראל"
+  },
+  "documents": {
+    "selectFile": "בחר קובץ",
+    "dragAndDrop": "או גרור ושחרר כאן",
+    "allowedFormats": "פורמטים מורשים",
+    "upload": "העלה",
+    "uploading": "מעלה...",
+    "cancel": "ביטול",
+    "invalidFileType": "סוג קובץ לא מורשה. פורמטים מקובלים: JPG, PNG, WEBP, PDF",
+    "fileTooLarge": "הקובץ גדול מדי. גודל מקסימלי: 5MB",
+    "uploadError": "שגיאה בהעלאה",
+    "uploadSuccess": "המסמך הועלה בהצלחה",
+    "deleteConfirm": "האם אתה בטוח שברצונך למחוק מסמך זה?",
+    "deleteSuccess": "המסמך נמחק בהצלחה",
+    "deleteError": "שגיאה במחיקה",
+    "boardingPass": "כרטיס עלייה למטוס",
+    "bookingConfirmation": "אישור הזמנה",
+    "idDocument": "תעודת זהות",
+    "proofOfDelay": "הוכחת עיכוב",
+    "other": "מסמך אחר",
+    "noDocuments": "לא הועלו מסמכים",
+    "uploadDocuments": "העלה מסמכים",
+    "uploadedDocuments": "מסמכים שהועלו",
+    "required": "מסמך נדרש",
+    "optional": "מסמך אופציונלי"
   }
 }

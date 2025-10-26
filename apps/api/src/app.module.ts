@@ -8,6 +8,7 @@ import { UsersModule } from './users/users.module';
 import { ClaimsModule } from './claims/claims.module';
 import { CompensationModule } from './compensation/compensation.module';
 import { EmailModule } from './email/email.module';
+import { DocumentsModule } from './documents/documents.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { EmailModule } from './email/email.module';
     UsersModule,
     ClaimsModule,
     CompensationModule,
+    DocumentsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
