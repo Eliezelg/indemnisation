@@ -115,7 +115,9 @@
     "idDocumentDescription": "Copie de votre pièce d'identité ou passeport",
     "proofOfDelayDescription": "Certificat de retard délivré par la compagnie aérienne",
     "otherDocumentDescription": "Tout autre document pertinent",
-    "skipDocuments": "Passer et téléverser plus tard"
+    "skipDocuments": "Passer et téléverser plus tard",
+    "searchingFlight": "Recherche des informations du vol...",
+    "flightFound": "Vol trouvé ! Informations auto-complétées"
   },
   "dashboard": {
     "title": "Mes réclamations",

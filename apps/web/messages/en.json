@@ -115,7 +115,9 @@
     "idDocumentDescription": "Copy of your ID or passport",
     "proofOfDelayDescription": "Delay certificate issued by the airline",
     "otherDocumentDescription": "Any other relevant document",
-    "skipDocuments": "Skip and upload later"
+    "skipDocuments": "Skip and upload later",
+    "searchingFlight": "Searching for flight information...",
+    "flightFound": "Flight found! Information auto-completed"
   },
   "dashboard": {
     "title": "My Claims",

@@ -115,7 +115,9 @@
     "idDocumentDescription": "עותק של תעודת הזהות או דרכון",
     "proofOfDelayDescription": "אישור עיכוב מחברת התעופה",
     "otherDocumentDescription": "כל מסמך רלוונטי אחר",
-    "skipDocuments": "דלג והעלה מאוחר יותר"
+    "skipDocuments": "דלג והעלה מאוחר יותר",
+    "searchingFlight": "מחפש מידע על הטיסה...",
+    "flightFound": "טיסה נמצאה! המידע הושלם אוטומטית"
   },
   "dashboard": {
     "title": "התביעות שלי",

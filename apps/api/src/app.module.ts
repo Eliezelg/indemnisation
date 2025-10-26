@@ -9,6 +9,7 @@ import { ClaimsModule } from './claims/claims.module';
 import { CompensationModule } from './compensation/compensation.module';
 import { EmailModule } from './email/email.module';
 import { DocumentsModule } from './documents/documents.module';
+import { FlightApiModule } from './flight-api/flight-api.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { DocumentsModule } from './documents/documents.module';
     ClaimsModule,
     CompensationModule,
     DocumentsModule,
+    FlightApiModule,
   ],
   controllers: [AppController],
   providers: [AppService],

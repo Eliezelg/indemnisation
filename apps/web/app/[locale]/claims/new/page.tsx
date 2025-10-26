@@ -38,6 +38,9 @@ export default function NewClaimPage() {
   const [error, setError] = useState('');
   const [result, setResult] = useState<any>(null);
   const [uploadSuccess, setUploadSuccess] = useState('');
+  const [searchingFlight, setSearchingFlight] = useState(false);
+  const [flightFound, setFlightFound] = useState(false);
+  const [airlineLogo, setAirlineLogo] = useState('');
 
   // Parse and translate reasoning from backend
   const translateReasoning = (reasoning: string): string => {
@@ -93,11 +96,67 @@ export default function NewClaimPage() {
     bookingReference: '',
   });
 
+  const searchFlightInfo = async (flightNumber: string, date: string) => {
+    if (!flightNumber || !date) return;
+
+    setSearchingFlight(true);
+    setFlightFound(false);
+    setError('');
+
+    try {
+      const response = await fetch(
+        `http://localhost:3001/flight-api/search?flightNumber=${encodeURIComponent(flightNumber)}&date=${encodeURIComponent(date)}`
+      );
+
+      if (!response.ok) {
+        throw new Error('Failed to search flight');
+      }
+
+      const data = await response.json();
+
+      if (data.found && data.data) {
+        // Auto-populate fields
+        setFormData(prev => ({
+          ...prev,
+          departureAirport: data.data.departureAirport || prev.departureAirport,
+          arrivalAirport: data.data.arrivalAirport || prev.arrivalAirport,
+          airline: data.data.airline || prev.airline,
+          delayMinutes: data.data.delayMinutes?.toString() || prev.delayMinutes,
+        }));
+
+        setAirlineLogo(data.data.airlineLogo || '');
+        setFlightFound(true);
+
+        // Auto-detect disruption type based on delay
+        if (data.data.delayMinutes && data.data.delayMinutes >= 180) {
+          setFormData(prev => ({
+            ...prev,
+            disruptionType: 'DELAY',
+          }));
+        }
+      }
+    } catch (err) {
+      console.error('Flight search error:', err);
+    } finally {
+      setSearchingFlight(false);
+    }
+  };
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+    const { name, value } = e.target;
+
+    setFormData(prev => ({
+      ...prev,
+      [name]: value,
+    }));
+
+    // Trigger flight search when both flightNumber and date are filled
+    if (name === 'flightNumber' || name === 'flightDate') {
+      const newFormData = { ...formData, [name]: value };
+      if (newFormData.flightNumber && newFormData.flightDate) {
+        searchFlightInfo(newFormData.flightNumber, newFormData.flightDate);
+      }
+    }
   };
 
   const DISRUPTION_TYPES = [
@@ -276,6 +335,34 @@ export default function NewClaimPage() {
                         required
                       />
                     </div>
+
+                    {/* Flight Search Status */}
+                    {(searchingFlight || flightFound) && (
+                      <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                        {searchingFlight && (
+                          <div className="flex items-center gap-3">
+                            <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-600"></div>
+                            <span className="text-sm text-blue-800">{t('searchingFlight')}</span>
+                          </div>
+                        )}
+                        {flightFound && !searchingFlight && (
+                          <div className="flex items-center gap-3">
+                            <svg className="h-5 w-5 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                            </svg>
+                            <span className="text-sm text-green-800">{t('flightFound')}</span>
+                            {airlineLogo && (
+                              <img
+                                src={airlineLogo}
+                                alt="Airline logo"
+                                className="h-8 ml-auto"
+                                onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                              />
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    )}
 
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">
