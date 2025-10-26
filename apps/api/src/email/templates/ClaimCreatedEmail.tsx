@@ -16,6 +16,7 @@ type Locale = 'fr' | 'he' | 'en';
 interface ClaimCreatedEmailProps {
   firstName: string;
   lastName: string;
+  claimId: string;
   claimNumber: string;
   flightNumber: string;
   departureAirport: string;
@@ -100,6 +101,7 @@ const content = {
 export const ClaimCreatedEmail = ({
   firstName = 'John',
   lastName = 'Doe',
+  claimId = 'clm_123',
   claimNumber = 'CLM-2025-000001',
   flightNumber = 'AF1234',
   departureAirport = 'CDG',
@@ -149,7 +151,7 @@ export const ClaimCreatedEmail = ({
 
             <Button
               style={button}
-              href={`${process.env.FRONTEND_URL || 'http://localhost:3000'}/${locale}/claims/${claimNumber}`}
+              href={`${process.env.FRONTEND_URL || 'http://localhost:3000'}/${locale}/claims/${claimId}`}
             >
               {t.cta}
             </Button>

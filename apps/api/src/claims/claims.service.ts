@@ -68,6 +68,7 @@ export class ClaimsService {
         {
           firstName: user.firstName,
           lastName: user.lastName,
+          claimId: claim.id,
           claimNumber: claim.claimNumber,
           flightNumber: claim.flightNumber,
           departureAirport: claim.departureAirport,
@@ -152,6 +153,7 @@ export class ClaimsService {
         {
           firstName: user.firstName,
           lastName: user.lastName,
+          claimId: updatedClaim.id,
           claimNumber: updatedClaim.claimNumber,
           flightNumber: updatedClaim.flightNumber,
           status: 'SUBMITTED',

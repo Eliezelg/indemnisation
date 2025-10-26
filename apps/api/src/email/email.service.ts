@@ -109,6 +109,7 @@ export class EmailService {
     context: {
       firstName: string;
       lastName: string;
+      claimId: string;
       claimNumber: string;
       flightNumber: string;
       departureAirport: string;
@@ -150,6 +151,7 @@ export class EmailService {
     context: {
       firstName: string;
       lastName: string;
+      claimId: string;
       claimNumber: string;
       flightNumber: string;
       status: ClaimStatus;

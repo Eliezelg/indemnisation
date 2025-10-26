@@ -24,6 +24,7 @@ type ClaimStatus =
 interface ClaimStatusEmailProps {
   firstName: string;
   lastName: string;
+  claimId: string;
   claimNumber: string;
   flightNumber: string;
   status: ClaimStatus;
@@ -155,6 +156,7 @@ const statusColors: Record<ClaimStatus, string> = {
 export const ClaimStatusEmail = ({
   firstName = 'John',
   lastName = 'Doe',
+  claimId = 'clm_123',
   claimNumber = 'CLM-2025-000001',
   flightNumber = 'AF1234',
   status = 'SUBMITTED',
@@ -201,7 +203,7 @@ export const ClaimStatusEmail = ({
 
             <Button
               style={button}
-              href={`${process.env.FRONTEND_URL || 'http://localhost:3000'}/${locale}/claims/${claimNumber}`}
+              href={`${process.env.FRONTEND_URL || 'http://localhost:3000'}/${locale}/claims/${claimId}`}
             >
               {t.cta}
             </Button>
