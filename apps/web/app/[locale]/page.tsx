@@ -1,5 +1,6 @@
-import Link from 'next/link';
-import {useTranslations} from 'next-intl';
+import { Link } from '@/i18n/routing';
+import { useTranslations } from 'next-intl';
+import LanguageSelector from '@/components/LanguageSelector';
 
 export default function Home() {
   const t = useTranslations('home');
@@ -11,7 +12,8 @@ export default function Home() {
       <nav className="bg-white shadow-sm">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
           <h1 className="text-2xl font-bold text-blue-600">Indemnisation Vols</h1>
-          <div className="space-x-4">
+          <div className="flex items-center gap-4">
+            <LanguageSelector />
             <Link href="/login" className="text-gray-700 hover:text-blue-600 font-medium">
               {tNav('login')}
             </Link>

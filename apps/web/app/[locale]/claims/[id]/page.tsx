@@ -1,7 +1,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useRouter, useParams } from '@/i18n/routing';
+import { useParams } from 'next/navigation';
+import { useRouter } from '@/i18n/routing';
 import { Link } from '@/i18n/routing';
 import { useTranslations } from 'next-intl';
 import LanguageSelector from '@/components/LanguageSelector';
