@@ -1,6 +1,23 @@
+import Link from 'next/link';
+
 export default function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white" suppressHydrationWarning>
+      {/* Navigation */}
+      <nav className="bg-white shadow-sm">
+        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
+          <h1 className="text-2xl font-bold text-blue-600">Indemnisation Vols</h1>
+          <div className="space-x-4">
+            <Link href="/login" className="text-gray-700 hover:text-blue-600 font-medium">
+              Connexion
+            </Link>
+            <Link href="/register" className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition-colors">
+              S'inscrire
+            </Link>
+          </div>
+        </div>
+      </nav>
+
       {/* Hero Section */}
       <main className="container mx-auto px-4 py-16">
         <div className="max-w-4xl mx-auto text-center">
@@ -11,9 +28,9 @@ export default function Home() {
             Votre vol a été retardé, annulé ou surbooké ? Vous avez droit à une indemnisation.
             Nous nous occupons de tout.
           </p>
-          <button className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-8 rounded-lg text-lg transition-colors">
+          <Link href="/register" className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-8 rounded-lg text-lg transition-colors">
             Vérifier mon éligibilité
-          </button>
+          </Link>
         </div>
 
         {/* Comment ça marche */}
