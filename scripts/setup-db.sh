@@ -7,8 +7,8 @@ echo "🔧 Setting up PostgreSQL database..."
 
 # Database configuration
 DB_NAME="indemnisation"
-DB_USER="indemnisation"
-DB_PASS="indemnisation123"
+DB_USER="postgres"
+DB_PASS="postgres"
 
 echo "📝 Creating database and user..."
 echo "You may need to enter your sudo password."
