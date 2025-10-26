@@ -7,6 +7,7 @@ import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { ClaimsModule } from './claims/claims.module';
 import { CompensationModule } from './compensation/compensation.module';
+import { EmailModule } from './email/email.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { CompensationModule } from './compensation/compensation.module';
       isGlobal: true,
     }),
     PrismaModule,
+    EmailModule,
     AuthModule,
     UsersModule,
     ClaimsModule,

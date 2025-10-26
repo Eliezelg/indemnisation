@@ -5,6 +5,7 @@ import {
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from '../prisma/prisma.service';
+import { EmailService } from '../email/email.service';
 import * as bcrypt from 'bcrypt';
 import { RegisterDto, LoginDto } from './dto';
 
@@ -13,6 +14,7 @@ export class AuthService {
   constructor(
     private prisma: PrismaService,
     private jwt: JwtService,
+    private emailService: EmailService,
   ) {}
 
   async register(dto: RegisterDto) {
@@ -38,6 +40,16 @@ export class AuthService {
         phone: dto.phone,
       },
     });
+
+    // Send welcome email (non-blocking)
+    this.emailService.sendWelcomeEmail(
+      user.email,
+      {
+        firstName: user.firstName,
+        lastName: user.lastName,
+      },
+      'fr', // Default to French, will be user preference later
+    );
 
     // Generate tokens
     const tokens = await this.generateTokens(user.id, user.email);
