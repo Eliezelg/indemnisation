@@ -102,3 +102,21 @@ enum ClaimStatus {
   PAID            // Compensation paid
   CANCELLED       // Cancelled by user
 }
+
+// ============================================
+// AIRPORTS (for distance calculation)
+// ============================================
+
+model Airport {
+  id          String  @id @default(cuid())
+  iata        String  @unique // 3-letter IATA code (CDG, TLV, etc.)
+  name        String
+  city        String
+  country     String  // ISO 2-letter code (FR, IL, US, etc.)
+  latitude    Float
+  longitude   Float
+  createdAt   DateTime @default(now())
+
+  @@index([iata])
+  @@index([country])
+}
