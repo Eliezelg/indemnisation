@@ -1,6 +1,6 @@
 export default function Home() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
+    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white" suppressHydrationWarning>
       {/* Hero Section */}
       <main className="container mx-auto px-4 py-16">
         <div className="max-w-4xl mx-auto text-center">
