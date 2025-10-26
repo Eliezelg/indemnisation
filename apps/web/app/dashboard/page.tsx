@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 interface User {
   id: string;
@@ -12,13 +13,44 @@ interface User {
   emailVerified: boolean;
 }
 
+interface Claim {
+  id: string;
+  claimNumber: string;
+  flightNumber: string;
+  flightDate: string;
+  departureAirport: string;
+  arrivalAirport: string;
+  disruptionType: string;
+  status: string;
+  recommendedAmount: number;
+  jurisdiction: string;
+  createdAt: string;
+}
+
+const STATUS_LABELS: Record<string, { label: string; color: string }> = {
+  DRAFT: { label: 'Brouillon', color: 'gray' },
+  SUBMITTED: { label: 'Soumise', color: 'blue' },
+  IN_REVIEW: { label: 'En cours', color: 'yellow' },
+  APPROVED: { label: 'Approuvée', color: 'green' },
+  REJECTED: { label: 'Rejetée', color: 'red' },
+  PAID: { label: 'Payée', color: 'green' },
+  CANCELLED: { label: 'Annulée', color: 'gray' },
+};
+
+const DISRUPTION_LABELS: Record<string, string> = {
+  DELAY: 'Retard',
+  CANCELLATION: 'Annulation',
+  DENIED_BOARDING: 'Refus d\'embarquement',
+};
+
 export default function DashboardPage() {
   const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
+  const [claims, setClaims] = useState<Claim[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchUser = async () => {
+    const fetchData = async () => {
       const token = localStorage.getItem('accessToken');
 
       if (!token) {
@@ -27,18 +59,26 @@ export default function DashboardPage() {
       }
 
       try {
-        const response = await fetch('http://localhost:3001/auth/me', {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-          },
-        });
+        const [userRes, claimsRes] = await Promise.all([
+          fetch('http://localhost:3001/auth/me', {
+            headers: { 'Authorization': `Bearer ${token}` },
+          }),
+          fetch('http://localhost:3001/claims', {
+            headers: { 'Authorization': `Bearer ${token}` },
+          }),
+        ]);
 
-        if (!response.ok) {
+        if (!userRes.ok) {
           throw new Error('Unauthorized');
         }
 
-        const data = await response.json();
-        setUser(data);
+        const userData = await userRes.json();
+        setUser(userData);
+
+        if (claimsRes.ok) {
+          const claimsData = await claimsRes.json();
+          setClaims(claimsData);
+        }
       } catch (error) {
         localStorage.removeItem('accessToken');
         localStorage.removeItem('refreshToken');
@@ -49,7 +89,7 @@ export default function DashboardPage() {
       }
     };
 
-    fetchUser();
+    fetchData();
   }, [router]);
 
   const handleLogout = () => {
@@ -89,7 +129,7 @@ export default function DashboardPage() {
       </nav>
 
       <div className="container mx-auto px-4 py-12">
-        <div className="max-w-4xl mx-auto">
+        <div className="max-w-6xl mx-auto">
           <div className="bg-white rounded-lg shadow-lg p-8 mb-8">
             <h2 className="text-3xl font-bold text-gray-900 mb-2">
               Bonjour, {user.firstName} {user.lastName}!
@@ -98,7 +138,7 @@ export default function DashboardPage() {
               Bienvenue sur votre tableau de bord personnel
             </p>
 
-            <div className="grid md:grid-cols-2 gap-6">
+            <div className="grid md:grid-cols-3 gap-6">
               <div className="border border-gray-200 rounded-lg p-4">
                 <h3 className="font-semibold text-gray-700 mb-2">Informations du compte</h3>
                 <div className="space-y-2 text-sm">
@@ -116,33 +156,105 @@ export default function DashboardPage() {
               </div>
 
               <div className="border border-gray-200 rounded-lg p-4">
-                <h3 className="font-semibold text-gray-700 mb-2">Réclamations</h3>
-                <p className="text-gray-500 text-sm">Aucune réclamation pour le moment</p>
-                <button className="mt-4 w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md transition-colors">
+                <h3 className="font-semibold text-gray-700 mb-2">Statistiques</h3>
+                <div className="space-y-2 text-sm">
+                  <p><span className="text-gray-500">Réclamations totales:</span> {claims.length}</p>
+                  <p><span className="text-gray-500">En cours:</span> {claims.filter(c => c.status === 'SUBMITTED' || c.status === 'IN_REVIEW').length}</p>
+                  <p><span className="text-gray-500">Approuvées:</span> {claims.filter(c => c.status === 'APPROVED' || c.status === 'PAID').length}</p>
+                </div>
+              </div>
+
+              <div className="border border-blue-200 rounded-lg p-4 bg-blue-50">
+                <h3 className="font-semibold text-blue-900 mb-2">Nouvelle réclamation</h3>
+                <p className="text-sm text-blue-700 mb-4">
+                  Déposez une réclamation pour un vol retardé, annulé ou surbooké
+                </p>
+                <Link
+                  href="/claims/new"
+                  className="block w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md text-center transition-colors"
+                >
                   Créer une réclamation
-                </button>
+                </Link>
               </div>
             </div>
           </div>
 
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
-            <h3 className="text-lg font-semibold text-blue-900 mb-2">
-              Prochaines étapes
+          {/* Claims List */}
+          <div className="bg-white rounded-lg shadow-lg p-8">
+            <h3 className="text-2xl font-bold text-gray-900 mb-6">
+              Mes réclamations
             </h3>
-            <ul className="space-y-2 text-blue-800">
-              <li className="flex items-start">
-                <span className="mr-2">📝</span>
-                <span>Vérifiez votre adresse email pour activer votre compte</span>
-              </li>
-              <li className="flex items-start">
-                <span className="mr-2">✈️</span>
-                <span>Déposez votre première réclamation pour un vol perturbé</span>
-              </li>
-              <li className="flex items-start">
-                <span className="mr-2">💰</span>
-                <span>Recevez jusqu'à 600€ d'indemnisation</span>
-              </li>
-            </ul>
+
+            {claims.length === 0 ? (
+              <div className="text-center py-12">
+                <svg className="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                <p className="text-gray-500 mb-4">Aucune réclamation pour le moment</p>
+                <Link
+                  href="/claims/new"
+                  className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-md transition-colors"
+                >
+                  Créer ma première réclamation
+                </Link>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {claims.map((claim) => {
+                  const status = STATUS_LABELS[claim.status] || { label: claim.status, color: 'gray' };
+                  const disruption = DISRUPTION_LABELS[claim.disruptionType] || claim.disruptionType;
+
+                  return (
+                    <div key={claim.id} className="border border-gray-200 rounded-lg p-4 hover:border-blue-300 transition-colors">
+                      <div className="flex justify-between items-start mb-3">
+                        <div>
+                          <h4 className="font-semibold text-gray-900 text-lg">
+                            {claim.flightNumber}
+                          </h4>
+                          <p className="text-sm text-gray-600">
+                            {claim.departureAirport} → {claim.arrivalAirport}
+                          </p>
+                        </div>
+                        <span className={`px-3 py-1 rounded-full text-xs font-semibold bg-${status.color}-100 text-${status.color}-700`}>
+                          {status.label}
+                        </span>
+                      </div>
+
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm mb-3">
+                        <div>
+                          <span className="text-gray-500">N° réclamation:</span>
+                          <p className="font-medium">{claim.claimNumber}</p>
+                        </div>
+                        <div>
+                          <span className="text-gray-500">Date du vol:</span>
+                          <p className="font-medium">{new Date(claim.flightDate).toLocaleDateString('fr-FR')}</p>
+                        </div>
+                        <div>
+                          <span className="text-gray-500">Type:</span>
+                          <p className="font-medium">{disruption}</p>
+                        </div>
+                        <div>
+                          <span className="text-gray-500">Montant:</span>
+                          <p className="font-medium text-blue-600">€{claim.recommendedAmount}</p>
+                        </div>
+                      </div>
+
+                      <div className="flex justify-between items-center pt-3 border-t border-gray-100">
+                        <p className="text-xs text-gray-500">
+                          Créée le {new Date(claim.createdAt).toLocaleDateString('fr-FR')}
+                        </p>
+                        <Link
+                          href={`/claims/${claim.id}`}
+                          className="text-blue-600 hover:text-blue-700 text-sm font-medium"
+                        >
+                          Voir les détails →
+                        </Link>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
           </div>
         </div>
       </div>
