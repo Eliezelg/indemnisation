@@ -1,11 +1,13 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import Link from 'next/link';
+import { useRouter } from '@/i18n/routing';
+import { Link } from '@/i18n/routing';
+import { useTranslations } from 'next-intl';
 
 export default function LoginPage() {
   const router = useRouter();
+  const t = useTranslations('auth');
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -30,7 +32,7 @@ export default function LoginPage() {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message || 'Email ou mot de passe incorrect');
+        throw new Error(data.message || t('loginError'));
       }
 
       localStorage.setItem('accessToken', data.accessToken);
@@ -39,7 +41,7 @@ export default function LoginPage() {
 
       router.push('/dashboard');
     } catch (err: any) {
-      setError(err.message || 'Une erreur est survenue');
+      setError(err.message || t('loginError'));
     } finally {
       setLoading(false);
     }
@@ -49,11 +51,8 @@ export default function LoginPage() {
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white flex items-center justify-center px-4">
       <div className="max-w-md w-full bg-white rounded-lg shadow-lg p-8">
         <h1 className="text-3xl font-bold text-gray-900 mb-2 text-center">
-          Connexion
+          {t('loginTitle')}
         </h1>
-        <p className="text-gray-600 text-center mb-8">
-          Accédez à votre espace personnel
-        </p>
 
         {error && (
           <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded mb-4">
@@ -64,7 +63,7 @@ export default function LoginPage() {
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-              Email
+              {t('email')}
             </label>
             <input
               type="email"
@@ -78,7 +77,7 @@ export default function LoginPage() {
 
           <div>
             <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
-              Mot de passe
+              {t('password')}
             </label>
             <input
               type="password"
@@ -90,20 +89,9 @@ export default function LoginPage() {
             />
           </div>
 
-          <div className="flex items-center justify-between">
-            <div className="flex items-center">
-              <input
-                id="remember"
-                type="checkbox"
-                className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-              />
-              <label htmlFor="remember" className="ml-2 block text-sm text-gray-700">
-                Se souvenir de moi
-              </label>
-            </div>
-
+          <div className="flex items-center justify-end">
             <Link href="/forgot-password" className="text-sm text-blue-600 hover:text-blue-700">
-              Mot de passe oublié?
+              {t('forgotPassword')}
             </Link>
           </div>
 
@@ -112,7 +100,7 @@ export default function LoginPage() {
             disabled={loading}
             className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-md transition-colors disabled:bg-blue-300 disabled:cursor-not-allowed"
           >
-            {loading ? 'Connexion...' : 'Se connecter'}
+            {loading ? `${t('loginButton')}...` : t('loginButton')}
           </button>
         </form>
 
@@ -122,7 +110,7 @@ export default function LoginPage() {
               <div className="w-full border-t border-gray-300"></div>
             </div>
             <div className="relative flex justify-center text-sm">
-              <span className="px-2 bg-white text-gray-500">Nouveau sur notre plateforme?</span>
+              <span className="px-2 bg-white text-gray-500">{t('noAccount')}</span>
             </div>
           </div>
 
@@ -130,7 +118,7 @@ export default function LoginPage() {
             href="/register"
             className="mt-4 w-full inline-flex justify-center py-3 px-4 border border-blue-600 rounded-md text-blue-600 hover:bg-blue-50 font-semibold transition-colors"
           >
-            Créer un compte
+            {t('registerLink')}
           </Link>
         </div>
       </div>
