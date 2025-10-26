@@ -1,0 +1,143 @@
+import { Injectable } from '@nestjs/common';
+import { DisruptionType, Jurisdiction } from '@prisma/client';
+import { DistanceService } from './distance.service';
+import { EUCalculatorService } from './eu-calculator.service';
+import { IsraelCalculatorService } from './israel-calculator.service';
+import { JurisdictionService } from './jurisdiction.service';
+
+export interface CompensationResult {
+  distance: number;
+  jurisdiction: Jurisdiction;
+  calculatedAmountEU: number | null;
+  calculatedAmountIL: number | null;
+  recommendedAmount: number;
+  currency: string;
+  details: {
+    euEligible: boolean;
+    israelEligible: boolean;
+    euAmount?: number;
+    ilsAmount?: number;
+    reasoning: string;
+  };
+}
+
+/**
+ * Orchestrator service that coordinates all compensation calculations
+ */
+@Injectable()
+export class CompensationService {
+  constructor(
+    private distanceService: DistanceService,
+    private euCalculator: EUCalculatorService,
+    private israelCalculator: IsraelCalculatorService,
+    private jurisdictionService: JurisdictionService,
+  ) {}
+
+  /**
+   * Calculate compensation for a flight disruption
+   * @param departureIata - IATA code of departure airport
+   * @param arrivalIata - IATA code of arrival airport
+   * @param disruptionType - Type of disruption
+   * @param delayMinutes - Delay in minutes (optional)
+   * @param airlineCode - Airline code (optional)
+   * @returns Complete compensation calculation result
+   */
+  async calculateCompensation(
+    departureIata: string,
+    arrivalIata: string,
+    disruptionType: DisruptionType,
+    delayMinutes?: number,
+    airlineCode?: string,
+  ): Promise<CompensationResult> {
+    // Calculate distance between airports
+    const distance = await this.distanceService.calculateDistance(
+      departureIata,
+      arrivalIata,
+    );
+
+    // Determine applicable jurisdiction
+    const jurisdiction = await this.jurisdictionService.determineJurisdiction(
+      departureIata,
+      arrivalIata,
+      airlineCode,
+    );
+
+    // Get country codes
+    const countries = await this.jurisdictionService.getCountryCodes(
+      departureIata,
+      arrivalIata,
+    );
+
+    // Calculate compensation for each applicable jurisdiction
+    let calculatedAmountEU: number | null = null;
+    let calculatedAmountIL: number | null = null;
+    let euEligible = false;
+    let israelEligible = false;
+
+    if (jurisdiction === 'EU' || jurisdiction === 'BOTH') {
+      euEligible = true;
+      calculatedAmountEU = this.euCalculator.calculate(
+        distance,
+        disruptionType,
+        delayMinutes,
+      );
+    }
+
+    if (jurisdiction === 'ISRAEL' || jurisdiction === 'BOTH') {
+      israelEligible = true;
+      const ilResult = this.israelCalculator.calculateBoth(
+        distance,
+        disruptionType,
+        delayMinutes,
+      );
+      calculatedAmountIL = ilResult.ils;
+    }
+
+    // Determine recommended amount (highest compensation)
+    let recommendedAmount = 0;
+    let currency = 'EUR';
+    let reasoning = '';
+
+    if (euEligible && israelEligible) {
+      // Both jurisdictions apply - recommend the higher one
+      const ilsInEur = this.israelCalculator.convertToEUR(calculatedAmountIL);
+
+      if (calculatedAmountEU >= ilsInEur) {
+        recommendedAmount = calculatedAmountEU;
+        currency = 'EUR';
+        reasoning = `Le règlement européen CE 261/2004 offre une meilleure compensation (€${calculatedAmountEU}) que la loi israélienne (₪${calculatedAmountIL} ≈ €${ilsInEur}). Nous recommandons de réclamer sous le règlement européen.`;
+      } else {
+        recommendedAmount = calculatedAmountIL;
+        currency = 'ILS';
+        reasoning = `La loi israélienne offre une meilleure compensation (₪${calculatedAmountIL} ≈ €${ilsInEur}) que le règlement européen (€${calculatedAmountEU}). Nous recommandons de réclamer sous la loi israélienne.`;
+      }
+    } else if (euEligible) {
+      recommendedAmount = calculatedAmountEU;
+      currency = 'EUR';
+      reasoning = `Votre vol est couvert par le règlement européen CE 261/2004. Compensation: €${calculatedAmountEU}.`;
+    } else if (israelEligible) {
+      recommendedAmount = calculatedAmountIL;
+      currency = 'ILS';
+      const eurEquiv = this.israelCalculator.convertToEUR(calculatedAmountIL);
+      reasoning = `Votre vol est couvert par la loi israélienne sur les services aériens (2012). Compensation: ₪${calculatedAmountIL} (≈ €${eurEquiv}).`;
+    } else {
+      reasoning = 'Aucune juridiction applicable. Votre vol ne semble pas couvert par les réglementations européenne ou israélienne.';
+    }
+
+    return {
+      distance,
+      jurisdiction,
+      calculatedAmountEU,
+      calculatedAmountIL,
+      recommendedAmount,
+      currency,
+      details: {
+        euEligible,
+        israelEligible,
+        euAmount: calculatedAmountEU,
+        ilsAmount: calculatedAmountIL,
+        reasoning,
+      },
+    };
+  }
+}
