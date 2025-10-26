@@ -48,7 +48,7 @@ export class AuthService {
         firstName: user.firstName,
         lastName: user.lastName,
       },
-      'fr', // Default to French, will be user preference later
+      user.preferredLocale as 'fr' | 'he' | 'en',
     );
 
     // Generate tokens

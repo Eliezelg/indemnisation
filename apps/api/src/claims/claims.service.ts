@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CompensationService } from '../compensation/compensation.service';
+import { EmailService } from '../email/email.service';
 import { CreateClaimDto } from './dto';
 
 @Injectable()
@@ -8,12 +9,24 @@ export class ClaimsService {
   constructor(
     private prisma: PrismaService,
     private compensationService: CompensationService,
+    private emailService: EmailService,
   ) {}
 
   /**
    * Create a new claim with automatic compensation calculation
    */
   async create(userId: string, dto: CreateClaimDto) {
+    // Get user data for email
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+      select: {
+        email: true,
+        firstName: true,
+        lastName: true,
+        preferredLocale: true,
+      },
+    });
+
     // Calculate compensation
     const compensation = await this.compensationService.calculateCompensation(
       dto.departureAirport,
@@ -47,6 +60,24 @@ export class ClaimsService {
         status: 'DRAFT',
       },
     });
+
+    // Send claim created email (non-blocking)
+    if (user) {
+      this.emailService.sendClaimCreatedEmail(
+        user.email,
+        {
+          firstName: user.firstName,
+          lastName: user.lastName,
+          claimNumber: claim.claimNumber,
+          flightNumber: claim.flightNumber,
+          departureAirport: claim.departureAirport,
+          arrivalAirport: claim.arrivalAirport,
+          recommendedAmount: claim.recommendedAmount,
+          currency: '€',
+        },
+        user.preferredLocale as 'fr' | 'he' | 'en',
+      );
+    }
 
     return {
       ...claim,
@@ -94,13 +125,42 @@ export class ClaimsService {
       throw new ForbiddenException('Cette réclamation a déjà été soumise');
     }
 
-    return this.prisma.claim.update({
+    // Get user data for email
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+      select: {
+        email: true,
+        firstName: true,
+        lastName: true,
+        preferredLocale: true,
+      },
+    });
+
+    // Update claim status
+    const updatedClaim = await this.prisma.claim.update({
       where: { id },
       data: {
         status: 'SUBMITTED',
         submittedAt: new Date(),
       },
     });
+
+    // Send status change email (non-blocking)
+    if (user) {
+      this.emailService.sendClaimStatusEmail(
+        user.email,
+        {
+          firstName: user.firstName,
+          lastName: user.lastName,
+          claimNumber: updatedClaim.claimNumber,
+          flightNumber: updatedClaim.flightNumber,
+          status: 'SUBMITTED',
+        },
+        user.preferredLocale as 'fr' | 'he' | 'en',
+      );
+    }
+
+    return updatedClaim;
   }
 
   /**
