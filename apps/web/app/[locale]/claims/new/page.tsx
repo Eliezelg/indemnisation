@@ -1,8 +1,9 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import Link from 'next/link';
+import { useRouter } from '@/i18n/routing';
+import { Link } from '@/i18n/routing';
+import { useTranslations } from 'next-intl';
 
 const AIRPORTS = [
   { code: 'CDG', name: 'Paris Charles de Gaulle', city: 'Paris', country: 'France' },
@@ -23,14 +24,10 @@ const AIRPORTS = [
   { code: 'DXB', name: 'Dubai International', city: 'Dubai', country: 'UAE' },
 ];
 
-const DISRUPTION_TYPES = [
-  { value: 'DELAY', label: 'Retard', description: 'Vol retardé de plus de 3 heures' },
-  { value: 'CANCELLATION', label: 'Annulation', description: 'Vol annulé par la compagnie' },
-  { value: 'DENIED_BOARDING', label: 'Refus d\'embarquement', description: 'Surbooking ou autre raison' },
-];
-
 export default function NewClaimPage() {
   const router = useRouter();
+  const t = useTranslations('claim');
+  const tCommon = useTranslations('common');
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -63,23 +60,29 @@ export default function NewClaimPage() {
     });
   };
 
+  const DISRUPTION_TYPES = [
+    { value: 'DELAY', label: t('delay'), description: t('delayDescription') },
+    { value: 'CANCELLATION', label: t('cancellation'), description: t('cancellationDescription') },
+    { value: 'DENIED_BOARDING', label: t('deniedBoarding'), description: t('deniedBoardingDescription') },
+  ];
+
   const handleNext = () => {
     setError('');
 
     if (step === 1) {
       if (!formData.flightNumber || !formData.flightDate || !formData.departureAirport || !formData.arrivalAirport) {
-        setError('Veuillez remplir tous les champs obligatoires');
+        setError(t('requiredFieldsError'));
         return;
       }
     }
 
     if (step === 2) {
       if (!formData.disruptionType) {
-        setError('Veuillez sélectionner le type de perturbation');
+        setError(t('selectDisruptionError'));
         return;
       }
       if (formData.disruptionType === 'DELAY' && !formData.delayMinutes) {
-        setError('Veuillez indiquer la durée du retard');
+        setError(t('delayDurationError'));
         return;
       }
     }
@@ -97,7 +100,7 @@ export default function NewClaimPage() {
     setError('');
 
     if (!formData.firstName || !formData.lastName || !formData.email) {
-      setError('Veuillez remplir tous les champs obligatoires');
+      setError(t('requiredFieldsError'));
       return;
     }
 
@@ -135,13 +138,13 @@ export default function NewClaimPage() {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message || 'Erreur lors de la création de la réclamation');
+        throw new Error(data.message || t('createError'));
       }
 
       setResult(data);
       setStep(4); // Results step
     } catch (err: any) {
-      setError(err.message || 'Une erreur est survenue');
+      setError(err.message || tCommon('error'));
     } finally {
       setLoading(false);
     }
@@ -153,10 +156,10 @@ export default function NewClaimPage() {
       <nav className="bg-white shadow-sm">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
           <Link href="/dashboard" className="text-2xl font-bold text-blue-600">
-            Indemnisation Vols
+            {t('appTitle')}
           </Link>
           <Link href="/dashboard" className="text-gray-600 hover:text-blue-600">
-            ← Retour au tableau de bord
+            ← {t('backToDashboard')}
           </Link>
         </div>
       </nav>
@@ -167,7 +170,7 @@ export default function NewClaimPage() {
           {step < 4 && (
             <div className="mb-8">
               <div className="flex justify-between items-center mb-2">
-                <span className="text-sm font-medium text-gray-700">Étape {step} sur 3</span>
+                <span className="text-sm font-medium text-gray-700">{t('stepProgress', { current: step, total: 3 })}</span>
                 <span className="text-sm text-gray-500">{Math.round((step / 3) * 100)}%</span>
               </div>
               <div className="w-full bg-gray-200 rounded-full h-2">
@@ -192,20 +195,20 @@ export default function NewClaimPage() {
               {step === 1 && (
                 <div>
                   <h2 className="text-2xl font-bold text-gray-900 mb-6">
-                    Informations du vol
+                    {t('step1Title')}
                   </h2>
 
                   <div className="space-y-4">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Numéro de vol *
+                        {t('flightNumber')} *
                       </label>
                       <input
                         type="text"
                         name="flightNumber"
                         value={formData.flightNumber}
                         onChange={handleChange}
-                        placeholder="Ex: AF1234"
+                        placeholder={t('flightNumberPlaceholder')}
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                         required
                       />
@@ -213,7 +216,7 @@ export default function NewClaimPage() {
 
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Date du vol *
+                        {t('flightDate')} *
                       </label>
                       <input
                         type="date"
@@ -228,7 +231,7 @@ export default function NewClaimPage() {
 
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Aéroport de départ *
+                        {t('departureAirport')} *
                       </label>
                       <select
                         name="departureAirport"
@@ -237,7 +240,7 @@ export default function NewClaimPage() {
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                         required
                       >
-                        <option value="">Sélectionnez un aéroport</option>
+                        <option value="">{t('selectAirport')}</option>
                         {AIRPORTS.map((airport) => (
                           <option key={airport.code} value={airport.code}>
                             {airport.code} - {airport.name} ({airport.city})
@@ -248,7 +251,7 @@ export default function NewClaimPage() {
 
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Aéroport d'arrivée *
+                        {t('arrivalAirport')} *
                       </label>
                       <select
                         name="arrivalAirport"
@@ -257,7 +260,7 @@ export default function NewClaimPage() {
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                         required
                       >
-                        <option value="">Sélectionnez un aéroport</option>
+                        <option value="">{t('selectAirport')}</option>
                         {AIRPORTS.map((airport) => (
                           <option key={airport.code} value={airport.code}>
                             {airport.code} - {airport.name} ({airport.city})
@@ -268,14 +271,14 @@ export default function NewClaimPage() {
 
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Compagnie aérienne (optionnel)
+                        {t('airline')}
                       </label>
                       <input
                         type="text"
                         name="airline"
                         value={formData.airline}
                         onChange={handleChange}
-                        placeholder="Ex: Air France, EL AL"
+                        placeholder={t('airlinePlaceholder')}
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                       />
                     </div>
@@ -286,7 +289,7 @@ export default function NewClaimPage() {
                     onClick={handleNext}
                     className="mt-6 w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-md transition-colors"
                   >
-                    Continuer
+                    {tCommon('next')}
                   </button>
                 </div>
               )}
@@ -295,7 +298,7 @@ export default function NewClaimPage() {
               {step === 2 && (
                 <div>
                   <h2 className="text-2xl font-bold text-gray-900 mb-6">
-                    Type de perturbation
+                    {t('step2Title')}
                   </h2>
 
                   <div className="space-y-4">
@@ -324,7 +327,7 @@ export default function NewClaimPage() {
                     {formData.disruptionType === 'DELAY' && (
                       <div className="mt-4">
                         <label className="block text-sm font-medium text-gray-700 mb-1">
-                          Durée du retard (en minutes) *
+                          {t('delayMinutes')} *
                         </label>
                         <input
                           type="number"
@@ -332,12 +335,12 @@ export default function NewClaimPage() {
                           value={formData.delayMinutes}
                           onChange={handleChange}
                           min="0"
-                          placeholder="Ex: 240"
+                          placeholder={t('delayMinutesPlaceholder')}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                           required={formData.disruptionType === 'DELAY'}
                         />
                         <p className="text-sm text-gray-500 mt-1">
-                          Ex: 4 heures = 240 minutes
+                          {t('delayHint')}
                         </p>
                       </div>
                     )}
@@ -349,14 +352,14 @@ export default function NewClaimPage() {
                       onClick={handleBack}
                       className="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-3 px-4 rounded-md transition-colors"
                     >
-                      Retour
+                      {tCommon('previous')}
                     </button>
                     <button
                       type="button"
                       onClick={handleNext}
                       className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-md transition-colors"
                     >
-                      Continuer
+                      {tCommon('next')}
                     </button>
                   </div>
                 </div>
@@ -366,14 +369,14 @@ export default function NewClaimPage() {
               {step === 3 && (
                 <div>
                   <h2 className="text-2xl font-bold text-gray-900 mb-6">
-                    Informations du passager
+                    {t('step3Title')}
                   </h2>
 
                   <div className="space-y-4">
                     <div className="grid grid-cols-2 gap-4">
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">
-                          Prénom *
+                          {t('firstName')} *
                         </label>
                         <input
                           type="text"
@@ -387,7 +390,7 @@ export default function NewClaimPage() {
 
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">
-                          Nom *
+                          {t('lastName')} *
                         </label>
                         <input
                           type="text"
@@ -402,7 +405,7 @@ export default function NewClaimPage() {
 
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Email *
+                        {t('email')} *
                       </label>
                       <input
                         type="email"
@@ -416,28 +419,28 @@ export default function NewClaimPage() {
 
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Téléphone (optionnel)
+                        {t('phone')}
                       </label>
                       <input
                         type="tel"
                         name="phone"
                         value={formData.phone}
                         onChange={handleChange}
-                        placeholder="+33 6 12 34 56 78"
+                        placeholder={t('phonePlaceholder')}
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                       />
                     </div>
 
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Référence de réservation (optionnel)
+                        {t('bookingReference')}
                       </label>
                       <input
                         type="text"
                         name="bookingReference"
                         value={formData.bookingReference}
                         onChange={handleChange}
-                        placeholder="Ex: ABC123"
+                        placeholder={t('bookingRefPlaceholder')}
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                       />
                     </div>
@@ -449,14 +452,14 @@ export default function NewClaimPage() {
                       onClick={handleBack}
                       className="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-3 px-4 rounded-md transition-colors"
                     >
-                      Retour
+                      {tCommon('previous')}
                     </button>
                     <button
                       type="submit"
                       disabled={loading}
                       className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-md transition-colors disabled:bg-blue-300 disabled:cursor-not-allowed"
                     >
-                      {loading ? 'Calcul en cours...' : 'Calculer mon indemnisation'}
+                      {loading ? t('calculating') : t('submit')}
                     </button>
                   </div>
                 </div>
@@ -472,16 +475,16 @@ export default function NewClaimPage() {
                       </svg>
                     </div>
                     <h2 className="text-3xl font-bold text-gray-900 mb-2">
-                      Réclamation créée !
+                      {t('resultTitle')}
                     </h2>
                     <p className="text-gray-600">
-                      Numéro de réclamation: <span className="font-semibold">{result.claimNumber}</span>
+                      {t('resultClaimNumber')}: <span className="font-semibold">{result.claimNumber}</span>
                     </p>
                   </div>
 
                   <div className="bg-blue-50 border-2 border-blue-200 rounded-lg p-6 mb-6">
                     <div className="text-center mb-4">
-                      <p className="text-sm text-gray-600 mb-1">Montant d'indemnisation recommandé</p>
+                      <p className="text-sm text-gray-600 mb-1">{t('resultRecommendedAmount')}</p>
                       <p className="text-5xl font-bold text-blue-600">
                         {result.currency === 'EUR' ? '€' : '₪'}{result.recommendedAmount}
                       </p>
@@ -494,19 +497,19 @@ export default function NewClaimPage() {
 
                     <div className="border-t border-blue-200 pt-4 mt-4">
                       <p className="text-sm text-gray-700 mb-2">
-                        <span className="font-semibold">Distance:</span> {result.distance} km
+                        <span className="font-semibold">{t('resultDistance')}:</span> {result.distance} km
                       </p>
                       <p className="text-sm text-gray-700 mb-2">
-                        <span className="font-semibold">Juridiction:</span> {result.jurisdiction}
+                        <span className="font-semibold">{t('resultJurisdiction')}:</span> {result.jurisdiction}
                       </p>
                       {result.calculatedAmountEU && (
                         <p className="text-sm text-gray-700 mb-2">
-                          <span className="font-semibold">Règlement EU:</span> €{result.calculatedAmountEU}
+                          <span className="font-semibold">{t('resultEuAmount')}:</span> €{result.calculatedAmountEU}
                         </p>
                       )}
                       {result.calculatedAmountIL && (
                         <p className="text-sm text-gray-700 mb-2">
-                          <span className="font-semibold">Loi israélienne:</span> ₪{result.calculatedAmountIL}
+                          <span className="font-semibold">{t('resultIlAmount')}:</span> ₪{result.calculatedAmountIL}
                         </p>
                       )}
                     </div>
@@ -522,7 +525,7 @@ export default function NewClaimPage() {
                     href="/dashboard"
                     className="block w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-md text-center transition-colors"
                   >
-                    Retour au tableau de bord
+                    {t('backToDashboard')}
                   </Link>
                 </div>
               )}
