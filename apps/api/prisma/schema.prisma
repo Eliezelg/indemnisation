@@ -1,0 +1,104 @@
+// Prisma schema for Indemnisation platform
+// Database: PostgreSQL 15
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================
+// USER & AUTHENTICATION
+// ============================================
+
+model User {
+  id            String   @id @default(cuid())
+  email         String   @unique
+  password      String   // bcrypt hashed
+  firstName     String
+  lastName      String
+  phone         String?
+  emailVerified Boolean  @default(false)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // Relations
+  claims        Claim[]
+
+  @@index([email])
+}
+
+// ============================================
+// CLAIMS
+// ============================================
+
+model Claim {
+  id                   String         @id @default(cuid())
+  claimNumber          String         @unique // CLM-2025-000001
+  userId               String
+
+  // Flight information
+  flightNumber         String
+  flightDate           DateTime
+  departureAirport     String         // IATA code
+  arrivalAirport       String         // IATA code
+  airline              String?
+
+  // Disruption details
+  disruptionType       DisruptionType
+  delayMinutes         Int?
+
+  // Passenger info (JSON for flexibility)
+  passengerInfo        Json
+
+  // Compensation calculations
+  calculatedAmountEU   Decimal?       @db.Decimal(10,2)
+  calculatedAmountIL   Decimal?       @db.Decimal(10,2)
+  recommendedAmount    Decimal?       @db.Decimal(10,2)
+  jurisdiction         Jurisdiction?
+  distance             Float?
+
+  // Workflow
+  status               ClaimStatus    @default(DRAFT)
+  submittedAt          DateTime?
+
+  createdAt            DateTime       @default(now())
+  updatedAt            DateTime       @updatedAt
+
+  // Relations
+  user                 User           @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([claimNumber])
+  @@index([status])
+  @@index([flightDate])
+}
+
+// ============================================
+// ENUMS
+// ============================================
+
+enum DisruptionType {
+  DELAY
+  CANCELLATION
+  DENIED_BOARDING
+}
+
+enum Jurisdiction {
+  EU
+  ISRAEL
+  BOTH
+}
+
+enum ClaimStatus {
+  DRAFT           // Not submitted yet
+  SUBMITTED       // Submitted, pending review
+  IN_REVIEW       // Being reviewed by admin
+  APPROVED        // Approved for processing
+  REJECTED        // Rejected
+  PAID            // Compensation paid
+  CANCELLED       // Cancelled by user
+}
