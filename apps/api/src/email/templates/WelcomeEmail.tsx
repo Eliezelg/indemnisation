@@ -87,7 +87,7 @@ export const WelcomeEmail = ({
           <Section style={header}>
             <Text style={heading}>{t.welcome}</Text>
           </Section>
-          <Section style={content}>
+          <Section style={contentSection}>
             <Text style={paragraph}>{t.greeting(firstName)}</Text>
             <Text style={paragraph}>{t.intro}</Text>
 
@@ -150,7 +150,7 @@ const heading = {
   margin: '0',
 };
 
-const content = {
+const contentSection = {
   padding: '0 48px',
 };
 

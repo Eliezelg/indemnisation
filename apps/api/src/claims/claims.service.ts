@@ -72,7 +72,7 @@ export class ClaimsService {
           flightNumber: claim.flightNumber,
           departureAirport: claim.departureAirport,
           arrivalAirport: claim.arrivalAirport,
-          recommendedAmount: claim.recommendedAmount,
+          recommendedAmount: Number(claim.recommendedAmount),
           currency: '€',
         },
         user.preferredLocale as 'fr' | 'he' | 'en',
