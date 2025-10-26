@@ -48,4 +48,24 @@ export class UsersService {
 
     return user;
   }
+
+  async updatePreferredLocale(userId: string, locale: string) {
+    const user = await this.prisma.user.update({
+      where: { id: userId },
+      data: { preferredLocale: locale },
+      select: {
+        id: true,
+        email: true,
+        firstName: true,
+        lastName: true,
+        phone: true,
+        emailVerified: true,
+        preferredLocale: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
+
+    return user;
+  }
 }

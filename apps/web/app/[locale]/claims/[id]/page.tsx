@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter, useParams } from '@/i18n/routing';
 import { Link } from '@/i18n/routing';
 import { useTranslations } from 'next-intl';
+import LanguageSelector from '@/components/LanguageSelector';
 
 interface Claim {
   id: string;
@@ -154,9 +155,12 @@ export default function ClaimDetailsPage() {
           <Link href="/dashboard" className="text-2xl font-bold text-blue-600">
             {t('appTitle')}
           </Link>
-          <Link href="/dashboard" className="text-gray-600 hover:text-blue-600">
-            ← {t('backToList')}
-          </Link>
+          <div className="flex items-center gap-4">
+            <LanguageSelector />
+            <Link href="/dashboard" className="text-gray-600 hover:text-blue-600">
+              ← {t('backToList')}
+            </Link>
+          </div>
         </div>
       </nav>
 

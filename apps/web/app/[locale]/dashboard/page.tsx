@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from '@/i18n/routing';
 import { Link } from '@/i18n/routing';
 import { useTranslations } from 'next-intl';
+import LanguageSelector from '@/components/LanguageSelector';
 
 interface User {
   id: string;
@@ -117,12 +118,15 @@ export default function DashboardPage() {
       <nav className="bg-white shadow-sm">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
           <h1 className="text-2xl font-bold text-blue-600">{t('appTitle')}</h1>
-          <button
-            onClick={handleLogout}
-            className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md transition-colors"
-          >
-            {t('logout')}
-          </button>
+          <div className="flex items-center gap-4">
+            <LanguageSelector />
+            <button
+              onClick={handleLogout}
+              className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md transition-colors"
+            >
+              {t('logout')}
+            </button>
+          </div>
         </div>
       </nav>
 
