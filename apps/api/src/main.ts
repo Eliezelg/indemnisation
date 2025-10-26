@@ -9,9 +9,13 @@ async function bootstrap() {
     new FastifyAdapter()
   );
 
-  // CORS configuration
+  // CORS configuration - accept multiple origins in dev
   app.enableCors({
-    origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+    origin: [
+      'http://localhost:3000',
+      'http://localhost:3002',
+      process.env.FRONTEND_URL,
+    ].filter(Boolean),
     credentials: true,
   });
 
