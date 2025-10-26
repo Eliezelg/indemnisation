@@ -28,10 +28,45 @@ export default function NewClaimPage() {
   const router = useRouter();
   const t = useTranslations('claim');
   const tCommon = useTranslations('common');
+  const tDetail = useTranslations('claimDetail');
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [result, setResult] = useState<any>(null);
+
+  // Parse and translate reasoning from backend
+  const translateReasoning = (reasoning: string): string => {
+    if (!reasoning) return '';
+
+    const parts = reasoning.split('|');
+    const type = parts[0];
+
+    switch (type) {
+      case 'BOTH_EU_BETTER':
+        return tDetail('bothEuBetter', {
+          euAmount: parts[1],
+          ilAmount: parts[2],
+          eurEquiv: parts[3]
+        });
+      case 'BOTH_IL_BETTER':
+        return tDetail('bothIlBetter', {
+          ilAmount: parts[1],
+          eurEquiv: parts[2],
+          euAmount: parts[3]
+        });
+      case 'EU_ONLY':
+        return tDetail('euOnly', { amount: parts[1] });
+      case 'IL_ONLY':
+        return tDetail('ilOnly', {
+          amount: parts[1],
+          eurEquiv: parts[2]
+        });
+      case 'NO_JURISDICTION':
+        return tDetail('noJurisdiction');
+      default:
+        return reasoning; // Fallback pour ancien format
+    }
+  };
 
   const [formData, setFormData] = useState({
     // Step 1: Flight info
@@ -517,7 +552,7 @@ export default function NewClaimPage() {
 
                   <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 mb-6">
                     <p className="text-sm text-gray-700">
-                      {result.compensation.reasoning}
+                      {translateReasoning(result.compensation.reasoning)}
                     </p>
                   </div>
 

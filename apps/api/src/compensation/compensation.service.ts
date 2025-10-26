@@ -105,23 +105,23 @@ export class CompensationService {
       if (calculatedAmountEU >= ilsInEur) {
         recommendedAmount = calculatedAmountEU;
         currency = 'EUR';
-        reasoning = `Le règlement européen CE 261/2004 offre une meilleure compensation (€${calculatedAmountEU}) que la loi israélienne (₪${calculatedAmountIL} ≈ €${ilsInEur}). Nous recommandons de réclamer sous le règlement européen.`;
+        reasoning = `BOTH_EU_BETTER|${calculatedAmountEU}|${calculatedAmountIL}|${ilsInEur}`;
       } else {
         recommendedAmount = calculatedAmountIL;
         currency = 'ILS';
-        reasoning = `La loi israélienne offre une meilleure compensation (₪${calculatedAmountIL} ≈ €${ilsInEur}) que le règlement européen (€${calculatedAmountEU}). Nous recommandons de réclamer sous la loi israélienne.`;
+        reasoning = `BOTH_IL_BETTER|${calculatedAmountIL}|${ilsInEur}|${calculatedAmountEU}`;
       }
     } else if (euEligible) {
       recommendedAmount = calculatedAmountEU;
       currency = 'EUR';
-      reasoning = `Votre vol est couvert par le règlement européen CE 261/2004. Compensation: €${calculatedAmountEU}.`;
+      reasoning = `EU_ONLY|${calculatedAmountEU}`;
     } else if (israelEligible) {
       recommendedAmount = calculatedAmountIL;
       currency = 'ILS';
       const eurEquiv = this.israelCalculator.convertToEUR(calculatedAmountIL);
-      reasoning = `Votre vol est couvert par la loi israélienne sur les services aériens (2012). Compensation: ₪${calculatedAmountIL} (≈ €${eurEquiv}).`;
+      reasoning = `IL_ONLY|${calculatedAmountIL}|${eurEquiv}`;
     } else {
-      reasoning = 'Aucune juridiction applicable. Votre vol ne semble pas couvert par les réglementations européenne ou israélienne.';
+      reasoning = 'NO_JURISDICTION';
     }
 
     return {
