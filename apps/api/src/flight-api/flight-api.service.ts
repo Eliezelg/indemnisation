@@ -314,10 +314,23 @@ export class FlightApiService {
         // IMPORTANT: Filter client-side to ensure we have the right flight
         // The API sometimes returns other flights despite the filters
         const flight = result.data.find(f => {
-          const flightNum = f.number?.replace(/\s+/g, ''); // Remove spaces from "RO 382" -> "RO382"
-          return flightNum === flightNumber ||
-                 flightNum === flightNumber.toUpperCase() ||
-                 (f.airline?.iata === airlineCode && f.number?.includes(flightNum));
+          const responseFlightNum = f.number?.replace(/\s+/g, '').toUpperCase(); // "AF 869" -> "AF869"
+          const searchFlightNum = flightNumber.replace(/\s+/g, '').toUpperCase(); // "AF869" -> "AF869"
+
+          // Check if the flight numbers match
+          if (responseFlightNum === searchFlightNum) {
+            return true;
+          }
+
+          // Also check if airline code matches and the number part matches
+          if (f.airline?.iata === airlineCode) {
+            const numPart = f.number?.match(/\d+/)?.[0]; // Extract "869" from "AF 869"
+            if (numPart === flightNum) {
+              return true;
+            }
+          }
+
+          return false;
         });
 
         if (!flight) {
@@ -332,10 +345,20 @@ export class FlightApiService {
         const flightNumberFromResponse = flight.number?.replace(/\s+/g, '') || flightNumber;
         const airlineInfo = flight.airline || {};
 
-        // Calculate delay if available
+        // Calculate delay from scheduled vs actual times
         let delayMinutes = 0;
         if (flight.delayed) {
           delayMinutes = flight.delayed;
+        } else if (flight.movement?.scheduledTime?.utc && flight.movement?.revisedTime?.utc) {
+          // Calculate delay from scheduled vs revised time
+          const scheduled = new Date(flight.movement.scheduledTime.utc);
+          const revised = new Date(flight.movement.revisedTime.utc);
+          delayMinutes = Math.floor((revised.getTime() - scheduled.getTime()) / 60000);
+        } else if (flight.movement?.scheduledTime?.utc && flight.movement?.runwayTime?.utc) {
+          // Calculate delay from scheduled vs actual runway time
+          const scheduled = new Date(flight.movement.scheduledTime.utc);
+          const runway = new Date(flight.movement.runwayTime.utc);
+          delayMinutes = Math.floor((runway.getTime() - scheduled.getTime()) / 60000);
         }
 
         // For FlightLabs historical API:
@@ -345,6 +368,7 @@ export class FlightApiService {
         const arrivalAirport = flight.movement?.airport?.iata || flight.movement?.airport?.code || '';
         const arrivalTime = flight.movement?.scheduledTime?.utc;
         const arrivalTimeLocal = flight.movement?.scheduledTime?.local;
+        const actualArrivalTime = flight.movement?.revisedTime?.utc || flight.movement?.runwayTime?.utc;
 
         return {
           flightNumber: flightNumberFromResponse,
@@ -356,8 +380,8 @@ export class FlightApiService {
           arrivalTime: arrivalTimeLocal || arrivalTime,
           flightDate: formattedDate,
           status: flight.status || 'completed',
-          actualDepartureTime: undefined, // Historical API doesn't provide this
-          actualArrivalTime: undefined, // Historical API doesn't provide this
+          actualDepartureTime: actualArrivalTime, // Use revised/runway time as actual
+          actualArrivalTime: actualArrivalTime,
           delayMinutes: delayMinutes > 0 ? delayMinutes : 0,
         };
       } catch (error) {
