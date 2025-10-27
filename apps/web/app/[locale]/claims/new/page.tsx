@@ -115,13 +115,32 @@ export default function NewClaimPage() {
       const data = await response.json();
 
       if (data.found && data.data) {
+        console.log('Flight API response:', data.data);
+
         // Auto-populate fields
+        const updatedData: any = {};
+
+        if (data.data.departureAirport) {
+          updatedData.departureAirport = data.data.departureAirport;
+        }
+
+        if (data.data.arrivalAirport) {
+          updatedData.arrivalAirport = data.data.arrivalAirport;
+        }
+
+        if (data.data.airline) {
+          updatedData.airline = data.data.airline;
+        }
+
+        if (data.data.delayMinutes) {
+          updatedData.delayMinutes = data.data.delayMinutes.toString();
+        }
+
+        console.log('Updating form with:', updatedData);
+
         setFormData(prev => ({
           ...prev,
-          departureAirport: data.data.departureAirport || prev.departureAirport,
-          arrivalAirport: data.data.arrivalAirport || prev.arrivalAirport,
-          airline: data.data.airline || prev.airline,
-          delayMinutes: data.data.delayMinutes?.toString() || prev.delayMinutes,
+          ...updatedData,
         }));
 
         setAirlineLogo(data.data.airlineLogo || '');
@@ -129,10 +148,12 @@ export default function NewClaimPage() {
 
         // Auto-detect disruption type based on delay
         if (data.data.delayMinutes && data.data.delayMinutes >= 180) {
-          setFormData(prev => ({
-            ...prev,
-            disruptionType: 'DELAY',
-          }));
+          setTimeout(() => {
+            setFormData(prev => ({
+              ...prev,
+              disruptionType: 'DELAY',
+            }));
+          }, 100);
         }
       }
     } catch (err) {
