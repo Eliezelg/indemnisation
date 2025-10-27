@@ -52,7 +52,7 @@ export class AuthService {
     );
 
     // Generate tokens
-    const tokens = await this.generateTokens(user.id, user.email);
+    const tokens = await this.generateTokens(user.id, user.email, user.role);
 
     return {
       user: {
@@ -61,6 +61,7 @@ export class AuthService {
         firstName: user.firstName,
         lastName: user.lastName,
         phone: user.phone,
+        role: user.role,
         preferredLocale: user.preferredLocale,
       },
       ...tokens,
@@ -85,7 +86,7 @@ export class AuthService {
     }
 
     // Generate tokens
-    const tokens = await this.generateTokens(user.id, user.email);
+    const tokens = await this.generateTokens(user.id, user.email, user.role);
 
     return {
       user: {
@@ -94,6 +95,7 @@ export class AuthService {
         firstName: user.firstName,
         lastName: user.lastName,
         phone: user.phone,
+        role: user.role,
         preferredLocale: user.preferredLocale,
       },
       ...tokens,
@@ -150,15 +152,15 @@ export class AuthService {
     return user;
   }
 
-  private async generateTokens(userId: string, email: string) {
+  private async generateTokens(userId: string, email: string, role: string) {
     // Generate both access and refresh tokens in parallel
     const [accessToken, refreshToken] = await Promise.all([
       this.jwt.signAsync(
-        { sub: userId, email },
+        { sub: userId, email, role },
         { secret: process.env.JWT_SECRET, expiresIn: '1h' },
       ),
       this.jwt.signAsync(
-        { sub: userId, email, type: 'refresh' },
+        { sub: userId, email, role, type: 'refresh' },
         { secret: process.env.JWT_REFRESH_SECRET, expiresIn: '7d' },
       ),
     ]);
