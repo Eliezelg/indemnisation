@@ -310,13 +310,26 @@ export class FlightApiService {
 
         // The historical API returns a different structure than advanced-flights-schedules
         // It has a "movement" object
-        const flight = result.data[0];
+
+        // IMPORTANT: Filter client-side to ensure we have the right flight
+        // The API sometimes returns other flights despite the filters
+        const flight = result.data.find(f => {
+          const flightNum = f.number?.replace(/\s+/g, ''); // Remove spaces from "RO 382" -> "RO382"
+          return flightNum === flightNumber ||
+                 flightNum === flightNumber.toUpperCase() ||
+                 (f.airline?.iata === airlineCode && f.number?.includes(flightNum));
+        });
+
+        if (!flight) {
+          console.log(`FlightLabs: No matching flight found for ${flightNumber} in results`);
+          continue;
+        }
 
         console.log('FlightLabs: Flight found!', JSON.stringify(flight, null, 2));
 
         // Parse the response based on the historical API structure
         // The movement contains departure info, we need to find arrival info
-        const flightNumberFromResponse = flight.number || flightNumber;
+        const flightNumberFromResponse = flight.number?.replace(/\s+/g, '') || flightNumber;
         const airlineInfo = flight.airline || {};
 
         // Calculate delay if available
@@ -325,18 +338,26 @@ export class FlightApiService {
           delayMinutes = flight.delayed;
         }
 
+        // For FlightLabs historical API:
+        // - We searched by departure airport (airportCode)
+        // - The movement.airport is the ARRIVAL airport
+        // - movement.scheduledTime is the ARRIVAL time at destination
+        const arrivalAirport = flight.movement?.airport?.iata || flight.movement?.airport?.code || '';
+        const arrivalTime = flight.movement?.scheduledTime?.utc;
+        const arrivalTimeLocal = flight.movement?.scheduledTime?.local;
+
         return {
           flightNumber: flightNumberFromResponse,
           airline: airlineInfo.name || '',
           airlineCode: airlineInfo.iata || airlineCode,
           departureAirport: airportCode,
-          arrivalAirport: flight.movement?.airport?.code || '',
-          departureTime: flight.movement?.scheduledTime?.utc,
-          arrivalTime: flight.movement?.actualTime?.utc,
+          arrivalAirport: arrivalAirport,
+          departureTime: arrivalTimeLocal || arrivalTime, // Use local time if available
+          arrivalTime: arrivalTimeLocal || arrivalTime,
           flightDate: formattedDate,
           status: flight.status || 'completed',
-          actualDepartureTime: flight.movement?.actualTime?.utc,
-          actualArrivalTime: flight.movement?.actualTime?.utc,
+          actualDepartureTime: undefined, // Historical API doesn't provide this
+          actualArrivalTime: undefined, // Historical API doesn't provide this
           delayMinutes: delayMinutes > 0 ? delayMinutes : 0,
         };
       } catch (error) {
