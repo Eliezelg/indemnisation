@@ -18,14 +18,15 @@ export class FlightApiNewService {
 
   /**
    * Search for flight information by flight number and date
-   * Tries FlightAPI.io first, then falls back to mock data
+   * Tries FlightAPI.io only - returns null if not found
+   * User will enter flight information manually if null
    */
   async searchFlight(
     flightNumber: string,
     date: string,
   ): Promise<FlightData | null> {
     try {
-      // Try FlightAPI.io first
+      // Try FlightAPI.io
       this.logger.log(`Searching flight ${flightNumber} on ${date}`);
 
       const flightApiResult = await this.flightApiProvider.searchFlight(
@@ -41,14 +42,8 @@ export class FlightApiNewService {
       this.logger.error('FlightAPI.io error:', error.message);
     }
 
-    // Fallback to mock data
-    this.logger.log('Using mock flight data for development');
-    const mockResult = await this.mockProvider.searchFlight(flightNumber, date);
-
-    if (mockResult) {
-      return this.transformToLegacyFormat(mockResult);
-    }
-
+    // No data found - user will enter manually
+    this.logger.log(`No flight data found for ${flightNumber} on ${date}`);
     return null;
   }
 

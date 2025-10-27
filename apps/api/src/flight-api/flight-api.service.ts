@@ -16,7 +16,8 @@ export class FlightApiService {
 
   /**
    * Search for flight information by flight number and date
-   * Tries FlightAPI.io first, then falls back to FlightLabs, then mock data for development
+   * Tries FlightAPI.io first, then falls back to FlightLabs
+   * Returns null if no data found - user will enter manually
    */
   async searchFlight(
     flightNumber: string,
@@ -42,104 +43,11 @@ export class FlightApiService {
       console.error('FlightLabs error:', error.message);
     }
 
-    // Fallback to mock data for development/demo purposes
-    console.log('Using mock flight data for development');
-    return this.getMockFlightData(flightNumber, date);
+    // No data found - user will enter flight information manually
+    console.log(`No flight data found for ${flightNumber} on ${date}`);
+    return null;
   }
 
-  /**
-   * Get mock flight data for development/testing
-   * This simulates realistic flight data for common routes
-   */
-  private getMockFlightData(
-    flightNumber: string,
-    date: string,
-  ): FlightData | null {
-    // Extract airline code
-    const airlineCode = flightNumber.match(/^[A-Z]{2}/)?.[0] || '';
-
-    // Mock data for common flights
-    const mockFlights: Record<string, Partial<FlightData>> = {
-      'AF': {
-        airline: 'Air France',
-        departureAirport: 'CDG',
-        arrivalAirport: 'TLV',
-      },
-      'LY': {
-        airline: 'El Al',
-        departureAirport: 'TLV',
-        arrivalAirport: 'CDG',
-      },
-      'BA': {
-        airline: 'British Airways',
-        departureAirport: 'LHR',
-        arrivalAirport: 'CDG',
-      },
-      'LH': {
-        airline: 'Lufthansa',
-        departureAirport: 'FRA',
-        arrivalAirport: 'TLV',
-      },
-      'EZY': {
-        airline: 'easyJet',
-        departureAirport: 'ORY',
-        arrivalAirport: 'TLV',
-      },
-      'FR': {
-        airline: 'Ryanair',
-        departureAirport: 'BVA',
-        arrivalAirport: 'BGY',
-      },
-    };
-
-    const mockData = mockFlights[airlineCode] || mockFlights[airlineCode.substring(0, 2)];
-
-    if (!mockData) {
-      // Default mock data
-      return {
-        flightNumber,
-        airline: 'Demo Airline',
-        airlineCode,
-        departureAirport: 'CDG',
-        arrivalAirport: 'TLV',
-        departureTime: `${date}T10:00:00`,
-        arrivalTime: `${date}T15:30:00`,
-        flightDate: date.split('T')[0],
-        status: 'completed',
-        actualDepartureTime: `${date}T10:15:00`,
-        actualArrivalTime: `${date}T19:45:00`,
-        delayMinutes: 255, // 4h15min delay
-      };
-    }
-
-    // Create realistic mock data with delay
-    const departureDate = new Date(date);
-    const scheduledDeparture = new Date(departureDate);
-    scheduledDeparture.setHours(10, 0, 0);
-
-    const scheduledArrival = new Date(scheduledDeparture);
-    scheduledArrival.setHours(scheduledArrival.getHours() + 5, 30, 0);
-
-    // Add random delay between 3-6 hours
-    const delayMinutes = 180 + Math.floor(Math.random() * 180);
-    const actualArrival = new Date(scheduledArrival);
-    actualArrival.setMinutes(actualArrival.getMinutes() + delayMinutes);
-
-    return {
-      flightNumber,
-      airline: mockData.airline || 'Demo Airline',
-      airlineCode,
-      departureAirport: mockData.departureAirport || 'CDG',
-      arrivalAirport: mockData.arrivalAirport || 'TLV',
-      departureTime: scheduledDeparture.toISOString(),
-      arrivalTime: scheduledArrival.toISOString(),
-      flightDate: date.split('T')[0],
-      status: 'completed',
-      actualDepartureTime: scheduledDeparture.toISOString(),
-      actualArrivalTime: actualArrival.toISOString(),
-      delayMinutes,
-    };
-  }
 
   /**
    * Search using FlightAPI.io
