@@ -143,6 +143,7 @@ export class FlightApiService {
 
   /**
    * Search using FlightAPI.io
+   * Note: FlightAPI.io works best for current/recent flights (today ± 1-2 days)
    */
   private async searchFlightApi(
     flightNumber: string,
@@ -156,38 +157,65 @@ export class FlightApiService {
     const formattedDate = date.split('T')[0].replace(/-/g, '');
 
     // Extract airline code (e.g., "AF" from "AF869")
-    const airlineCode = flightNumber.match(/^[A-Z]{2}/)?.[0] || '';
+    const airlineCode = flightNumber.match(/^[A-Z]{2,3}/)?.[0] || '';
 
     // Extract flight number digits (e.g., "869" from "AF869")
-    const flightNum = flightNumber.replace(/[A-Z]+/, '');
+    const flightNum = flightNumber.replace(/^[A-Z]+/, '');
 
     // FlightAPI.io Flight Tracking API endpoint
     const url = `${this.flightApiBaseUrl}/airline/${this.flightApiKey}?num=${flightNum}&name=${airlineCode}&date=${formattedDate}`;
 
-    console.log('FlightAPI.io URL:', url);
+    console.log(`FlightAPI.io: Searching ${flightNumber} for ${formattedDate}`);
 
     try {
       const response = await fetch(url);
 
       if (!response.ok) {
-        console.log(`FlightAPI.io request failed: ${response.status}`);
-        throw new Error(`FlightAPI request failed: ${response.status}`);
+        console.log(`FlightAPI.io: HTTP ${response.status}`);
+
+        // Try to get error message
+        const errorData = await response.json().catch(() => null);
+        if (errorData?.message) {
+          console.log(`FlightAPI.io error: ${errorData.message}`);
+        }
+
+        return null;
       }
 
       const data = await response.json();
 
+      // Check if it's an error response
+      if (data.success === false) {
+        console.log(`FlightAPI.io: ${data.message || 'Flight not found'}`);
+        return null;
+      }
+
       if (!data || !Array.isArray(data) || data.length < 2) {
-        console.log('FlightAPI.io: No valid data returned');
+        console.log('FlightAPI.io: Invalid data structure');
         return null;
       }
 
       // FlightAPI.io returns an array with departure and arrival objects
       const departure = data[0]?.departure;
       const arrival = data[1]?.arrival;
+      const aircraft = data[2]?.aircraft;
+      const status = data[3]?.status;
 
       if (!departure || !arrival) {
         console.log('FlightAPI.io: Missing departure or arrival data');
         return null;
+      }
+
+      console.log('FlightAPI.io: Flight found!', {
+        from: departure.airportCode,
+        to: arrival.airportCode,
+        status: status
+      });
+
+      // Calculate delay if we have actual times
+      let delayMinutes: number | undefined;
+      if (arrival.onGroundTime && arrival.scheduledTime) {
+        delayMinutes = this.calculateDelay(arrival.scheduledTime, arrival.onGroundTime);
       }
 
       return {
@@ -199,13 +227,14 @@ export class FlightApiService {
         departureTime: departure.scheduledTime,
         arrivalTime: arrival.scheduledTime,
         flightDate: date.split('T')[0],
-        status: '', // FlightAPI.io doesn't return status in this format
-        actualDepartureTime: departure.offGroundTime,
-        actualArrivalTime: arrival.onGroundTime,
+        status: status || '',
+        actualDepartureTime: departure.offGroundTime || departure.outGateTime,
+        actualArrivalTime: arrival.onGroundTime || arrival.inGateTime,
+        delayMinutes,
       };
     } catch (error) {
-      console.error('FlightAPI.io request error:', error);
-      throw error;
+      console.error('FlightAPI.io error:', error.message);
+      return null;
     }
   }
 
