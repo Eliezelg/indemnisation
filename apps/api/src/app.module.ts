@@ -10,6 +10,7 @@ import { CompensationModule } from './compensation/compensation.module';
 import { EmailModule } from './email/email.module';
 import { DocumentsModule } from './documents/documents.module';
 import { FlightApiModule } from './flight-api/flight-api.module';
+import { StatsModule } from './stats/stats.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { FlightApiModule } from './flight-api/flight-api.module';
     CompensationModule,
     DocumentsModule,
     FlightApiModule,
+    StatsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

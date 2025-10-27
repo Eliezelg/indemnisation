@@ -72,6 +72,7 @@ model Claim {
   // Relations
   user                 User           @relation(fields: [userId], references: [id])
   documents            Document[]
+  notes                ClaimNote[]
 
   @@index([userId])
   @@index([claimNumber])
@@ -149,4 +150,22 @@ enum DocumentType {
   ID_DOCUMENT         // Pièce d'identité
   PROOF_OF_DELAY      // Preuve du retard (certificat de retard)
   OTHER               // Autre document
+}
+
+// ============================================
+// CLAIM NOTES (internal admin notes)
+// ============================================
+
+model ClaimNote {
+  id          String   @id @default(cuid())
+  claimId     String
+  content     String   @db.Text
+  createdBy   String   // User ID (admin qui a créé la note)
+  createdAt   DateTime @default(now())
+
+  // Relations
+  claim       Claim    @relation(fields: [claimId], references: [id], onDelete: Cascade)
+
+  @@index([claimId])
+  @@index([createdAt])
 }
