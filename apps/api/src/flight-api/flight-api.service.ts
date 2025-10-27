@@ -257,16 +257,22 @@ export class FlightApiService {
     const airlineCode = flightNumber.match(/^[A-Z]{2,3}/)?.[0] || '';
     const flightNum = flightNumber.replace(/^[A-Z]{2,3}/, '');
 
-    // Map airlines to their hub airports
+    // Map airlines to their hub airports (most likely departure airports)
     const airlineHubs: Record<string, string[]> = {
-      'AF': ['CDG', 'ORY'],
-      'LY': ['TLV'],
-      'BA': ['LHR'],
-      'LH': ['FRA'],
-      'EZY': ['ORY', 'CDG'],
-      'FR': ['BVA'],
-      'AA': ['JFK', 'LAX'],
-      'DL': ['JFK', 'LAX'],
+      'AF': ['CDG', 'ORY'], // Air France: Paris CDG, Orly
+      'LY': ['TLV'], // El Al: Tel Aviv
+      'BA': ['LHR', 'LGW'], // British Airways: Heathrow, Gatwick
+      'LH': ['FRA', 'MUC'], // Lufthansa: Frankfurt, Munich
+      'EZY': ['ORY', 'CDG', 'LGW'], // easyJet: Paris, London
+      'FR': ['BVA', 'DUB'], // Ryanair: Paris Beauvais, Dublin
+      'AA': ['JFK', 'LAX', 'DFW'], // American Airlines
+      'DL': ['JFK', 'LAX', 'ATL'], // Delta Air Lines
+      'KL': ['AMS'], // KLM: Amsterdam
+      'IB': ['MAD'], // Iberia: Madrid
+      'AZ': ['FCO'], // ITA Airways: Rome
+      'TK': ['IST'], // Turkish Airlines: Istanbul
+      'EK': ['DXB'], // Emirates: Dubai
+      'QR': ['DOH'], // Qatar Airways: Doha
     };
 
     // Get likely airports for this airline
