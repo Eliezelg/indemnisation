@@ -211,7 +211,7 @@ export class FlightApiService {
 
   /**
    * Search using FlightLabs API
-   * Uses the historical flights endpoint for past flights
+   * Uses the historical flights endpoint for past flights with flight_num filter
    */
   private async searchFlightLabs(
     flightNumber: string,
@@ -224,15 +224,11 @@ export class FlightApiService {
     // Format: YYYY-MM-DD
     const formattedDate = date.split('T')[0];
 
-    // Try the historical endpoint first for past flights
-    // The historical endpoint requires a time range
-    const dateFrom = `${formattedDate}T00:00`;
-    const dateTo = `${formattedDate}T23:59`;
-
-    // Extract airline code to guess most likely departure airport
+    // Extract airline code and flight number
     const airlineCode = flightNumber.match(/^[A-Z]{2,3}/)?.[0] || '';
+    const flightNum = flightNumber.replace(/^[A-Z]{2,3}/, '');
 
-    // Map airlines to their hub airports to reduce API calls
+    // Map airlines to their hub airports
     const airlineHubs: Record<string, string[]> = {
       'AF': ['CDG', 'ORY'],
       'LY': ['TLV'],
@@ -244,73 +240,78 @@ export class FlightApiService {
       'DL': ['JFK', 'LAX'],
     };
 
-    // Get likely airports for this airline, fall back to common European airports
+    // Get likely airports for this airline
     const likelyAirports = airlineHubs[airlineCode] || ['CDG', 'TLV', 'LHR'];
 
     for (const airportCode of likelyAirports) {
-      // Try departure from this airport
-      const url = `https://goflightlabs.com/historical?access_key=${this.flightLabsKey}&code=${airportCode}&date_from=${dateFrom}&date_to=${dateTo}&type=departure`;
+      // Use historical endpoint with flight_num and airline_iata filters
+      // This is much more efficient than downloading all flights
+      const url = `https://goflightlabs.com/historical?access_key=${this.flightLabsKey}&code=${airportCode}&type=departure&date=${formattedDate}&airline_iata=${airlineCode}&flight_num=${flightNum}`;
 
-      console.log(`FlightLabs: Trying ${airportCode} for ${flightNumber}`);
+      console.log(`FlightLabs Historical: Searching ${flightNumber} from ${airportCode}`);
 
       try {
         const response = await fetch(url);
 
         if (!response.ok) {
           if (response.status === 429) {
-            console.log('FlightLabs: Rate limit reached, falling back to mock data');
+            console.log('FlightLabs: Rate limit reached');
             throw new Error('Rate limit reached');
           }
-          console.log(`FlightLabs: ${airportCode} returned ${response.status}`);
+          console.log(`FlightLabs: ${response.status} for ${airportCode}`);
           continue;
         }
 
-        const data = await response.json();
+        const result = await response.json();
 
-        if (!data || !Array.isArray(data) || data.length === 0) {
-          console.log(`FlightLabs: No data for ${airportCode}`);
+        // Check if trial limit exceeded or no success
+        if (!result || result.success === false) {
+          if (result.message?.includes('trial') || result.message?.includes('exceeded')) {
+            console.log('FlightLabs: Trial limit exceeded, using mock data');
+            throw new Error('Trial limit exceeded');
+          }
+          console.log(`FlightLabs: No success for ${flightNumber} from ${airportCode}`);
           continue;
         }
 
-        // Find the flight with matching flight number
-        const flight = data.find(f =>
-          f.flight_iata === flightNumber ||
-          f.flight_number === flightNumber ||
-          `${f.airline?.iata}${f.flight_number}` === flightNumber
-        );
-
-        if (!flight) {
-          console.log(`FlightLabs: ${flightNumber} not in ${airportCode} departures`);
+        if (!result.data || result.data.length === 0) {
+          console.log(`FlightLabs: No data for ${flightNumber} from ${airportCode}`);
           continue;
         }
 
-        console.log('FlightLabs: Flight found!', flight);
+        // The historical API returns a different structure than advanced-flights-schedules
+        // It has a "movement" object
+        const flight = result.data[0];
 
-        // Calculate delay if we have actual times
+        console.log('FlightLabs: Flight found!', JSON.stringify(flight, null, 2));
+
+        // Parse the response based on the historical API structure
+        // The movement contains departure info, we need to find arrival info
+        const flightNumberFromResponse = flight.number || flightNumber;
+        const airlineInfo = flight.airline || {};
+
+        // Calculate delay if available
         let delayMinutes = 0;
-        if (flight.arrival?.actual && flight.arrival?.scheduled) {
-          const actual = new Date(flight.arrival.actual);
-          const scheduled = new Date(flight.arrival.scheduled);
-          delayMinutes = Math.floor((actual.getTime() - scheduled.getTime()) / 60000);
+        if (flight.delayed) {
+          delayMinutes = flight.delayed;
         }
 
         return {
-          flightNumber: flight.flight_iata || flightNumber,
-          airline: flight.airline?.name || '',
-          airlineCode: flight.airline?.iata || '',
-          departureAirport: flight.departure?.iata || '',
-          arrivalAirport: flight.arrival?.iata || '',
-          departureTime: flight.departure?.scheduled,
-          arrivalTime: flight.arrival?.scheduled,
+          flightNumber: flightNumberFromResponse,
+          airline: airlineInfo.name || '',
+          airlineCode: airlineInfo.iata || airlineCode,
+          departureAirport: airportCode,
+          arrivalAirport: flight.movement?.airport?.code || '',
+          departureTime: flight.movement?.scheduledTime?.utc,
+          arrivalTime: flight.movement?.actualTime?.utc,
           flightDate: formattedDate,
           status: flight.status || 'completed',
-          actualDepartureTime: flight.departure?.actual,
-          actualArrivalTime: flight.arrival?.actual,
+          actualDepartureTime: flight.movement?.actualTime?.utc,
+          actualArrivalTime: flight.movement?.actualTime?.utc,
           delayMinutes: delayMinutes > 0 ? delayMinutes : 0,
         };
       } catch (error) {
         console.error(`FlightLabs error for ${airportCode}:`, error.message);
-        // If we hit rate limit, stop trying other airports
         if (error.message === 'Rate limit reached') {
           throw error;
         }
