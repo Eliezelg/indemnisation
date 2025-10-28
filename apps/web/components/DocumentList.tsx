@@ -71,15 +71,46 @@ export default function DocumentList({ claimId, onDocumentsChange }: DocumentLis
     }
   };
 
-  const handleDownload = async (documentId: string) => {
+  const handleDownload = async (documentId: string, fileName: string) => {
     try {
       const token = localStorage.getItem('accessToken');
-      window.open(
-        `http://localhost:3001/documents/${documentId}/download?token=${token}`,
-        '_blank'
+
+      // Fetch the file with authorization header
+      const response = await fetch(
+        `http://localhost:3001/documents/${documentId}/download`,
+        {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+          },
+        }
       );
+
+      if (!response.ok) {
+        throw new Error('Erreur lors du téléchargement');
+      }
+
+      // Get the blob from response
+      const blob = await response.blob();
+
+      // Create a temporary URL for the blob
+      const url = window.URL.createObjectURL(blob);
+
+      // Create a temporary anchor element and trigger download
+      const a = document.createElement('a');
+      a.style.display = 'none';
+      a.href = url;
+      a.download = fileName;
+      document.body.appendChild(a);
+      a.click();
+
+      // Cleanup
+      setTimeout(() => {
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+      }, 100);
     } catch (err: any) {
-      alert(t('uploadError'));
+      alert(err.message || t('uploadError'));
     }
   };
 
@@ -212,7 +243,7 @@ export default function DocumentList({ claimId, onDocumentsChange }: DocumentLis
             </div>
             <div className="flex items-center gap-2 ml-4">
               <button
-                onClick={() => handleDownload(doc.id)}
+                onClick={() => handleDownload(doc.id, doc.fileName)}
                 className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
                 title="Télécharger"
               >

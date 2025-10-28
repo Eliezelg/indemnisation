@@ -1,34 +1,88 @@
-import { redirect } from 'next/navigation';
-import { getTranslations } from 'next-intl/server';
+'use client';
+
+import { use, useEffect, useState } from 'react';
+import { useRouter } from '@/i18n/routing';
+import { useTranslations } from 'next-intl';
 import AdminSidebar from './components/AdminSidebar';
 
-export async function generateMetadata({ params }: { params: { locale: string } }) {
-  const t = await getTranslations({ locale: params.locale, namespace: 'admin' });
-
-  return {
-    title: t('title'),
-    description: t('description'),
-  };
-}
-
-export default async function AdminLayout({
+export default function AdminLayout({
   children,
   params,
 }: {
   children: React.ReactNode;
-  params: { locale: string };
+  params: Promise<{ locale: string }>;
 }) {
-  // TODO: Add authentication check here
-  // For now, we'll allow access
-  // const session = await getSession();
-  // if (!session || session.user.role !== 'ADMIN') {
-  //   redirect(`/${params.locale}/login`);
-  // }
+  const { locale } = use(params);
+  const router = useRouter();
+  const t = useTranslations('admin');
+  const [isAuthorized, setIsAuthorized] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const token = localStorage.getItem('accessToken');
+        const userStr = localStorage.getItem('user');
+
+        if (!token || !userStr) {
+          router.push('/login');
+          return;
+        }
+
+        const user = JSON.parse(userStr);
+
+        // Check if user has ADMIN role
+        if (user.role !== 'ADMIN') {
+          alert('Access denied. Admin privileges required.');
+          router.push('/dashboard');
+          return;
+        }
+
+        // Verify token is still valid by making a test API call
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/stats/overview`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+          },
+        });
+
+        if (!response.ok) {
+          localStorage.removeItem('accessToken');
+          localStorage.removeItem('user');
+          router.push('/login');
+          return;
+        }
+
+        setIsAuthorized(true);
+      } catch (error) {
+        console.error('Auth check failed:', error);
+        router.push('/login');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    checkAuth();
+  }, [router]);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Vérification des permissions...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!isAuthorized) {
+    return null;
+  }
 
   return (
     <div className="flex min-h-screen bg-gray-50">
       {/* Sidebar */}
-      <AdminSidebar locale={params.locale} />
+      <AdminSidebar locale={locale} />
 
       {/* Main content */}
       <div className="flex-1 lg:ml-64">

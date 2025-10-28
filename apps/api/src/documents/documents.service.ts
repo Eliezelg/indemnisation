@@ -5,7 +5,7 @@ import {
   ForbiddenException,
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { DocumentType } from '@prisma/client';
+import { DocumentType, DocumentStatus } from '@prisma/client';
 import * as fs from 'fs/promises';
 import * as path from 'path';
 
@@ -152,6 +152,72 @@ export class DocumentsService {
 
     if (document.claim.userId !== userId) {
       throw new ForbiddenException("Vous n'avez pas accès à ce document");
+    }
+
+    const filePath = path.join(this.uploadDir, document.filePath);
+
+    try {
+      await fs.access(filePath);
+    } catch {
+      throw new NotFoundException('Fichier non trouvé sur le serveur');
+    }
+
+    return {
+      filePath,
+      fileName: document.fileName,
+      fileType: document.fileType,
+    };
+  }
+
+  // ====== ADMIN METHODS ======
+
+  async getAllPendingDocuments() {
+    return this.prisma.document.findMany({
+      where: { status: DocumentStatus.PENDING },
+      include: {
+        claim: {
+          include: {
+            user: {
+              select: {
+                id: true,
+                email: true,
+                firstName: true,
+                lastName: true,
+              },
+            },
+          },
+        },
+      },
+      orderBy: { uploadedAt: 'desc' },
+    });
+  }
+
+  async validateDocument(documentId: string, status: DocumentStatus, rejectionReason?: string) {
+    const document = await this.prisma.document.findUnique({
+      where: { id: documentId },
+    });
+
+    if (!document) {
+      throw new NotFoundException('Document non trouvé');
+    }
+
+    return this.prisma.document.update({
+      where: { id: documentId },
+      data: {
+        status,
+        validatedAt: new Date(),
+        rejectionReason: status === DocumentStatus.REJECTED ? rejectionReason : null,
+      },
+    });
+  }
+
+  async getDocumentFileAdmin(documentId: string) {
+    const document = await this.prisma.document.findUnique({
+      where: { id: documentId },
+    });
+
+    if (!document) {
+      throw new NotFoundException('Document non trouvé');
     }
 
     const filePath = path.join(this.uploadDir, document.filePath);

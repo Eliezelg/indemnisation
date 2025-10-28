@@ -57,8 +57,8 @@ export default function AdminClaimsPage() {
 
   const fetchClaims = async () => {
     try {
-      const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:3001/claims', {
+      const token = localStorage.getItem('accessToken');
+      const response = await fetch('http://localhost:3001/admin/claims', {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
@@ -241,9 +241,9 @@ export default function AdminClaimsPage() {
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                       <div>
                         <div className="font-medium">
-                          {claim.user.firstName} {claim.user.lastName}
+                          {claim.user?.firstName || 'N/A'} {claim.user?.lastName || ''}
                         </div>
-                        <div className="text-gray-500">{claim.user.email}</div>
+                        <div className="text-gray-500">{claim.user?.email || 'N/A'}</div>
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
@@ -274,7 +274,7 @@ export default function AdminClaimsPage() {
                       </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                      {claim.recommendedAmount.toFixed(2)} €
+                      {claim.recommendedAmount ? Number(claim.recommendedAmount).toFixed(2) : '0.00'} €
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                       <Link

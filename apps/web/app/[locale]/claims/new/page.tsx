@@ -7,6 +7,8 @@ import { useTranslations } from 'next-intl';
 import FileUpload from '@/components/FileUpload';
 import DocumentList from '@/components/DocumentList';
 import { DocumentType } from '@/types/document';
+import AirportAutocomplete from '@/components/AirportAutocomplete';
+import { validateFlightNumber, formatFlightNumber } from '@/utils/flightValidation';
 
 const AIRPORTS = [
   { code: 'CDG', name: 'Paris Charles de Gaulle', city: 'Paris', country: 'France' },
@@ -41,6 +43,7 @@ export default function NewClaimPage() {
   const [searchingFlight, setSearchingFlight] = useState(false);
   const [flightFound, setFlightFound] = useState(false);
   const [airlineLogo, setAirlineLogo] = useState('');
+  const [flightNumberError, setFlightNumberError] = useState('');
 
   // Parse and translate reasoning from backend
   const translateReasoning = (reasoning: string): string => {
@@ -166,18 +169,53 @@ export default function NewClaimPage() {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
 
+    // Validate and format flight number
+    if (name === 'flightNumber') {
+      const formatted = formatFlightNumber(value);
+      const validation = validateFlightNumber(formatted);
+
+      if (value && !validation.isValid) {
+        setFlightNumberError(validation.error || '');
+      } else {
+        setFlightNumberError('');
+      }
+
+      setFormData(prev => ({
+        ...prev,
+        [name]: formatted,
+      }));
+
+      // Trigger flight search when both flightNumber and date are filled
+      if (formatted && formData.flightDate && validation.isValid) {
+        searchFlightInfo(formatted, formData.flightDate);
+      }
+
+      return;
+    }
+
     setFormData(prev => ({
       ...prev,
       [name]: value,
     }));
 
     // Trigger flight search when both flightNumber and date are filled
-    if (name === 'flightNumber' || name === 'flightDate') {
+    if (name === 'flightDate') {
       const newFormData = { ...formData, [name]: value };
-      if (newFormData.flightNumber && newFormData.flightDate) {
-        searchFlightInfo(newFormData.flightNumber, newFormData.flightDate);
+      if (newFormData.flightNumber && value) {
+        const validation = validateFlightNumber(newFormData.flightNumber);
+        if (validation.isValid) {
+          searchFlightInfo(newFormData.flightNumber, value);
+        }
       }
     }
+  };
+
+  // Handler for airport autocomplete changes
+  const handleAirportChange = (field: 'departureAirport' | 'arrivalAirport', value: string) => {
+    setFormData(prev => ({
+      ...prev,
+      [field]: value,
+    }));
   };
 
   const DISRUPTION_TYPES = [
@@ -337,9 +375,15 @@ export default function NewClaimPage() {
                         value={formData.flightNumber}
                         onChange={handleChange}
                         placeholder={t('flightNumberPlaceholder')}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                          flightNumberError ? 'border-red-500' : 'border-gray-300'
+                        }`}
                         required
                       />
+                      {flightNumberError && (
+                        <p className="mt-1 text-sm text-red-500">{flightNumberError}</p>
+                      )}
+                      <p className="mt-1 text-xs text-gray-500">Format: AF123 (2 lettres + 1-4 chiffres)</p>
                     </div>
 
                     <div>
@@ -385,45 +429,21 @@ export default function NewClaimPage() {
                       </div>
                     )}
 
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        {t('departureAirport')} *
-                      </label>
-                      <select
-                        name="departureAirport"
-                        value={formData.departureAirport}
-                        onChange={handleChange}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        required
-                      >
-                        <option value="">{t('selectAirport')}</option>
-                        {AIRPORTS.map((airport) => (
-                          <option key={airport.code} value={airport.code}>
-                            {airport.code} - {airport.name} ({airport.city})
-                          </option>
-                        ))}
-                      </select>
-                    </div>
+                    <AirportAutocomplete
+                      value={formData.departureAirport}
+                      onChange={(value) => handleAirportChange('departureAirport', value)}
+                      label={t('departureAirport')}
+                      placeholder="Rechercher par code, ville ou pays..."
+                      required
+                    />
 
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        {t('arrivalAirport')} *
-                      </label>
-                      <select
-                        name="arrivalAirport"
-                        value={formData.arrivalAirport}
-                        onChange={handleChange}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        required
-                      >
-                        <option value="">{t('selectAirport')}</option>
-                        {AIRPORTS.map((airport) => (
-                          <option key={airport.code} value={airport.code}>
-                            {airport.code} - {airport.name} ({airport.city})
-                          </option>
-                        ))}
-                      </select>
-                    </div>
+                    <AirportAutocomplete
+                      value={formData.arrivalAirport}
+                      onChange={(value) => handleAirportChange('arrivalAirport', value)}
+                      label={t('arrivalAirport')}
+                      placeholder="Rechercher par code, ville ou pays..."
+                      required
+                    />
 
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">

@@ -86,10 +86,44 @@ export default function AdminClaimDetailPage() {
     }
   }, [id]);
 
+  const handleDownloadDocument = async (documentId: string, fileName: string) => {
+    try {
+      const token = localStorage.getItem('accessToken');
+      const response = await fetch(
+        `http://localhost:3001/admin/documents/${documentId}/download`,
+        {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error('Erreur lors du téléchargement');
+      }
+
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.style.display = 'none';
+      a.href = url;
+      a.download = fileName;
+      document.body.appendChild(a);
+      a.click();
+      setTimeout(() => {
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+      }, 100);
+    } catch (err: any) {
+      alert(err.message || 'Erreur lors du téléchargement');
+    }
+  };
+
   const fetchClaim = async () => {
     try {
-      const token = localStorage.getItem('token');
-      const response = await fetch(`http://localhost:3001/claims/${id}`, {
+      const token = localStorage.getItem('accessToken');
+      const response = await fetch(`http://localhost:3001/admin/claims/${id}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
@@ -111,7 +145,7 @@ export default function AdminClaimDetailPage() {
 
     setUpdating(true);
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('accessToken');
       const response = await fetch(`http://localhost:3001/claims/${claim.id}`, {
         method: 'PATCH',
         headers: {
@@ -222,7 +256,7 @@ export default function AdminClaimDetailPage() {
                 </div>
               </div>
               <div>
-                <div className="text-sm text-gray-500">Aéroport d'arrivée</div>
+                <div className="text-sm text-gray-500">Aéroport d&apos;arrivée</div>
                 <div className="font-medium flex items-center gap-2">
                   <MapPin size={16} />
                   {claim.arrivalAirport}
@@ -241,7 +275,7 @@ export default function AdminClaimDetailPage() {
                 <div className="text-sm text-gray-500">Montant recommandé</div>
                 <div className="font-medium text-green-600 flex items-center gap-2">
                   <Euro size={16} />
-                  {claim.recommendedAmount.toFixed(2)} €
+                  {claim.recommendedAmount ? Number(claim.recommendedAmount).toFixed(2) : '0.00'} €
                 </div>
               </div>
             </div>
@@ -311,14 +345,12 @@ export default function AdminClaimDetailPage() {
                         </div>
                       </div>
                     </div>
-                    <a
-                      href={`http://localhost:3001/documents/${doc.id}/download`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-indigo-600 hover:text-indigo-900 text-sm"
+                    <button
+                      onClick={() => handleDownloadDocument(doc.id, doc.fileName)}
+                      className="text-indigo-600 hover:text-indigo-900 text-sm font-medium transition-colors"
                     >
                       Télécharger
-                    </a>
+                    </button>
                   </div>
                 ))}
               </div>

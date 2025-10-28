@@ -196,4 +196,71 @@ export class ClaimsService {
 
     return `${prefix}${paddedNumber}`;
   }
+
+  // ====== ADMIN METHODS ======
+
+  /**
+   * Get all claims for admin (with user data)
+   */
+  async findAllForAdmin() {
+    return this.prisma.claim.findMany({
+      include: {
+        user: {
+          select: {
+            id: true,
+            email: true,
+            firstName: true,
+            lastName: true,
+            phone: true,
+          },
+        },
+      },
+      orderBy: { createdAt: 'desc' },
+    });
+  }
+
+  /**
+   * Get one claim for admin (with user data and documents)
+   */
+  async findOneForAdmin(id: string) {
+    const claim = await this.prisma.claim.findUnique({
+      where: { id },
+      include: {
+        user: {
+          select: {
+            id: true,
+            email: true,
+            firstName: true,
+            lastName: true,
+            phone: true,
+          },
+        },
+        documents: true,
+      },
+    });
+
+    if (!claim) {
+      throw new NotFoundException('Réclamation introuvable');
+    }
+
+    return claim;
+  }
+
+  /**
+   * Update claim status (admin only)
+   */
+  async updateStatus(claimId: string, status: string) {
+    const claim = await this.prisma.claim.findUnique({
+      where: { id: claimId },
+    });
+
+    if (!claim) {
+      throw new NotFoundException('Réclamation introuvable');
+    }
+
+    return this.prisma.claim.update({
+      where: { id: claimId },
+      data: { status: status as any },
+    });
+  }
 }

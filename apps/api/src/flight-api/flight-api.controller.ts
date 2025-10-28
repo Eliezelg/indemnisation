@@ -1,9 +1,9 @@
 import { Controller, Get, Query, BadRequestException } from '@nestjs/common';
-import { FlightApiService } from './flight-api.service';
+import { FlightApiNewService } from './flight-api-new.service';
 
 @Controller('flight-api')
 export class FlightApiController {
-  constructor(private flightApiService: FlightApiService) {}
+  constructor(private flightApiService: FlightApiNewService) {}
 
   @Get('search')
   async searchFlight(

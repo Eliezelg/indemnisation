@@ -11,6 +11,8 @@ import { EmailModule } from './email/email.module';
 import { DocumentsModule } from './documents/documents.module';
 import { FlightApiModule } from './flight-api/flight-api.module';
 import { StatsModule } from './stats/stats.module';
+import { AirportsModule } from './airports/airports.module';
+import { AirlinesModule } from './airlines/airlines.module';
 
 @Module({
   imports: [
@@ -26,6 +28,8 @@ import { StatsModule } from './stats/stats.module';
     DocumentsModule,
     FlightApiModule,
     StatsModule,
+    AirportsModule,
+    AirlinesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

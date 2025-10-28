@@ -1,6 +1,9 @@
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify';
+import multipart from '@fastify/multipart';
+import fastifyStatic from '@fastify/static';
+import { join } from 'path';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
@@ -8,6 +11,19 @@ async function bootstrap() {
     AppModule,
     new FastifyAdapter()
   );
+
+  // Register multipart for file uploads
+  await app.register(multipart, {
+    limits: {
+      fileSize: 5 * 1024 * 1024, // 5MB
+    },
+  });
+
+  // Register static for file serving
+  await app.register(fastifyStatic, {
+    root: join(process.cwd(), 'uploads'),
+    prefix: '/uploads/',
+  });
 
   // CORS configuration - accept multiple origins in dev
   app.enableCors({

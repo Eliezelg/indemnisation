@@ -1,6 +1,8 @@
 'use client';
 
 import { usePathname } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { useRouter } from '@/i18n/routing';
 import Link from 'next/link';
 import {
   LayoutDashboard,
@@ -8,15 +10,44 @@ import {
   Users,
   FolderOpen,
   Settings,
-  BarChart3
+  BarChart3,
+  LogOut
 } from 'lucide-react';
 
 interface SidebarProps {
   locale: string;
 }
 
+interface UserInfo {
+  firstName: string;
+  lastName: string;
+  email: string;
+}
+
 export default function AdminSidebar({ locale }: SidebarProps) {
   const pathname = usePathname();
+  const router = useRouter();
+  const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
+
+  useEffect(() => {
+    // Get user info from localStorage (stored during login)
+    const userStr = localStorage.getItem('user');
+    if (userStr) {
+      try {
+        const user = JSON.parse(userStr);
+        setUserInfo(user);
+      } catch (e) {
+        console.error('Failed to parse user info:', e);
+      }
+    }
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
+    localStorage.removeItem('user');
+    router.push('/login');
+  };
 
   const navigation = [
     {
@@ -96,20 +127,27 @@ export default function AdminSidebar({ locale }: SidebarProps) {
         </nav>
 
         {/* User info at bottom */}
-        <div className="absolute bottom-0 left-0 right-0 border-t border-gray-200 p-4">
+        <div className="absolute bottom-0 left-0 right-0 border-t border-gray-200 p-4 space-y-3">
           <div className="flex items-center gap-3">
             <div className="h-10 w-10 rounded-full bg-blue-600 flex items-center justify-center text-white font-medium">
-              A
+              {userInfo ? userInfo.firstName.charAt(0).toUpperCase() : 'A'}
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-sm font-medium text-gray-900 truncate">
-                Admin User
+                {userInfo ? `${userInfo.firstName} ${userInfo.lastName}` : 'Loading...'}
               </p>
               <p className="text-xs text-gray-500 truncate">
-                admin@flightclaim.com
+                {userInfo?.email || 'Loading...'}
               </p>
             </div>
           </div>
+          <button
+            onClick={handleLogout}
+            className="w-full flex items-center gap-2 px-3 py-2 text-sm font-medium text-red-600 hover:bg-red-50 rounded-md transition-colors"
+          >
+            <LogOut className="h-4 w-4" />
+            Déconnexion
+          </button>
         </div>
       </aside>
     </>

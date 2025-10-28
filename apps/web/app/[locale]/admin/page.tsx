@@ -62,19 +62,14 @@ export default function AdminDashboard() {
       setLoading(true);
 
       // Fetch all data in parallel
+      const token = localStorage.getItem('accessToken');
+      const headers = { 'Authorization': `Bearer ${token}` };
+
       const [overviewRes, monthlyRes, airlinesRes, recentRes] = await Promise.all([
-        fetch('http://localhost:3001/admin/stats/overview', {
-          headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
-        }),
-        fetch('http://localhost:3001/admin/stats/claims-by-month?months=6', {
-          headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
-        }),
-        fetch('http://localhost:3001/admin/stats/top-airlines?limit=5', {
-          headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
-        }),
-        fetch('http://localhost:3001/admin/stats/recent-claims?limit=10', {
-          headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
-        }),
+        fetch('http://localhost:3001/admin/stats/overview', { headers }),
+        fetch('http://localhost:3001/admin/stats/claims-by-month?months=6', { headers }),
+        fetch('http://localhost:3001/admin/stats/top-airlines?limit=5', { headers }),
+        fetch('http://localhost:3001/admin/stats/recent-claims?limit=10', { headers }),
       ]);
 
       if (overviewRes.ok) {
@@ -147,7 +142,7 @@ export default function AdminDashboard() {
         />
         <StatCard
           title="Avg. Amount"
-          value={`€${stats?.averageAmount.toFixed(0) || 0}`}
+          value={`€${stats?.averageAmount ? Number(stats.averageAmount).toFixed(0) : '0'}`}
           icon={TrendingUp}
           color="purple"
         />
@@ -263,7 +258,7 @@ export default function AdminDashboard() {
                     <StatusBadge status={claim.status} />
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    €{claim.recommendedAmount?.toFixed(2) || '0.00'}
+                    €{claim.recommendedAmount ? Number(claim.recommendedAmount).toFixed(2) : '0.00'}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                     {new Date(claim.createdAt).toLocaleDateString()}

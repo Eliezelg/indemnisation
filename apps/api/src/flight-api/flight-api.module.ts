@@ -5,6 +5,7 @@ import { FlightApiService } from './flight-api.service';
 import { FlightApiNewService } from './flight-api-new.service';
 import { FlightAPIProvider } from './providers/flightapi.provider';
 import { MockFlightProvider } from './providers/mock.provider';
+import { FlightCacheService } from './cache/flight-cache.service';
 
 @Module({
   imports: [HttpModule],
@@ -14,6 +15,7 @@ import { MockFlightProvider } from './providers/mock.provider';
     FlightApiNewService, // New service with provider pattern
     FlightAPIProvider,
     MockFlightProvider,
+    FlightCacheService,
   ],
   exports: [FlightApiService, FlightApiNewService],
 })

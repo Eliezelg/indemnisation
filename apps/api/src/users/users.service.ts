@@ -68,4 +68,52 @@ export class UsersService {
 
     return user;
   }
+
+  // ====== ADMIN METHODS ======
+
+  /**
+   * Get all users (admin only)
+   */
+  async findAll() {
+    return this.prisma.user.findMany({
+      select: {
+        id: true,
+        email: true,
+        firstName: true,
+        lastName: true,
+        phone: true,
+        role: true,
+        emailVerified: true,
+        preferredLocale: true,
+        createdAt: true,
+        _count: {
+          select: {
+            claims: true,
+          },
+        },
+      },
+      orderBy: { createdAt: 'desc' },
+    });
+  }
+
+  /**
+   * Get user statistics
+   */
+  async getUserStats() {
+    const totalUsers = await this.prisma.user.count();
+    const adminUsers = await this.prisma.user.count({
+      where: { role: 'ADMIN' },
+    });
+    const verifiedUsers = await this.prisma.user.count({
+      where: { emailVerified: true },
+    });
+
+    return {
+      totalUsers,
+      adminUsers,
+      clientUsers: totalUsers - adminUsers,
+      verifiedUsers,
+      unverifiedUsers: totalUsers - verifiedUsers,
+    };
+  }
 }
