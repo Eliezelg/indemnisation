@@ -5,70 +5,83 @@ import { Plane } from 'lucide-react';
 
 interface Airline {
   name: string;
-  logo: string;
+  code: string;
   gradient: string;
+  emoji?: string;
 }
 
 const airlines: Airline[] = [
   {
     name: 'Air France',
-    logo: 'AF',
-    gradient: 'from-blue-600 to-blue-800'
+    code: 'AF',
+    gradient: 'from-blue-600 to-blue-800',
+    emoji: '🇫🇷'
   },
   {
     name: 'Ryanair',
-    logo: 'FR',
-    gradient: 'from-yellow-500 to-blue-600'
+    code: 'FR',
+    gradient: 'from-yellow-500 to-blue-600',
+    emoji: '✈️'
   },
   {
     name: 'EasyJet',
-    logo: 'EJ',
-    gradient: 'from-orange-500 to-orange-600'
+    code: 'EJ',
+    gradient: 'from-orange-500 to-orange-600',
+    emoji: '🧡'
   },
   {
     name: 'Lufthansa',
-    logo: 'LH',
-    gradient: 'from-yellow-400 to-blue-600'
+    code: 'LH',
+    gradient: 'from-yellow-400 to-blue-600',
+    emoji: '🇩🇪'
   },
   {
     name: 'El Al',
-    logo: 'LY',
-    gradient: 'from-blue-500 to-blue-700'
+    code: 'LY',
+    gradient: 'from-blue-500 to-blue-700',
+    emoji: '🇮🇱'
   },
   {
     name: 'Wizz Air',
-    logo: 'W6',
-    gradient: 'from-pink-500 to-purple-600'
+    code: 'W6',
+    gradient: 'from-pink-500 to-purple-600',
+    emoji: '💜'
   },
   {
     name: 'Vueling',
-    logo: 'VY',
-    gradient: 'from-yellow-400 to-orange-500'
+    code: 'VY',
+    gradient: 'from-yellow-400 to-orange-500',
+    emoji: '🇪🇸'
   },
   {
     name: 'Transavia',
-    logo: 'HV',
-    gradient: 'from-green-500 to-green-700'
+    code: 'HV',
+    gradient: 'from-green-500 to-green-700',
+    emoji: '🇳🇱'
   },
   {
     name: 'British Airways',
-    logo: 'BA',
-    gradient: 'from-blue-800 to-red-600'
+    code: 'BA',
+    gradient: 'from-blue-800 to-red-600',
+    emoji: '🇬🇧'
   },
   {
     name: 'KLM',
-    logo: 'KL',
-    gradient: 'from-blue-400 to-blue-600'
+    code: 'KL',
+    gradient: 'from-blue-400 to-blue-600',
+    emoji: '💙'
   },
   {
     name: 'Iberia',
-    logo: 'IB',
-    gradient: 'from-red-500 to-yellow-400'
+    code: 'IB',
+    gradient: 'from-red-500 to-yellow-400',
+    emoji: '❤️'
   },
   {
     name: 'Turkish Airlines',
-    logo: 'TK',
-    gradient: 'from-red-600 to-red-800'
+    code: 'TK',
+    gradient: 'from-red-600 to-red-800',
+    emoji: '🇹🇷'
   }
 ];
 
@@ -108,9 +121,14 @@ export default function AirlinesSection() {
               >
                 <div className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border border-gray-100">
                   {/* Logo Circle */}
-                  <div className={`w-20 h-20 mx-auto mb-4 rounded-full bg-gradient-to-br ${airline.gradient} flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300`}>
-                    <span className="text-white font-bold text-lg">
-                      {airline.logo}
+                  <div className={`w-20 h-20 mx-auto mb-4 rounded-full bg-gradient-to-br ${airline.gradient} flex flex-col items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300`}>
+                    {airline.emoji && (
+                      <span className="text-3xl mb-1">
+                        {airline.emoji}
+                      </span>
+                    )}
+                    <span className="text-white font-bold text-xs">
+                      {airline.code}
                     </span>
                   </div>
 
