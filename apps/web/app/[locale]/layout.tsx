@@ -1,11 +1,29 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, JetBrains_Mono } from "next/font/google";
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
 import { getDirection, type Locale } from '@/i18n.config';
 import "../globals.css";
 
-const inter = Inter({ subsets: ["latin"] });
+// Premium fonts configuration
+const inter = Inter({
+  subsets: ["latin"],
+  variable: '--font-body',
+  display: 'swap',
+});
+
+const sora = Inter({
+  subsets: ["latin"],
+  variable: '--font-display',
+  display: 'swap',
+  weight: ['400', '500', '600', '700', '800'],
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ["latin"],
+  variable: '--font-mono',
+  display: 'swap',
+});
 
 export const metadata: Metadata = {
   title: "Indemnisation Vols - Réclamez jusqu'à 600€",
@@ -29,7 +47,7 @@ export default async function LocaleLayout({
 
   return (
     <html lang={locale} dir={direction}>
-      <body className={inter.className}>
+      <body className={`${inter.variable} ${sora.variable} ${jetbrainsMono.variable} font-body antialiased`}>
         <NextIntlClientProvider messages={messages}>
           {children}
         </NextIntlClientProvider>
