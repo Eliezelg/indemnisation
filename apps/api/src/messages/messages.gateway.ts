@@ -8,10 +8,10 @@ import {
   MessageBody,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
-import { Logger, UseGuards } from '@nestjs/common';
-import { MessagesService } from './messages.service';
+import { Logger } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { LoggerService } from '../logger/logger.service';
+import { PrismaService } from '../prisma/prisma.service';
 
 interface AuthenticatedSocket extends Socket {
   userId?: string;
@@ -34,9 +34,9 @@ export class MessagesGateway implements OnGatewayConnection, OnGatewayDisconnect
   private typingUsers = new Map<string, Set<string>>(); // claimId -> Set<userId>
 
   constructor(
-    private readonly messagesService: MessagesService,
     private readonly jwtService: JwtService,
     private readonly loggerService: LoggerService,
+    private readonly prisma: PrismaService,
   ) {}
 
   async handleConnection(client: AuthenticatedSocket) {
@@ -151,17 +151,22 @@ export class MessagesGateway implements OnGatewayConnection, OnGatewayDisconnect
     @MessageBody() data: { messageId: string },
   ) {
     try {
-      const message = await this.messagesService.markAsRead(
-        client.userId,
-        client.userRole,
-        data.messageId,
-      );
+      // Mark as read directly in DB
+      const message = await this.prisma.message.update({
+        where: { id: data.messageId },
+        data: {
+          isRead: true,
+          readAt: new Date(),
+        },
+      });
 
       // Notify sender that message was read
       this.emitToUser(message.senderId, 'message_read_receipt', {
         messageId: message.id,
         readAt: message.readAt,
       });
+
+      this.loggerService.log(`Message ${data.messageId} marked as read by ${client.userId}`, 'MessagesGateway');
 
       return { success: true };
     } catch (error) {
