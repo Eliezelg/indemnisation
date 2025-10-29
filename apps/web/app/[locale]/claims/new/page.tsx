@@ -8,6 +8,7 @@ import FileUpload from '@/components/FileUpload';
 import DocumentList from '@/components/DocumentList';
 import { DocumentType } from '@/types/document';
 import AirportAutocomplete from '@/components/AirportAutocomplete';
+import AirlineAutocomplete from '@/components/AirlineAutocomplete';
 import { validateFlightNumber, formatFlightNumber } from '@/utils/flightValidation';
 
 const AIRPORTS = [
@@ -445,19 +446,12 @@ export default function NewClaimPage() {
                       required
                     />
 
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        {t('airline')}
-                      </label>
-                      <input
-                        type="text"
-                        name="airline"
-                        value={formData.airline}
-                        onChange={handleChange}
-                        placeholder={t('airlinePlaceholder')}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      />
-                    </div>
+                    <AirlineAutocomplete
+                      value={formData.airline}
+                      onChange={(value) => setFormData(prev => ({ ...prev, airline: value }))}
+                      label={t('airline')}
+                      placeholder="Rechercher par code ou nom..."
+                    />
                   </div>
 
                   <button
