@@ -13,6 +13,7 @@ import { FlightApiModule } from './flight-api/flight-api.module';
 import { StatsModule } from './stats/stats.module';
 import { AirportsModule } from './airports/airports.module';
 import { AirlinesModule } from './airlines/airlines.module';
+import { MessagesModule } from './messages/messages.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { AirlinesModule } from './airlines/airlines.module';
     StatsModule,
     AirportsModule,
     AirlinesModule,
+    MessagesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

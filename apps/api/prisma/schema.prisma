@@ -34,6 +34,8 @@ model User {
 
   // Relations
   claims          Claim[]
+  sentMessages    Message[] @relation("SentMessages")
+  receivedMessages Message[] @relation("ReceivedMessages")
 
   @@index([email])
 }
@@ -79,6 +81,7 @@ model Claim {
   user                 User           @relation(fields: [userId], references: [id])
   documents            Document[]
   notes                ClaimNote[]
+  messages             Message[]
 
   @@index([userId])
   @@index([claimNumber])
@@ -131,23 +134,44 @@ model Airport {
 }
 
 // ============================================
+// AIRLINES
+// ============================================
+
+model Airline {
+  id            String   @id @default(cuid())
+  iata          String   @unique // 2-letter IATA code (AF, LY, BA, etc.)
+  icao          String?  // 3-letter ICAO code
+  name          String
+  country       String   // ISO 2-letter code
+  alliance      String?  // Star Alliance, SkyTeam, Oneworld, etc.
+  active        Boolean  @default(true)
+  createdAt     DateTime @default(now())
+
+  @@index([iata])
+  @@index([country])
+  @@index([alliance])
+}
+
+// ============================================
 // DOCUMENTS (supporting documents for claims)
 // ============================================
 
 model Document {
-  id              String      @id @default(cuid())
+  id              String         @id @default(cuid())
   claimId         String
-  fileName        String      // Original filename
-  fileType        String      // MIME type (image/jpeg, application/pdf, etc.)
-  fileSize        Int         // Size in bytes
-  filePath        String      // Storage path
+  fileName        String         // Original filename
+  fileType        String         // MIME type (image/jpeg, application/pdf, etc.)
+  fileSize        Int            // Size in bytes
+  filePath        String         // Storage path
   documentType    DocumentType
-  uploadedAt      DateTime    @default(now())
+  status          DocumentStatus @default(PENDING)
+  uploadedAt      DateTime       @default(now())
 
   // Relations
-  claim           Claim       @relation(fields: [claimId], references: [id], onDelete: Cascade)
+  claim           Claim          @relation(fields: [claimId], references: [id], onDelete: Cascade)
 
   @@index([claimId])
+  @@index([status])
 }
 
 enum DocumentType {
@@ -156,6 +180,12 @@ enum DocumentType {
   ID_DOCUMENT         // Pièce d'identité
   PROOF_OF_DELAY      // Preuve du retard (certificat de retard)
   OTHER               // Autre document
+}
+
+enum DocumentStatus {
+  PENDING
+  APPROVED
+  REJECTED
 }
 
 // ============================================
@@ -174,4 +204,48 @@ model ClaimNote {
 
   @@index([claimId])
   @@index([createdAt])
+}
+
+// ============================================
+// INTERNAL MESSAGING SYSTEM
+// ============================================
+
+model Message {
+  id            String        @id @default(cuid())
+  claimId       String
+  senderId      String
+  receiverId    String?       // null for broadcast messages
+  content       String        @db.Text
+  isRead        Boolean       @default(false)
+  readAt        DateTime?
+  isAdminMessage Boolean      @default(false) // true if sent by admin
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  // Relations
+  claim         Claim         @relation(fields: [claimId], references: [id], onDelete: Cascade)
+  sender        User          @relation("SentMessages", fields: [senderId], references: [id])
+  receiver      User?         @relation("ReceivedMessages", fields: [receiverId], references: [id])
+  attachments   MessageAttachment[]
+
+  @@index([claimId])
+  @@index([senderId])
+  @@index([receiverId])
+  @@index([isRead])
+  @@index([createdAt])
+}
+
+model MessageAttachment {
+  id          String   @id @default(cuid())
+  messageId   String
+  fileName    String
+  fileType    String   // MIME type
+  fileSize    Int      // Size in bytes
+  filePath    String   // Storage path
+  uploadedAt  DateTime @default(now())
+
+  // Relations
+  message     Message  @relation(fields: [messageId], references: [id], onDelete: Cascade)
+
+  @@index([messageId])
 }

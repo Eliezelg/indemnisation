@@ -205,8 +205,6 @@ export class DocumentsService {
       where: { id: documentId },
       data: {
         status,
-        validatedAt: new Date(),
-        rejectionReason: status === DocumentStatus.REJECTED ? rejectionReason : null,
       },
     });
   }

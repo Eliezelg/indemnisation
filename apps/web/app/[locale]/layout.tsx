@@ -3,6 +3,7 @@ import { Inter, JetBrains_Mono } from "next/font/google";
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
 import { getDirection, type Locale } from '@/i18n.config';
+import ToastProvider from '@/components/toast/ToastProvider';
 import "../globals.css";
 
 // Premium fonts configuration
@@ -50,6 +51,7 @@ export default async function LocaleLayout({
       <body className={`${inter.variable} ${sora.variable} ${jetbrainsMono.variable} font-body antialiased`}>
         <NextIntlClientProvider messages={messages}>
           {children}
+          <ToastProvider />
         </NextIntlClientProvider>
       </body>
     </html>

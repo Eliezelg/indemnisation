@@ -8,6 +8,7 @@ import { useTranslations } from 'next-intl';
 import LanguageSelector from '@/components/LanguageSelector';
 import FileUpload from '@/components/FileUpload';
 import DocumentList from '@/components/DocumentList';
+import MessageThread from '@/components/MessageThread';
 import { DocumentType } from '@/types/document';
 
 interface Claim {
@@ -59,6 +60,8 @@ export default function ClaimDetailsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [submitting, setSubmitting] = useState(false);
+  const [userId, setUserId] = useState<string>('');
+  const [userRole, setUserRole] = useState<string>('USER');
 
   useEffect(() => {
     const fetchClaim = async () => {
@@ -67,6 +70,15 @@ export default function ClaimDetailsPage() {
       if (!token) {
         router.push('/login');
         return;
+      }
+
+      // Decode token to get user info
+      try {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        setUserId(payload.sub);
+        setUserRole(payload.role || 'USER');
+      } catch (e) {
+        console.error('Failed to decode token', e);
       }
 
       try {
@@ -402,6 +414,17 @@ export default function ClaimDetailsPage() {
               </div>
             )}
           </div>
+
+          {/* Messages */}
+          {claim.status !== 'DRAFT' && userId && (
+            <div className="mb-6">
+              <MessageThread
+                claimId={claim.id}
+                currentUserId={userId}
+                currentUserRole={userRole}
+              />
+            </div>
+          )}
 
           {/* Timeline */}
           <div className="bg-white rounded-lg shadow-lg p-8">
