@@ -1,13 +1,16 @@
-import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
+import { Injectable, NotFoundException, ForbiddenException, Inject, forwardRef } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateMessageDto } from './dto/create-message.dto';
 import { LoggerService } from '../logger/logger.service';
+import { MessagesGateway } from './messages.gateway';
 
 @Injectable()
 export class MessagesService {
   constructor(
     private prisma: PrismaService,
     private logger: LoggerService,
+    @Inject(forwardRef(() => MessagesGateway))
+    private messagesGateway: MessagesGateway,
   ) {}
 
   /**
@@ -72,6 +75,9 @@ export class MessagesService {
       `Message created: ${message.id} on claim ${dto.claimId} by ${userRole}`,
       'MessagesService',
     );
+
+    // Emit WebSocket event for real-time delivery
+    this.messagesGateway?.emitNewMessage(dto.claimId, message);
 
     return message;
   }
