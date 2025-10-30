@@ -1,6 +1,6 @@
 # 📚 DOCUMENTATION - DESIGN PREMIUM
 
-Bienvenue dans la documentation complète du design premium de la plateforme Indemnisation Pro.
+Bienvenue dans la documentation complète du design premium de la plateforme SkyLex.
 
 ---
 

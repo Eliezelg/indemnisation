@@ -2,7 +2,7 @@
 ║                                                                       ║
 ║           🎨 DESIGN PREMIUM - 100% COMPLET ✅                        ║
 ║                                                                       ║
-║              Indemnisation Pro - Landing Page                        ║
+║              SkyLex - Landing Page                        ║
 ║                                                                       ║
 ╚══════════════════════════════════════════════════════════════════════╝
 
@@ -129,4 +129,4 @@ Les médias (vidéos/images) sont OPTIONNELS et amélioreront le rendu.
 
 Créé le : 29 Octobre 2025
 Par : Claude (Anthropic)
-Pour : Indemnisation Pro
+Pour : SkyLex

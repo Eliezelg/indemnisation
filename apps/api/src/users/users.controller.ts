@@ -18,6 +18,6 @@ export class UsersController {
     @Request() req,
     @Body() dto: UpdatePreferredLocaleDto,
   ) {
-    return this.usersService.updatePreferredLocale(req.user.userId, dto.locale);
+    return this.usersService.updatePreferredLocale(req.user.id, dto.locale);
   }
 }

@@ -19,62 +19,132 @@ import { motion } from 'framer-motion';
 export default function Home() {
   const t = useTranslations('home');
   const tNav = useTranslations('nav');
+  const tCommon = useTranslations('common');
+  const tFooter = useTranslations('footer');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (
     <div className="min-h-screen bg-white" suppressHydrationWarning>
-      {/* Navigation Premium avec Glassmorphism */}
-      <nav className="fixed top-0 w-full z-50 backdrop-blur-md bg-white/80 border-b border-gray-200/50 shadow-sm">
-        <div className="container mx-auto px-4 sm:px-6 py-4">
+      {/* Navigation Premium Ultra Luxe */}
+      <motion.nav
+        initial={{ y: -100, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
+        className="fixed top-0 w-full z-50 backdrop-blur-xl bg-white/95 border-b border-gray-100 shadow-2xl shadow-black/5"
+      >
+        {/* Gradient Border Top */}
+        <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-blue-500 to-transparent opacity-50" />
+
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-5">
           <div className="flex items-center justify-between">
-            {/* Logo */}
-            <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center shadow-lg shadow-blue-500/30">
-                <Plane className="w-6 h-6 text-white" />
+            {/* Logo Premium */}
+            <motion.div
+              className="flex items-center space-x-3 group cursor-pointer"
+              whileHover={{ scale: 1.02 }}
+              transition={{ type: "spring", stiffness: 400, damping: 10 }}
+            >
+              <div className="relative">
+                <div className="absolute inset-0 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl blur-xl opacity-50 group-hover:opacity-75 transition-opacity" />
+                <div className="relative w-12 h-12 bg-gradient-to-br from-blue-500 via-blue-600 to-purple-600 rounded-2xl flex items-center justify-center shadow-2xl shadow-blue-500/40 group-hover:shadow-blue-500/60 transition-all">
+                  <Plane className="w-6 h-6 text-white transform group-hover:rotate-12 transition-transform duration-300" />
+                </div>
               </div>
-              <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                Indemnisation Pro
-              </span>
+              <div className="flex flex-col">
+                <span className="text-2xl font-display font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-blue-600 bg-clip-text text-transparent bg-[length:200%_auto] animate-gradient">
+                  {tCommon('appName')}
+                </span>
+                <span className="text-xs text-gray-500 font-medium tracking-wider uppercase">
+                  Premium Service
+                </span>
+              </div>
+            </motion.div>
+
+            {/* Desktop Menu Premium */}
+            <div className="hidden lg:flex items-center space-x-1">
+              {[
+                { href: '#how-it-works', label: tNav('howItWorks') },
+                { href: '#benefits', label: tNav('benefits') },
+                { href: '#faq', label: 'FAQ' }
+              ].map((item, index) => (
+                <motion.a
+                  key={item.href}
+                  href={item.href}
+                  initial={{ opacity: 0, y: -20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.1 + 0.2 }}
+                  className="relative px-5 py-2 text-gray-700 hover:text-blue-600 transition-all duration-300 text-base font-medium group"
+                >
+                  <span className="relative z-10">{item.label}</span>
+                  <div className="absolute inset-0 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  <div className="absolute bottom-0 left-4 right-4 h-0.5 bg-gradient-to-r from-blue-600 to-purple-600 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
+                </motion.a>
+              ))}
             </div>
 
-            {/* Desktop Menu */}
-            <div className="hidden md:flex items-center space-x-6">
-              <a href="#how-it-works" className="text-gray-700 hover:text-blue-600 transition-colors relative group text-sm font-medium">
-                Comment ça marche
-                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-600 group-hover:w-full transition-all" />
-              </a>
-              <a href="#benefits" className="text-gray-700 hover:text-blue-600 transition-colors relative group text-sm font-medium">
-                Avantages
-                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-600 group-hover:w-full transition-all" />
-              </a>
-              <a href="#faq" className="text-gray-700 hover:text-blue-600 transition-colors relative group text-sm font-medium">
-                FAQ
-                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-600 group-hover:w-full transition-all" />
-              </a>
-            </div>
+            {/* Actions Premium */}
+            <div className="flex items-center space-x-3">
+              {/* Language Selector */}
+              <motion.div
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.5 }}
+              >
+                <LanguageSelector />
+              </motion.div>
 
-            {/* CTA Buttons */}
-            <div className="flex items-center space-x-4">
-              <LanguageSelector />
-              <Link href="/login" className="text-gray-700 hover:text-blue-600 font-medium transition-colors text-sm hidden sm:block">
+              {/* Login Button */}
+              <Link
+                href="/login"
+                className="hidden md:flex items-center text-gray-700 hover:text-blue-600 font-semibold transition-all duration-300 text-base px-5 py-2 rounded-lg hover:bg-gray-50"
+              >
                 {tNav('login')}
               </Link>
-              <Link
-                href="/register"
-                className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-6 py-2 rounded-lg transition-all shadow-lg shadow-blue-500/30 text-sm font-medium items-center hidden sm:flex"
+
+              {/* Premium CTA Button */}
+              <motion.div
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.6 }}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
               >
-                {tNav('register')}
-                <ArrowRight className="ml-2 w-4 h-4" />
-              </Link>
+                <Link
+                  href="/register"
+                  className="hidden sm:flex items-center relative overflow-hidden group px-7 py-3 rounded-xl transition-all text-base font-bold"
+                >
+                  {/* Animated gradient background */}
+                  <div className="absolute inset-0 bg-gradient-to-r from-blue-600 via-purple-600 to-blue-600 bg-[length:200%_auto] animate-gradient" />
+
+                  {/* Shine effect */}
+                  <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+                  </div>
+
+                  {/* Content */}
+                  <span className="relative text-white flex items-center">
+                    {tNav('register')}
+                    <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                  </span>
+
+                  {/* Glow effect */}
+                  <div className="absolute inset-0 rounded-xl blur-xl bg-gradient-to-r from-blue-600 to-purple-600 opacity-50 group-hover:opacity-75 transition-opacity -z-10" />
+                </Link>
+              </motion.div>
+
               {/* Mobile Menu Button */}
-              <MobileMenuButton
-                isOpen={isMobileMenuOpen}
-                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              />
+              <div className="lg:hidden">
+                <MobileMenuButton
+                  isOpen={isMobileMenuOpen}
+                  onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                />
+              </div>
             </div>
           </div>
         </div>
-      </nav>
+
+        {/* Bottom subtle shadow */}
+        <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent" />
+      </motion.nav>
 
       {/* Mobile Menu */}
       <MobileMenu isOpen={isMobileMenuOpen} onClose={() => setIsMobileMenuOpen(false)} />
@@ -102,7 +172,7 @@ export default function Home() {
             >
               <Sparkles className="w-4 h-4 text-yellow-300 mr-2" />
               <span className="text-white text-sm font-medium">
-                Jusqu'à 600€ d'indemnisation garantie
+                {t('hero.badge')}
               </span>
             </motion.div>
 
@@ -115,7 +185,7 @@ export default function Home() {
             >
               {t('title')}
               <span className="block bg-gradient-to-r from-blue-300 to-purple-300 bg-clip-text text-transparent mt-2">
-                en 3 minutes chrono
+                {t('hero.subtitle')}
               </span>
             </motion.h1>
 
@@ -146,7 +216,7 @@ export default function Home() {
               </Link>
               <button className="border-2 border-white/30 text-white hover:bg-white/10 backdrop-blur-md px-8 py-4 rounded-lg text-lg font-semibold flex items-center transition-all">
                 <Play className="mr-2 w-5 h-5" />
-                Comment ça marche
+                {t('hero.howItWorksButton')}
               </button>
             </motion.div>
 
@@ -159,15 +229,15 @@ export default function Home() {
             >
               <div className="text-center">
                 <div className="text-3xl sm:text-4xl font-bold text-white mb-1 font-mono">98%</div>
-                <div className="text-xs sm:text-sm text-blue-200">Taux de succès</div>
+                <div className="text-xs sm:text-sm text-blue-200">{t('trustIndicators.successRate')}</div>
               </div>
               <div className="text-center">
                 <div className="text-3xl sm:text-4xl font-bold text-white mb-1 font-mono">12K+</div>
-                <div className="text-xs sm:text-sm text-blue-200">Clients satisfaits</div>
+                <div className="text-xs sm:text-sm text-blue-200">{t('trustIndicators.satisfiedClients')}</div>
               </div>
               <div className="text-center">
                 <div className="text-3xl sm:text-4xl font-bold text-white mb-1 font-mono">4.8M€</div>
-                <div className="text-xs sm:text-sm text-blue-200">Récupérés</div>
+                <div className="text-xs sm:text-sm text-blue-200">{t('trustIndicators.recovered')}</div>
               </div>
             </motion.div>
           </div>
@@ -191,8 +261,8 @@ export default function Home() {
             <StatCard
               icon={<CheckCircle className="w-8 h-8 text-white" />}
               value={127}
-              label="Réclamations traitées"
-              sublabel="+12% ce mois"
+              label={t('stats.claimsProcessed')}
+              sublabel={t('stats.thisMonth')}
               gradient="from-blue-500 to-blue-600"
               trendIcon={<TrendingUp className="w-5 h-5" />}
               delay={0}
@@ -200,16 +270,16 @@ export default function Home() {
             <StatCard
               icon={<Clock className="w-8 h-8 text-white" />}
               value={23}
-              label="En cours de traitement"
-              sublabel="Délai moyen 48h"
+              label={t('stats.inProgress')}
+              sublabel={t('stats.avgDelay')}
               gradient="from-amber-500 to-orange-600"
               delay={0.1}
             />
             <StatCard
               icon={<CheckCircle className="w-8 h-8 text-white" />}
               value={89}
-              label="Réclamations approuvées"
-              sublabel="70% de taux de succès"
+              label={t('stats.approvedClaims')}
+              sublabel={t('stats.successRate70')}
               gradient="from-green-500 to-emerald-600"
               delay={0.2}
             />
@@ -217,8 +287,8 @@ export default function Home() {
               icon={<Euro className="w-8 h-8 text-white" />}
               value={42650}
               suffix="€"
-              label="Montant total récupéré"
-              sublabel="+8,500€ ce mois"
+              label={t('stats.totalRecovered')}
+              sublabel={t('stats.thisMonthAmount')}
               gradient="from-purple-500 to-pink-600"
               delay={0.3}
             />
@@ -236,7 +306,7 @@ export default function Home() {
               viewport={{ once: true }}
               className="text-3xl sm:text-4xl md:text-5xl font-display font-bold text-gray-900 mb-4"
             >
-              {t('step1Title')} simple et rapide
+              {t('howItWorksTitle')} {t('process.simpleAndFast')}
             </motion.h2>
             <motion.p
               initial={{ opacity: 0, y: 20 }}
@@ -245,7 +315,7 @@ export default function Home() {
               transition={{ delay: 0.1 }}
               className="text-lg text-gray-600 max-w-2xl mx-auto"
             >
-              En seulement 3 étapes, récupérez votre indemnisation
+              {t('process.description')}
             </motion.p>
           </div>
 
@@ -288,7 +358,7 @@ export default function Home() {
               viewport={{ once: true }}
               className="text-3xl sm:text-4xl md:text-5xl font-display font-bold text-gray-900 mb-4"
             >
-              Pourquoi nous choisir ?
+              {t('whyChooseUs.title')}
             </motion.h2>
             <motion.p
               initial={{ opacity: 0, y: 20 }}
@@ -297,7 +367,7 @@ export default function Home() {
               transition={{ delay: 0.1 }}
               className="text-lg text-gray-600 max-w-2xl mx-auto"
             >
-              Des milliers de passagers nous font confiance
+              {t('whyChooseUs.description')}
             </motion.p>
           </div>
 
@@ -343,16 +413,16 @@ export default function Home() {
             className="max-w-3xl mx-auto"
           >
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-display font-bold mb-6">
-              Prêt à récupérer votre argent ?
+              {t('finalCta.title')}
             </h2>
             <p className="text-lg sm:text-xl text-blue-100 mb-8">
-              Rejoignez des milliers de passagers qui ont déjà récupéré leur indemnisation
+              {t('finalCta.description')}
             </p>
             <Link
               href="/register"
               className="inline-flex items-center bg-white text-blue-600 hover:bg-blue-50 px-8 py-4 rounded-lg shadow-2xl text-lg font-semibold transition-all hover:scale-105"
             >
-              Commencer maintenant
+              {t('finalCta.button')}
               <ArrowRight className="ml-2 w-5 h-5" />
             </Link>
           </motion.div>
@@ -370,32 +440,32 @@ export default function Home() {
                   <Plane className="w-6 h-6 text-white" />
                 </div>
                 <span className="text-xl font-bold text-white">
-                  Indemnisation Pro
+                  {tCommon('appName')}
                 </span>
               </div>
               <p className="text-gray-400 text-sm max-w-md">
-                La plateforme de référence pour récupérer votre indemnisation en cas de vol retardé, annulé ou surréservé.
+                {tFooter('description')}
               </p>
             </div>
 
             {/* Links */}
             <div>
-              <h4 className="text-white font-semibold mb-4">Liens utiles</h4>
+              <h4 className="text-white font-semibold mb-4">{tFooter('usefulLinks')}</h4>
               <ul className="space-y-2 text-sm">
-                <li><a href="#" className="hover:text-white transition-colors">Comment ça marche</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Nos tarifs</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">FAQ</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Contact</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">{tFooter('links.howItWorks')}</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">{tFooter('links.about')}</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">{tFooter('links.faq')}</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">{tFooter('links.contact')}</a></li>
               </ul>
             </div>
 
             {/* Legal */}
             <div>
-              <h4 className="text-white font-semibold mb-4">Légal</h4>
+              <h4 className="text-white font-semibold mb-4">{tFooter('legal')}</h4>
               <ul className="space-y-2 text-sm">
-                <li><a href="#" className="hover:text-white transition-colors">CGU</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Politique de confidentialité</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Mentions légales</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">{tFooter('legalLinks.terms')}</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">{tFooter('legalLinks.privacy')}</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">{tFooter('legalLinks.cookies')}</a></li>
               </ul>
             </div>
           </div>
@@ -403,7 +473,7 @@ export default function Home() {
           {/* Bottom Bar */}
           <div className="border-t border-gray-800 pt-8 flex flex-col sm:flex-row justify-between items-center">
             <p className="text-sm text-gray-400 mb-4 sm:mb-0">
-              © 2025 Indemnisation Pro. Tous droits réservés.
+              {tFooter('copyright')}
             </p>
             <div className="flex items-center space-x-4">
               <LanguageSelector />

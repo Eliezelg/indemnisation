@@ -2,8 +2,12 @@
 
 import { motion } from 'framer-motion';
 import { Check, X, DollarSign, Shield, TrendingUp, AlertCircle } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
 export default function PricingSection() {
+  const t = useTranslations('pricing');
+  const tCommon = useTranslations('common');
+
   return (
     <section id="pricing" className="py-20 bg-white">
       <div className="container mx-auto px-4 sm:px-6">
@@ -18,10 +22,10 @@ export default function PricingSection() {
             <DollarSign className="w-8 h-8 text-white" />
           </div>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-display font-bold text-gray-900 mb-4">
-            Tarification Transparente
+            {t('title')}
           </h2>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Aucun frais à l'avance. Vous ne payez que si nous gagnons.
+            {t('subtitle')}
           </p>
         </motion.div>
 
@@ -143,7 +147,7 @@ export default function PricingSection() {
                       Critère
                     </th>
                     <th className="px-6 py-4 text-center text-sm font-semibold text-blue-600">
-                      Indemnisation Pro
+                      SkyLex
                     </th>
                     <th className="px-6 py-4 text-center text-sm font-semibold text-gray-600">
                       Autres services
@@ -295,7 +299,7 @@ export default function PricingSection() {
             </div>
             <div>
               <h4 className="font-semibold text-gray-900 mb-2">
-                Pourquoi choisir Indemnisation Pro ?
+                Pourquoi choisir SkyLex ?
               </h4>
               <p className="text-sm text-gray-600 leading-relaxed">
                 Notre commission de 25% inclut tous les services : analyse juridique, négociation avec la compagnie aérienne,

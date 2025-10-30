@@ -4,12 +4,13 @@ import { useLocale } from 'next-intl';
 import { useRouter, usePathname } from '@/i18n/routing';
 import { useState, useTransition } from 'react';
 
-type Locale = 'fr' | 'he' | 'en';
+type Locale = 'fr' | 'he' | 'en' | 'es';
 
 const languages = {
   fr: { name: 'Français', flag: '🇫🇷' },
   he: { name: 'עברית', flag: '🇮🇱' },
   en: { name: 'English', flag: '🇬🇧' },
+  es: { name: 'Español', flag: '🇪🇸' },
 };
 
 export default function LanguageSelector() {

@@ -5,7 +5,9 @@
     "newClaim": "Nouvelle réclamation",
     "login": "Connexion",
     "register": "S'inscrire",
-    "logout": "Se déconnecter"
+    "logout": "Se déconnecter",
+    "howItWorks": "Comment ça marche",
+    "benefits": "Avantages"
   },
   "common": {
     "submit": "Soumettre",
@@ -19,7 +21,10 @@
     "loading": "Chargement...",
     "error": "Une erreur est survenue",
     "success": "Succès",
-    "back": "Retour"
+    "back": "Retour",
+    "appName": "SkyLex",
+    "notAvailable": "N/D",
+    "view": "Voir"
   },
   "home": {
     "title": "Réclamez votre indemnisation de vol",
@@ -38,7 +43,40 @@
     "feature2Title": "Expertise juridique",
     "feature2Description": "Conformité CE 261/2004 et loi israélienne",
     "feature3Title": "Rapide et simple",
-    "feature3Description": "Formulaire en 3 minutes"
+    "feature3Description": "Formulaire en 3 minutes",
+    "hero": {
+      "badge": "Jusqu'à 600€ d'indemnisation garantie",
+      "subtitle": "en 3 minutes chrono",
+      "howItWorksButton": "Comment ça marche"
+    },
+    "trustIndicators": {
+      "successRate": "Taux de succès",
+      "satisfiedClients": "Clients satisfaits",
+      "recovered": "Récupérés"
+    },
+    "stats": {
+      "claimsProcessed": "Réclamations traitées",
+      "thisMonth": "+12% ce mois",
+      "inProgress": "En cours de traitement",
+      "avgDelay": "Délai moyen 48h",
+      "approvedClaims": "Réclamations approuvées",
+      "successRate70": "70% de taux de succès",
+      "totalRecovered": "Montant total récupéré",
+      "thisMonthAmount": "+8,500€ ce mois"
+    },
+    "process": {
+      "simpleAndFast": "simple et rapide",
+      "description": "En seulement 3 étapes, récupérez votre indemnisation"
+    },
+    "whyChooseUs": {
+      "title": "Pourquoi nous choisir ?",
+      "description": "Des milliers de passagers nous font confiance"
+    },
+    "finalCta": {
+      "title": "Prêt à récupérer votre argent ?",
+      "description": "Rejoignez des milliers de passagers qui ont déjà récupéré leur indemnisation",
+      "button": "Commencer maintenant"
+    }
   },
   "auth": {
     "loginTitle": "Connexion à votre compte",
@@ -59,7 +97,22 @@
     "logout": "Déconnexion",
     "loginError": "Email ou mot de passe incorrect",
     "registerError": "Erreur lors de l'inscription",
-    "passwordMismatch": "Les mots de passe ne correspondent pas"
+    "passwordMismatch": "Les mots de passe ne correspondent pas",
+    "emailNotVerified": "Votre email n'est pas vérifié. Veuillez vérifier votre boîte mail.",
+    "resendVerification": "Renvoyer l'email de vérification",
+    "verificationSent": "Email de vérification envoyé avec succès !",
+    "verificationError": "Erreur lors de l'envoi de l'email"
+  },
+  "verifyEmail": {
+    "title": "Vérification de votre email",
+    "verifying": "Vérification en cours...",
+    "success": "Email vérifié avec succès !",
+    "successMessage": "Votre adresse email a été vérifiée. Vous pouvez maintenant vous connecter.",
+    "error": "Erreur de vérification",
+    "invalidToken": "Le lien de vérification est invalide ou a expiré.",
+    "expiredToken": "Le lien de vérification a expiré. Veuillez demander un nouveau lien.",
+    "goToLogin": "Aller à la connexion",
+    "requestNewLink": "Demander un nouveau lien"
   },
   "claim": {
     "title": "Nouvelle réclamation",
@@ -297,6 +350,194 @@
     "download": "Télécharger",
     "confirmStatusChange": "Êtes-vous sûr de vouloir changer le statut?",
     "statusUpdated": "Statut mis à jour avec succès",
-    "statusUpdateError": "Erreur lors de la mise à jour du statut"
+    "statusUpdateError": "Erreur lors de la mise à jour du statut",
+    "loadError": "Erreur lors du chargement des réclamations:",
+    "csvHeaders": {
+      "number": "Numéro",
+      "status": "Statut",
+      "flight": "Vol",
+      "date": "Date",
+      "type": "Type",
+      "amount": "Montant",
+      "client": "Client",
+      "email": "Email"
+    },
+    "claimsTitle": "Gestion des réclamations",
+    "claimsCount": "réclamation(s)",
+    "exportCsv": "Exporter CSV",
+    "claimsSearchPlaceholder": "Rechercher par numéro, vol, client...",
+    "tableHeaders": {
+      "number": "N°",
+      "client": "Client",
+      "flight": "Vol",
+      "date": "Date vol",
+      "type": "Type",
+      "amount": "Montant",
+      "status": "Statut",
+      "actions": "Actions"
+    },
+    "noClaimsFound": "Aucune réclamation trouvée",
+    "pagination": {
+      "previous": "Précédent",
+      "next": "Suivant",
+      "showing": "Affichage de {start} à {end} sur {total}",
+      "page": "Page"
+    }
+  },
+  "testimonials": {
+    "title": "Témoignages Clients",
+    "subtitle": "Découvrez les expériences de nos clients satisfaits",
+    "recovered": "récupérés",
+    "items": [
+      {
+        "quote": "J'ai récupéré 600€ pour mon vol annulé vers Barcelone en seulement 3 semaines. Le processus était simple et l'équipe très professionnelle. Je recommande vivement !",
+        "amount": "600€"
+      },
+      {
+        "quote": "Service exceptionnel ! Mon vol vers Paris avait 5h de retard. L'équipe a géré tout le dossier et j'ai reçu mon indemnisation sans aucun effort de ma part.",
+        "amount": "400€"
+      },
+      {
+        "quote": "Vol surréservé, refus d'embarquement... J'étais perdue. SkyLex a tout géré à ma place. Processus transparent et équipe réactive. Merci !",
+        "amount": "600€"
+      }
+    ],
+    "stats": {
+      "successRate": "Taux de succès",
+      "satisfiedClients": "Clients satisfaits",
+      "recovered": "Récupérés",
+      "avgTime": "Délai moyen"
+    }
+  },
+  "faq": {
+    "title": "Questions Fréquentes",
+    "subtitle": "Tout ce que vous devez savoir sur l'indemnisation des vols perturbés",
+    "items": [
+      {
+        "question": "Ai-je droit à une indemnisation ?",
+        "answer": "Vous avez droit à une indemnisation si votre vol a été retardé de plus de 3 heures, annulé ou si vous avez subi un refus d'embarquement. Les vols au départ ou à destination de l'UE sont couverts par le règlement CE 261/2004. Les vols depuis/vers Israël sont couverts par la loi israélienne sur les services aériens de 2012."
+      },
+      {
+        "question": "Combien puis-je recevoir ?",
+        "answer": "Le montant dépend de la distance du vol : • Moins de 1500 km : 250€ (EU) ou 500₪ (Israël) • 1500-3500 km : 400€ (EU) ou 700₪ (Israël) • Plus de 3500 km : 600€ (EU) ou 1000₪ (Israël). Nous calculons automatiquement le montant optimal selon votre situation."
+      },
+      {
+        "question": "Combien de temps prend le processus ?",
+        "answer": "En moyenne, le processus prend entre 4 à 8 semaines une fois votre dossier complet. Nous nous occupons de toutes les démarches avec la compagnie aérienne et vous tenons informé à chaque étape."
+      },
+      {
+        "question": "Quels documents dois-je fournir ?",
+        "answer": "Vous aurez besoin de : • Carte d'embarquement (obligatoire) • Confirmation de réservation • Pièce d'identité ou passeport • Preuve du retard/annulation (si disponible). Vous pouvez téléverser ces documents directement depuis votre espace personnel."
+      },
+      {
+        "question": "Que se passe-t-il si ma réclamation échoue ?",
+        "answer": "Si nous ne parvenons pas à obtenir votre indemnisation, vous ne payez rien. Notre service fonctionne sur le principe \"pas de gain, pas de frais\". Vous ne payez notre commission (25% TTC) que si nous récupérons votre indemnisation."
+      },
+      {
+        "question": "Y a-t-il un délai pour faire une réclamation ?",
+        "answer": "Oui, vous avez jusqu'à 3 ans après la date du vol pour faire une réclamation sous le règlement européen CE 261/2004, et jusqu'à 5 ans sous la loi israélienne. Nous vous recommandons toutefois de faire votre réclamation le plus tôt possible."
+      },
+      {
+        "question": "Les circonstances extraordinaires annulent-elles mon droit ?",
+        "answer": "Les compagnies aériennes invoquent souvent des \"circonstances extraordinaires\" (météo extrême, grèves du contrôle aérien, etc.) pour refuser l'indemnisation. Notre équipe d'experts juridiques examine chaque cas pour déterminer si cette excuse est valable. Dans de nombreux cas, nous parvenons à obtenir l'indemnisation malgré ces arguments."
+      },
+      {
+        "question": "Puis-je réclamer pour plusieurs passagers ?",
+        "answer": "Oui, vous pouvez créer une réclamation pour chaque passager affecté par la perturbation. Chaque passager a droit à une indemnisation individuelle. Si vous voyagiez en famille, vous pouvez donc multiplier le montant de l'indemnisation par le nombre de passagers."
+      },
+      {
+        "question": "Comment recevrai-je mon indemnisation ?",
+        "answer": "Une fois la compagnie aérienne accepte de payer, nous déduisons notre commission (25% TTC) et vous versons le montant restant directement sur votre compte bancaire. Vous recevez généralement le paiement dans les 7 à 14 jours suivant l'accord de la compagnie."
+      },
+      {
+        "question": "Puis-je suivre l'avancement de ma réclamation ?",
+        "answer": "Absolument ! Vous disposez d'un espace personnel où vous pouvez voir l'état de votre réclamation en temps réel, téléverser des documents supplémentaires, et communiquer avec notre équipe via une messagerie intégrée. Vous recevez également des notifications par email à chaque étape importante."
+      }
+    ],
+    "notFoundQuestion": "Vous ne trouvez pas votre réponse ?",
+    "support247": "Notre équipe est là pour vous aider 24/7",
+    "contactUs": "Contactez-nous",
+    "startClaim": "Commencer ma réclamation"
+  },
+  "pricing": {
+    "title": "Tarification Transparente",
+    "subtitle": "Aucun frais à l'avance. Vous ne payez que si nous gagnons.",
+    "guarantee": "Garantie \"Pas de gain, pas de frais\"",
+    "commission": "de commission",
+    "commissionNote": "Uniquement prélevée sur le montant récupéré (TVA incluse)",
+    "exampleTitle": "Exemple concret",
+    "exampleRecovered": "Indemnisation récupérée",
+    "youReceive": "Vous recevez",
+    "ourCommission": "Notre commission",
+    "included": {
+      "title": "Ce qui est inclus",
+      "item1": "Évaluation gratuite de votre dossier",
+      "item2": "Gestion complète de la réclamation",
+      "item3": "Communication avec la compagnie aérienne",
+      "item4": "Suivi en temps réel",
+      "item5": "Support client 24/7",
+      "item6": "Procédure judiciaire si nécessaire",
+      "item7": "Pas de frais cachés",
+      "item8": "Paiement direct sur votre compte"
+    },
+    "comparisonTitle": "Comparaison avec d'autres solutions",
+    "whyChooseTitle": "Pourquoi choisir SkyLex ?",
+    "whyChooseDescription": "Nous combinons expertise juridique, technologie moderne et service client exceptionnel pour maximiser vos chances d'obtenir votre indemnisation. Notre plateforme bilingue français-hébreu est unique sur le marché."
+  },
+  "airlines": {
+    "title": "Compagnies Aériennes Couvertes",
+    "subtitle": "Nous traitons les réclamations pour toutes les compagnies aériennes opérant en Europe et Israël",
+    "andMore": "Et bien d'autres...",
+    "coverageNote": "Nous couvrons toutes les compagnies aériennes opérant en Europe et Israël",
+    "stats": {
+      "airlines": "Compagnies aériennes",
+      "coverage": "Couverture Europe & Israël",
+      "support": "Support disponible"
+    }
+  },
+  "messages": {
+    "title": "Messages",
+    "communicateWith": "Communiquez avec",
+    "client": "le client",
+    "ourTeam": "notre équipe",
+    "noMessages": "Aucun message pour le moment",
+    "startConversation": "Envoyez un message pour démarrer la conversation",
+    "adminBadge": "Admin",
+    "placeholder": "Tapez votre message...",
+    "send": "Envoyer",
+    "sendHint": "Appuyez sur Entrée pour envoyer, Shift+Entrée pour une nouvelle ligne",
+    "time": {
+      "now": "À l'instant",
+      "minutesAgo": "Il y a {minutes}min",
+      "hoursAgo": "Il y a {hours}h",
+      "daysAgo": "Il y a {days}j"
+    }
+  },
+  "autocomplete": {
+    "airport": {
+      "placeholder": "Rechercher par code, ville ou pays...",
+      "noResults": "Aucun aéroport trouvé"
+    },
+    "airline": {
+      "placeholder": "Rechercher par code ou nom...",
+      "noResults": "Aucune compagnie aérienne trouvée"
+    }
+  },
+  "footer": {
+    "description": "La plateforme de référence pour récupérer votre indemnisation en cas de vol retardé, annulé ou surréservé.",
+    "usefulLinks": "Liens utiles",
+    "legal": "Légal",
+    "copyright": "© 2025 SkyLex. Tous droits réservés.",
+    "links": {
+      "about": "À propos",
+      "howItWorks": "Comment ça marche",
+      "faq": "FAQ",
+      "contact": "Contact"
+    },
+    "legalLinks": {
+      "terms": "Conditions d'utilisation",
+      "privacy": "Politique de confidentialité",
+      "cookies": "Cookies"
+    }
   }
 }

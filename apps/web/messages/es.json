@@ -1,0 +1,528 @@
+{
+  "nav": {
+    "home": "Inicio",
+    "dashboard": "Panel",
+    "newClaim": "Nueva Reclamación",
+    "login": "Iniciar Sesión",
+    "register": "Registrarse",
+    "logout": "Cerrar Sesión",
+    "howItWorks": "Cómo Funciona",
+    "benefits": "Beneficios"
+  },
+  "common": {
+    "submit": "Enviar",
+    "cancel": "Cancelar",
+    "next": "Siguiente",
+    "previous": "Anterior",
+    "save": "Guardar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "close": "Cerrar",
+    "loading": "Cargando...",
+    "error": "Ha ocurrido un error",
+    "success": "Éxito",
+    "back": "Volver",
+    "appName": "SkyLex",
+    "notAvailable": "N/D",
+    "view": "Ver"
+  },
+  "home": {
+    "title": "Reclame su Compensación de Vuelo",
+    "subtitle": "Obtenga hasta 600€ por su vuelo retrasado, cancelado o denegación de embarque",
+    "ctaButton": "Comenzar mi Reclamación",
+    "howItWorksTitle": "Cómo Funciona",
+    "step1Title": "Complete el Formulario",
+    "step1Description": "Algunos detalles sobre su vuelo interrumpido",
+    "step2Title": "Gestionamos su Caso",
+    "step2Description": "Nuestro equipo se encarga de todo",
+    "step3Title": "Reciba su Compensación",
+    "step3Description": "Directamente en su cuenta bancaria",
+    "featuresTitle": "Por qué Elegirnos",
+    "feature1Title": "Sin Tarifa si Perdemos",
+    "feature1Description": "Solo paga si tenemos éxito",
+    "feature2Title": "Experiencia Legal",
+    "feature2Description": "Cumplimiento CE 261/2004 y ley israelí",
+    "feature3Title": "Rápido y Sencillo",
+    "feature3Description": "Formulario de 3 minutos",
+    "hero": {
+      "badge": "Hasta 600€ de compensación garantizada",
+      "subtitle": "en solo 3 minutos",
+      "howItWorksButton": "Cómo Funciona"
+    },
+    "trustIndicators": {
+      "successRate": "Tasa de Éxito",
+      "satisfiedClients": "Clientes Satisfechos",
+      "recovered": "Recuperado"
+    },
+    "stats": {
+      "claimsProcessed": "Reclamaciones Procesadas",
+      "thisMonth": "+12% este mes",
+      "inProgress": "En Progreso",
+      "avgDelay": "Promedio 48h",
+      "approvedClaims": "Reclamaciones Aprobadas",
+      "successRate70": "70% tasa de éxito",
+      "totalRecovered": "Total Recuperado",
+      "thisMonthAmount": "+8.500€ este mes"
+    },
+    "process": {
+      "simpleAndFast": "simple y rápido",
+      "description": "En solo 3 pasos, reclame su compensación"
+    },
+    "whyChooseUs": {
+      "title": "¿Por qué Elegirnos?",
+      "description": "Miles de pasajeros confían en nosotros"
+    },
+    "finalCta": {
+      "title": "¿Listo para reclamar su dinero?",
+      "description": "Únase a miles de pasajeros que ya han reclamado su compensación",
+      "button": "Comenzar Ahora"
+    }
+  },
+  "auth": {
+    "loginTitle": "Iniciar Sesión en su Cuenta",
+    "registerTitle": "Crear una Cuenta",
+    "email": "Correo Electrónico",
+    "password": "Contraseña",
+    "confirmPassword": "Confirmar Contraseña",
+    "firstName": "Nombre",
+    "lastName": "Apellido",
+    "phone": "Teléfono",
+    "loginButton": "Iniciar Sesión",
+    "registerButton": "Crear Cuenta",
+    "forgotPassword": "¿Olvidó su Contraseña?",
+    "noAccount": "¿No tiene cuenta?",
+    "hasAccount": "¿Ya tiene cuenta?",
+    "loginLink": "Iniciar sesión",
+    "registerLink": "Registrarse",
+    "logout": "Cerrar Sesión",
+    "loginError": "Correo o contraseña incorrectos",
+    "registerError": "Error al registrarse",
+    "passwordMismatch": "Las contraseñas no coinciden"
+  },
+  "claim": {
+    "title": "Nueva Reclamación",
+    "appTitle": "Compensación de Vuelos",
+    "step1Title": "Información del Vuelo",
+    "step2Title": "Tipo de Interrupción",
+    "step3Title": "Su Información",
+    "step4Title": "Resultado",
+    "stepProgress": "Paso {current} de {total}",
+    "flightNumber": "Número de Vuelo",
+    "flightNumberPlaceholder": "Ej: IB1234",
+    "flightDate": "Fecha del Vuelo",
+    "departureAirport": "Aeropuerto de Salida",
+    "arrivalAirport": "Aeropuerto de Llegada",
+    "selectAirport": "Seleccione un aeropuerto",
+    "airline": "Aerolínea (opcional)",
+    "airlinePlaceholder": "Ej: Iberia, Air Europa",
+    "disruptionType": "Tipo de Interrupción",
+    "delay": "Retraso",
+    "delayDescription": "Vuelo retrasado más de 3 horas",
+    "cancellation": "Cancelación",
+    "cancellationDescription": "Vuelo cancelado por la aerolínea",
+    "deniedBoarding": "Denegación de Embarque",
+    "deniedBoardingDescription": "Sobreventa u otra razón",
+    "delayMinutes": "Duración del Retraso (en minutos)",
+    "delayMinutesPlaceholder": "Ej: 240",
+    "delayHint": "Ej: 4 horas = 240 minutos",
+    "firstName": "Nombre",
+    "lastName": "Apellido",
+    "email": "Correo Electrónico",
+    "phone": "Teléfono (opcional)",
+    "phonePlaceholder": "+34 6 12 34 56 78",
+    "bookingReference": "Referencia de Reserva (opcional)",
+    "bookingRefPlaceholder": "Ej: ABC123",
+    "requiredFieldsError": "Por favor complete todos los campos requeridos",
+    "selectDisruptionError": "Por favor seleccione el tipo de interrupción",
+    "delayDurationError": "Por favor especifique la duración del retraso",
+    "submit": "Calcular mi Compensación",
+    "calculating": "Calculando...",
+    "resultTitle": "¡Reclamación Creada!",
+    "resultClaimNumber": "Número de Reclamación",
+    "resultRecommendedAmount": "Monto de Compensación Recomendado",
+    "resultDistance": "Distancia",
+    "resultJurisdiction": "Jurisdicción",
+    "resultEuAmount": "Regulación UE",
+    "resultIlAmount": "Ley Israelí",
+    "resultReasoning": "Explicación",
+    "backToDashboard": "Volver al Panel",
+    "createError": "Error al crear la reclamación",
+    "documentsDescription": "Suba los documentos necesarios para respaldar su reclamación. La tarjeta de embarque es obligatoria.",
+    "boardingPassDescription": "Su tarjeta de embarque original (obligatoria)",
+    "bookingConfirmationDescription": "Confirmación de reserva de su vuelo",
+    "idDocumentDescription": "Copia de su ID o pasaporte",
+    "proofOfDelayDescription": "Certificado de retraso emitido por la aerolínea",
+    "otherDocumentDescription": "Cualquier otro documento relevante",
+    "skipDocuments": "Omitir y subir más tarde",
+    "searchingFlight": "Buscando información del vuelo...",
+    "flightFound": "¡Vuelo encontrado! Información autocompletada"
+  },
+  "dashboard": {
+    "title": "Mis Reclamaciones",
+    "welcome": "Bienvenido a su panel personal",
+    "greeting": "¡Hola, {firstName} {lastName}!",
+    "loading": "Cargando...",
+    "appTitle": "Compensación de Vuelos",
+    "logout": "Cerrar Sesión",
+    "accountInfo": "Información de la Cuenta",
+    "email": "Correo Electrónico",
+    "phone": "Teléfono",
+    "status": "Estado",
+    "verified": "Verificado",
+    "notVerified": "No Verificado",
+    "notProvided": "No Proporcionado",
+    "statistics": "Estadísticas",
+    "totalClaims": "Reclamaciones Totales",
+    "inProgress": "En Progreso",
+    "approved": "Aprobadas",
+    "newClaim": "Nueva Reclamación",
+    "newClaimDescription": "Presente una reclamación por un vuelo retrasado, cancelado o con sobreventa",
+    "createClaim": "Crear una reclamación",
+    "myClaims": "Mis Reclamaciones",
+    "noClaims": "Aún no hay reclamaciones",
+    "createFirstClaim": "Crear mi primera reclamación",
+    "claimNumber": "N° reclamación",
+    "flightDate": "Fecha del Vuelo",
+    "type": "Tipo",
+    "amount": "Monto",
+    "createdOn": "Creada el",
+    "viewDetails": "Ver detalles"
+  },
+  "claimDetail": {
+    "title": "Detalles de la Reclamación",
+    "appTitle": "Compensación de Vuelos",
+    "claimTitle": "Reclamación",
+    "flight": "Vuelo",
+    "notFound": "Reclamación no encontrada",
+    "submitError": "Error al enviar la reclamación",
+    "submitSuccess": "¡Reclamación enviada con éxito!",
+    "submitWarning": "Una vez enviada, no podrá modificar su reclamación",
+    "recommendedAmount": "Monto de Compensación Recomendado",
+    "or": "o",
+    "flightInfo": "Detalles del Vuelo",
+    "flightNumber": "Número de Vuelo",
+    "flightDate": "Fecha",
+    "departure": "Salida",
+    "arrival": "Llegada",
+    "route": "Ruta",
+    "distance": "Distancia",
+    "airline": "Aerolínea",
+    "disruptionInfo": "Interrupción",
+    "type": "Tipo",
+    "delayDuration": "Duración del Retraso",
+    "minutes": "min",
+    "passengerInfo": "Información del Pasajero",
+    "fullName": "Nombre Completo",
+    "email": "Correo Electrónico",
+    "phone": "Teléfono",
+    "bookingRef": "Referencia de Reserva",
+    "compensationInfo": "Cálculo de Compensación",
+    "jurisdiction": "Jurisdicción Aplicable",
+    "euRegulation": "Regulación Europea CE 261/2004",
+    "israelLaw": "Ley de Servicios de Aviación Israelí (2012)",
+    "euAmount": "Monto UE",
+    "israelAmount": "Monto Israel",
+    "reasoning": "Explicación",
+    "bothEuBetter": "La Regulación Europea CE 261/2004 ofrece mejor compensación (€{euAmount}) que la ley israelí (₪{ilAmount} ≈ €{eurEquiv}). Recomendamos reclamar bajo la regulación europea.",
+    "bothIlBetter": "La ley israelí ofrece mejor compensación (₪{ilAmount} ≈ €{eurEquiv}) que la regulación europea (€{euAmount}). Recomendamos reclamar bajo la ley israelí.",
+    "euOnly": "Su vuelo está cubierto por la Regulación Europea CE 261/2004. Compensación: €{amount}.",
+    "ilOnly": "Su vuelo está cubierto por la Ley de Servicios de Aviación Israelí (2012). Compensación: ₪{amount} (≈ €{eurEquiv}).",
+    "noJurisdiction": "Sin jurisdicción aplicable. Su vuelo no parece estar cubierto por las regulaciones europea o israelí.",
+    "timeline": "Cronología",
+    "claimCreated": "Reclamación Creada",
+    "claimSubmitted": "Reclamación Enviada",
+    "createdAt": "Creada el",
+    "submittedAt": "Enviada el",
+    "submitButton": "Enviar Reclamación",
+    "submitting": "Enviando...",
+    "backToList": "Volver a la Lista"
+  },
+  "status": {
+    "draft": "Borrador",
+    "submitted": "Enviada",
+    "in_review": "En Revisión",
+    "approved": "Aprobada",
+    "rejected": "Rechazada",
+    "paid": "Pagada",
+    "cancelled": "Cancelada"
+  },
+  "disruption": {
+    "delay": "Retraso",
+    "cancellation": "Cancelación",
+    "denied_boarding": "Denegación de Embarque"
+  },
+  "jurisdiction": {
+    "EU": "Unión Europea",
+    "ISRAEL": "Israel",
+    "BOTH": "UE e Israel"
+  },
+  "documents": {
+    "selectFile": "Seleccionar un archivo",
+    "dragAndDrop": "o arrastrar y soltar aquí",
+    "allowedFormats": "Formatos permitidos",
+    "upload": "Subir",
+    "uploading": "Subiendo...",
+    "cancel": "Cancelar",
+    "invalidFileType": "Tipo de archivo no válido. Formatos aceptados: JPG, PNG, WEBP, PDF",
+    "fileTooLarge": "Archivo demasiado grande. Tamaño máximo: 5MB",
+    "uploadError": "Error al subir",
+    "uploadSuccess": "Documento subido con éxito",
+    "deleteConfirm": "¿Está seguro de que desea eliminar este documento?",
+    "deleteSuccess": "Documento eliminado con éxito",
+    "deleteError": "Error al eliminar",
+    "boardingPass": "Tarjeta de Embarque",
+    "bookingConfirmation": "Confirmación de Reserva",
+    "idDocument": "Documento de Identidad",
+    "proofOfDelay": "Prueba de Retraso",
+    "other": "Otro Documento",
+    "noDocuments": "No hay documentos subidos",
+    "uploadDocuments": "Subir Documentos",
+    "uploadedDocuments": "Documentos Subidos",
+    "required": "Documento requerido",
+    "optional": "Documento opcional"
+  },
+  "notFound": {
+    "message": "Página no encontrada",
+    "backHome": "Volver al inicio"
+  },
+  "admin": {
+    "title": "Administración - Compensación de Vuelos",
+    "description": "Panel de administración para gestión de reclamaciones",
+    "dashboard": "Panel",
+    "claims": "Reclamaciones",
+    "users": "Usuarios",
+    "documents": "Documentos",
+    "settings": "Configuración",
+    "reports": "Informes",
+    "overview": "Visión General",
+    "totalClaims": "Reclamaciones Totales",
+    "pendingReview": "Pendiente de Revisión",
+    "approvedThisMonth": "Aprobadas Este Mes",
+    "avgClaimAmount": "Monto Promedio",
+    "claimsOverTime": "Reclamaciones en el Tiempo",
+    "claimsByStatus": "Reclamaciones por Estado",
+    "topAirlines": "Top 5 Aerolíneas",
+    "recentClaims": "Reclamaciones Recientes",
+    "claimNumber": "N° reclamación",
+    "client": "Cliente",
+    "flight": "Vuelo",
+    "amount": "Monto",
+    "status": "Estado",
+    "date": "Fecha",
+    "actions": "Acciones",
+    "view": "Ver",
+    "search": "Buscar",
+    "searchPlaceholder": "Buscar por número de reclamación, vuelo, cliente...",
+    "filterByStatus": "Filtrar por Estado",
+    "allStatuses": "Todos los Estados",
+    "export": "Exportar CSV",
+    "previous": "Anterior",
+    "next": "Siguiente",
+    "showing": "Mostrando {start} a {end} de {total}",
+    "noResults": "No se encontraron resultados",
+    "claimDetails": "Detalles de la Reclamación",
+    "flightDetails": "Detalles del Vuelo",
+    "passengerInfo": "Información del Pasajero",
+    "uploadedDocuments": "Documentos Subidos",
+    "quickActions": "Acciones Rápidas",
+    "submitForReview": "Enviar para Revisión",
+    "approve": "Aprobar",
+    "reject": "Rechazar",
+    "markAsPaid": "Marcar como Pagada",
+    "history": "Historial",
+    "internalNotes": "Notas Internas",
+    "addNote": "Agregar Nota",
+    "download": "Descargar",
+    "confirmStatusChange": "¿Está seguro de que desea cambiar el estado?",
+    "statusUpdated": "Estado actualizado con éxito",
+    "statusUpdateError": "Error al actualizar el estado",
+    "loadError": "Error al cargar reclamaciones:",
+    "csvHeaders": {
+      "number": "Número",
+      "status": "Estado",
+      "flight": "Vuelo",
+      "date": "Fecha",
+      "type": "Tipo",
+      "amount": "Monto",
+      "client": "Cliente",
+      "email": "Correo"
+    },
+    "claimsTitle": "Gestión de Reclamaciones",
+    "claimsCount": "reclamación(es)",
+    "exportCsv": "Exportar CSV",
+    "claimsSearchPlaceholder": "Buscar por número, vuelo, cliente...",
+    "tableHeaders": {
+      "number": "N°",
+      "client": "Cliente",
+      "flight": "Vuelo",
+      "date": "Fecha vuelo",
+      "type": "Tipo",
+      "amount": "Monto",
+      "status": "Estado",
+      "actions": "Acciones"
+    },
+    "noClaimsFound": "No se encontraron reclamaciones",
+    "pagination": {
+      "previous": "Anterior",
+      "next": "Siguiente",
+      "showing": "Mostrando {start} a {end} de {total}",
+      "page": "Página"
+    }
+  },
+  "testimonials": {
+    "title": "Testimonios de Clientes",
+    "subtitle": "Descubra las experiencias de nuestros clientes satisfechos",
+    "recovered": "recuperado",
+    "items": [
+      {
+        "quote": "Recuperé 600€ por mi vuelo cancelado a Barcelona en solo 3 semanas. El proceso fue simple y el equipo muy profesional. ¡Muy recomendable!",
+        "amount": "€600"
+      },
+      {
+        "quote": "¡Servicio excepcional! Mi vuelo a París se retrasó 5h. El equipo gestionó todo y recibí mi compensación sin esfuerzo.",
+        "amount": "€400"
+      },
+      {
+        "quote": "Vuelo sobreventa, denegación de embarque... Estaba perdida. Indemnización Pro gestionó todo. Proceso transparente y equipo receptivo. ¡Gracias!",
+        "amount": "€600"
+      }
+    ],
+    "stats": {
+      "successRate": "Tasa de Éxito",
+      "satisfiedClients": "Clientes Satisfechos",
+      "recovered": "Recuperado",
+      "avgTime": "Tiempo Promedio"
+    }
+  },
+  "faq": {
+    "title": "Preguntas Frecuentes",
+    "subtitle": "Todo lo que necesita saber sobre compensación por vuelos interrumpidos",
+    "items": [
+      {
+        "question": "¿Tengo derecho a compensación?",
+        "answer": "Tiene derecho a compensación si su vuelo se retrasó más de 3 horas, fue cancelado o se le denegó el embarque. Los vuelos desde o hacia la UE están cubiertos por la Regulación CE 261/2004. Los vuelos desde/hacia Israel están cubiertos por la Ley de Servicios de Aviación Israelí de 2012."
+      },
+      {
+        "question": "¿Cuánto puedo recibir?",
+        "answer": "El monto depende de la distancia del vuelo: • Menos de 1500 km: €250 (UE) o ₪500 (Israel) • 1500-3500 km: €400 (UE) o ₪700 (Israel) • Más de 3500 km: €600 (UE) o ₪1000 (Israel). Calculamos automáticamente el monto óptimo para su situación."
+      },
+      {
+        "question": "¿Cuánto tiempo tarda el proceso?",
+        "answer": "En promedio, el proceso toma entre 4 y 8 semanas una vez que su expediente esté completo. Gestionamos todas las comunicaciones con la aerolínea y lo mantenemos informado en cada paso."
+      },
+      {
+        "question": "¿Qué documentos necesito proporcionar?",
+        "answer": "Necesitará: • Tarjeta de embarque (obligatoria) • Confirmación de reserva • ID o pasaporte • Prueba de retraso/cancelación (si está disponible). Puede subir estos documentos directamente desde su espacio personal."
+      },
+      {
+        "question": "¿Qué sucede si mi reclamación falla?",
+        "answer": "Si no logramos obtener su compensación, no paga nada. Nuestro servicio funciona con base en \"sin ganancia, sin tarifa\". Solo paga nuestra comisión (25% IVA incluido) si recuperamos su compensación."
+      },
+      {
+        "question": "¿Hay un límite de tiempo para hacer una reclamación?",
+        "answer": "Sí, tiene hasta 3 años después de la fecha del vuelo para hacer una reclamación bajo la Regulación CE 261/2004, y hasta 5 años bajo la ley israelí. Sin embargo, recomendamos hacer su reclamación lo antes posible."
+      },
+      {
+        "question": "¿Las circunstancias extraordinarias cancelan mi derecho?",
+        "answer": "Las aerolíneas a menudo invocan \"circunstancias extraordinarias\" (clima extremo, huelgas de control aéreo, etc.) para rechazar compensación. Nuestro equipo de expertos legales examina cada caso para determinar si esta excusa es válida. En muchos casos, logramos obtener compensación a pesar de estos argumentos."
+      },
+      {
+        "question": "¿Puedo reclamar por múltiples pasajeros?",
+        "answer": "Sí, puede crear una reclamación por cada pasajero afectado por la interrupción. Cada pasajero tiene derecho a compensación individual. Si viajaba en familia, puede multiplicar el monto de compensación por el número de pasajeros."
+      },
+      {
+        "question": "¿Cómo recibiré mi compensación?",
+        "answer": "Una vez que la aerolínea acepta pagar, deducimos nuestra comisión (25% IVA incluido) y transferimos el monto restante directamente a su cuenta bancaria. Generalmente recibe el pago dentro de 7 a 14 días del acuerdo de la aerolínea."
+      },
+      {
+        "question": "¿Puedo seguir el progreso de mi reclamación?",
+        "answer": "¡Absolutamente! Tiene un espacio personal donde puede ver el estado de su reclamación en tiempo real, subir documentos adicionales y comunicarse con nuestro equipo mediante mensajería integrada. También recibe notificaciones por correo en cada paso importante."
+      }
+    ],
+    "notFoundQuestion": "¿No encuentra su respuesta?",
+    "support247": "Nuestro equipo está aquí para ayudar 24/7",
+    "contactUs": "Contáctenos",
+    "startClaim": "Comenzar mi Reclamación"
+  },
+  "pricing": {
+    "title": "Precios Transparentes",
+    "subtitle": "Sin tarifas por adelantado. Solo paga si ganamos.",
+    "guarantee": "Garantía \"Sin Ganancia, Sin Tarifa\"",
+    "commission": "comisión",
+    "commissionNote": "Solo se cobra sobre el monto recuperado (IVA incluido)",
+    "exampleTitle": "Ejemplo Práctico",
+    "exampleRecovered": "Compensación Recuperada",
+    "youReceive": "Usted Recibe",
+    "ourCommission": "Nuestra Comisión",
+    "included": {
+      "title": "Qué Está Incluido",
+      "item1": "Evaluación gratuita del caso",
+      "item2": "Gestión completa de la reclamación",
+      "item3": "Comunicación con la aerolínea",
+      "item4": "Seguimiento en tiempo real",
+      "item5": "Soporte al cliente 24/7",
+      "item6": "Procedimientos legales si es necesario",
+      "item7": "Sin tarifas ocultas",
+      "item8": "Pago directo a su cuenta"
+    },
+    "comparisonTitle": "Comparación con Otras Soluciones",
+    "whyChooseTitle": "¿Por qué Elegir Indemnización Pro?",
+    "whyChooseDescription": "Combinamos experiencia legal, tecnología moderna y servicio al cliente excepcional para maximizar sus posibilidades de obtener su compensación. Nuestra plataforma bilingüe francés-hebreo es única en el mercado."
+  },
+  "airlines": {
+    "title": "Aerolíneas Cubiertas",
+    "subtitle": "Gestionamos reclamaciones para todas las aerolíneas que operan en Europa e Israel",
+    "andMore": "Y muchas más...",
+    "coverageNote": "Cubrimos todas las aerolíneas que operan en Europa e Israel",
+    "stats": {
+      "airlines": "Aerolíneas",
+      "coverage": "Cobertura Europa e Israel",
+      "support": "Soporte Disponible"
+    }
+  },
+  "messages": {
+    "title": "Mensajes",
+    "communicateWith": "Comunicarse con",
+    "client": "el cliente",
+    "ourTeam": "nuestro equipo",
+    "noMessages": "Aún no hay mensajes",
+    "startConversation": "Envíe un mensaje para iniciar la conversación",
+    "adminBadge": "Admin",
+    "placeholder": "Escriba su mensaje...",
+    "send": "Enviar",
+    "sendHint": "Presione Enter para enviar, Shift+Enter para nueva línea",
+    "time": {
+      "now": "Justo ahora",
+      "minutesAgo": "hace {minutes}min",
+      "hoursAgo": "hace {hours}h",
+      "daysAgo": "hace {days}d"
+    }
+  },
+  "autocomplete": {
+    "airport": {
+      "placeholder": "Buscar por código, ciudad o país...",
+      "noResults": "No se encontró aeropuerto"
+    },
+    "airline": {
+      "placeholder": "Buscar por código o nombre...",
+      "noResults": "No se encontró aerolínea"
+    }
+  },
+  "footer": {
+    "description": "La plataforma líder para reclamar su compensación por vuelos retrasados, cancelados o con sobreventa.",
+    "usefulLinks": "Enlaces Útiles",
+    "legal": "Legal",
+    "copyright": "© 2025 Indemnización Pro. Todos los derechos reservados.",
+    "links": {
+      "about": "Acerca de",
+      "howItWorks": "Cómo Funciona",
+      "faq": "Preguntas Frecuentes",
+      "contact": "Contacto"
+    },
+    "legalLinks": {
+      "terms": "Términos de Servicio",
+      "privacy": "Política de Privacidad",
+      "cookies": "Cookies"
+    }
+  }
+}

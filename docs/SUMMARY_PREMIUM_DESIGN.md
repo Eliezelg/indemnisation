@@ -506,5 +506,5 @@ Consultez les documents de référence ou demandez-moi ! 🚀
 ---
 
 **Créé avec ❤️ par Claude**
-**Pour : Indemnisation Pro**
+**Pour : SkyLex**
 **Date : 29 Octobre 2025**

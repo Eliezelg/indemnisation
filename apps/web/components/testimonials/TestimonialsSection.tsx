@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { Star, Check, Quote } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
 interface Testimonial {
   name: string;
@@ -12,34 +13,33 @@ interface Testimonial {
   rating: number;
 }
 
-const testimonials: Testimonial[] = [
+const testimonialAuthors = [
   {
     name: "Sophie Martin",
     location: "Paris, France",
     initials: "SM",
-    quote: "J'ai récupéré 600€ pour mon vol annulé vers Barcelone en seulement 3 semaines. Le processus était simple et l'équipe très professionnelle. Je recommande vivement !",
-    amount: "600€",
-    rating: 5
+    rating: 5,
+    index: 0
   },
   {
     name: "David Cohen",
     location: "Tel Aviv, Israël",
     initials: "DC",
-    quote: "Service exceptionnel ! Mon vol vers Paris avait 5h de retard. L'équipe a géré tout le dossier et j'ai reçu mon indemnisation sans aucun effort de ma part.",
-    amount: "400€",
-    rating: 5
+    rating: 5,
+    index: 1
   },
   {
     name: "Marie Dubois",
     location: "Lyon, France",
     initials: "MD",
-    quote: "Vol surréservé, refus d'embarquement... J'étais perdue. Indemnisation Pro a tout géré à ma place. Processus transparent et équipe réactive. Merci !",
-    amount: "250€",
-    rating: 5
+    rating: 5,
+    index: 2
   }
 ];
 
 export default function TestimonialsSection() {
+  const t = useTranslations('testimonials');
+
   return (
     <section className="py-20 bg-gradient-to-br from-blue-50 to-purple-50">
       <div className="container mx-auto px-4 sm:px-6">
@@ -54,63 +54,68 @@ export default function TestimonialsSection() {
             <Quote className="w-8 h-8 text-white" />
           </div>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-display font-bold text-gray-900 mb-4">
-            Témoignages Clients
+            {t('title')}
           </h2>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Découvrez les expériences de nos clients satisfaits
+            {t('subtitle')}
           </p>
         </motion.div>
 
         {/* Testimonials Grid */}
         <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-          {testimonials.map((testimonial, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.1 }}
-              className="bg-white rounded-2xl p-6 md:p-8 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1"
-            >
-              {/* Stars Rating */}
-              <div className="flex items-center mb-4">
-                {[...Array(testimonial.rating)].map((_, i) => (
-                  <Star
-                    key={i}
-                    className="w-5 h-5 fill-yellow-400 text-yellow-400"
-                  />
-                ))}
-              </div>
+          {testimonialAuthors.map((author) => {
+            const quote = t(`items.${author.index}.quote`);
+            const amount = t(`items.${author.index}.amount`);
 
-              {/* Quote */}
-              <p className="text-gray-700 mb-6 italic leading-relaxed relative">
-                <span className="absolute -top-2 -left-2 text-4xl text-blue-200 opacity-50">"</span>
-                {testimonial.quote}
-                <span className="absolute -bottom-4 text-4xl text-blue-200 opacity-50">"</span>
-              </p>
-
-              {/* Author */}
-              <div className="flex items-center space-x-4 mb-6 pt-4 border-t border-gray-100">
-                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-400 to-purple-600 flex items-center justify-center text-white font-bold shadow-lg">
-                  {testimonial.initials}
+            return (
+              <motion.div
+                key={author.index}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: author.index * 0.1 }}
+                className="bg-white rounded-2xl p-6 md:p-8 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1"
+              >
+                {/* Stars Rating */}
+                <div className="flex items-center mb-4">
+                  {[...Array(author.rating)].map((_, i) => (
+                    <Star
+                      key={i}
+                      className="w-5 h-5 fill-yellow-400 text-yellow-400"
+                    />
+                  ))}
                 </div>
-                <div>
-                  <div className="font-semibold text-gray-900">
-                    {testimonial.name}
+
+                {/* Quote */}
+                <p className="text-gray-700 mb-6 italic leading-relaxed relative">
+                  <span className="absolute -top-2 -left-2 text-4xl text-blue-200 opacity-50">"</span>
+                  {quote}
+                  <span className="absolute -bottom-4 text-4xl text-blue-200 opacity-50">"</span>
+                </p>
+
+                {/* Author */}
+                <div className="flex items-center space-x-4 mb-6 pt-4 border-t border-gray-100">
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-400 to-purple-600 flex items-center justify-center text-white font-bold shadow-lg">
+                    {author.initials}
                   </div>
-                  <div className="text-sm text-gray-500">
-                    {testimonial.location}
+                  <div>
+                    <div className="font-semibold text-gray-900">
+                      {author.name}
+                    </div>
+                    <div className="text-sm text-gray-500">
+                      {author.location}
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              {/* Amount Badge */}
-              <div className="inline-flex items-center px-3 py-1 rounded-full bg-green-100 text-green-700 text-sm font-medium">
-                <Check className="w-4 h-4 mr-1" />
-                {testimonial.amount} récupérés
-              </div>
-            </motion.div>
-          ))}
+                {/* Amount Badge */}
+                <div className="inline-flex items-center px-3 py-1 rounded-full bg-green-100 text-green-700 text-sm font-medium">
+                  <Check className="w-4 h-4 mr-1" />
+                  {amount} {t('recovered')}
+                </div>
+              </motion.div>
+            );
+          })}
         </div>
 
         {/* Trust Stats */}
@@ -125,25 +130,25 @@ export default function TestimonialsSection() {
             <div className="text-3xl md:text-4xl font-bold text-blue-600 mb-2 font-mono">
               98%
             </div>
-            <div className="text-sm text-gray-600">Taux de succès</div>
+            <div className="text-sm text-gray-600">{t('stats.successRate')}</div>
           </div>
           <div>
             <div className="text-3xl md:text-4xl font-bold text-blue-600 mb-2 font-mono">
               4.8/5
             </div>
-            <div className="text-sm text-gray-600">Note moyenne</div>
+            <div className="text-sm text-gray-600">{t('stats.satisfiedClients')}</div>
           </div>
           <div>
             <div className="text-3xl md:text-4xl font-bold text-blue-600 mb-2 font-mono">
               12K+
             </div>
-            <div className="text-sm text-gray-600">Clients satisfaits</div>
+            <div className="text-sm text-gray-600">{t('stats.satisfiedClients')}</div>
           </div>
           <div>
             <div className="text-3xl md:text-4xl font-bold text-blue-600 mb-2 font-mono">
               24-48h
             </div>
-            <div className="text-sm text-gray-600">Délai de réponse</div>
+            <div className="text-sm text-gray-600">{t('stats.avgTime')}</div>
           </div>
         </motion.div>
       </div>

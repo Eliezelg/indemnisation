@@ -6,82 +6,69 @@ import { Plane } from 'lucide-react';
 interface Airline {
   name: string;
   code: string;
-  gradient: string;
-  emoji?: string;
+  logo: string;
 }
 
 const airlines: Airline[] = [
   {
     name: 'Air France',
     code: 'AF',
-    gradient: 'from-blue-600 to-blue-800',
-    emoji: '🇫🇷'
+    logo: 'https://images.kiwi.com/airlines/64/AF.png'
   },
   {
     name: 'Ryanair',
     code: 'FR',
-    gradient: 'from-yellow-500 to-blue-600',
-    emoji: '✈️'
+    logo: 'https://images.kiwi.com/airlines/64/FR.png'
   },
   {
     name: 'EasyJet',
-    code: 'EJ',
-    gradient: 'from-orange-500 to-orange-600',
-    emoji: '🧡'
+    code: 'U2',
+    logo: 'https://images.kiwi.com/airlines/64/U2.png'
   },
   {
     name: 'Lufthansa',
     code: 'LH',
-    gradient: 'from-yellow-400 to-blue-600',
-    emoji: '🇩🇪'
+    logo: 'https://images.kiwi.com/airlines/64/LH.png'
   },
   {
     name: 'El Al',
     code: 'LY',
-    gradient: 'from-blue-500 to-blue-700',
-    emoji: '🇮🇱'
+    logo: 'https://images.kiwi.com/airlines/64/LY.png'
   },
   {
     name: 'Wizz Air',
     code: 'W6',
-    gradient: 'from-pink-500 to-purple-600',
-    emoji: '💜'
+    logo: 'https://images.kiwi.com/airlines/64/W6.png'
   },
   {
     name: 'Vueling',
     code: 'VY',
-    gradient: 'from-yellow-400 to-orange-500',
-    emoji: '🇪🇸'
+    logo: 'https://images.kiwi.com/airlines/64/VY.png'
   },
   {
     name: 'Transavia',
     code: 'HV',
-    gradient: 'from-green-500 to-green-700',
-    emoji: '🇳🇱'
+    logo: 'https://images.kiwi.com/airlines/64/HV.png'
   },
   {
     name: 'British Airways',
     code: 'BA',
-    gradient: 'from-blue-800 to-red-600',
-    emoji: '🇬🇧'
+    logo: 'https://images.kiwi.com/airlines/64/BA.png'
   },
   {
     name: 'KLM',
     code: 'KL',
-    gradient: 'from-blue-400 to-blue-600',
-    emoji: '💙'
+    logo: 'https://images.kiwi.com/airlines/64/KL.png'
   },
   {
     name: 'Iberia',
     code: 'IB',
-    gradient: 'from-red-500 to-yellow-400',
-    emoji: '❤️'
+    logo: 'https://images.kiwi.com/airlines/64/IB.png'
   },
   {
     name: 'Turkish Airlines',
     code: 'TK',
-    gradient: 'from-red-600 to-red-800',
-    emoji: '🇹🇷'
+    logo: 'https://images.kiwi.com/airlines/64/TK.png'
   }
 ];
 
@@ -120,24 +107,12 @@ export default function AirlinesSection() {
                 className="group relative"
               >
                 <div className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border border-gray-100">
-                  {/* Logo Circle */}
-                  <div className={`w-20 h-20 mx-auto mb-4 rounded-full bg-gradient-to-br ${airline.gradient} flex flex-col items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300`}>
-                    {airline.emoji && (
-                      <span className="text-3xl mb-1">
-                        {airline.emoji}
-                      </span>
-                    )}
-                    <span className="text-white font-bold text-xs">
-                      {airline.code}
-                    </span>
-                  </div>
-
-                  {/* Airline Name */}
-                  <div className="text-center">
-                    <h3 className="font-semibold text-gray-900 text-sm group-hover:text-blue-600 transition-colors">
-                      {airline.name}
-                    </h3>
-                  </div>
+                  {/* Airline Logo */}
+                  <img
+                    src={airline.logo}
+                    alt={airline.name}
+                    className="w-full h-auto max-w-[80px] max-h-[80px] object-contain mx-auto group-hover:scale-110 transition-transform duration-300"
+                  />
 
                   {/* Hover Effect Overlay */}
                   <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-blue-500/0 to-purple-500/0 group-hover:from-blue-500/5 group-hover:to-purple-500/5 transition-all duration-300 pointer-events-none" />

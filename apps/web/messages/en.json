@@ -5,7 +5,9 @@
     "newClaim": "New Claim",
     "login": "Login",
     "register": "Sign Up",
-    "logout": "Logout"
+    "logout": "Logout",
+    "howItWorks": "How It Works",
+    "benefits": "Benefits"
   },
   "common": {
     "submit": "Submit",
@@ -19,7 +21,10 @@
     "loading": "Loading...",
     "error": "An error occurred",
     "success": "Success",
-    "back": "Back"
+    "back": "Back",
+    "appName": "SkyLex",
+    "notAvailable": "N/A",
+    "view": "View"
   },
   "home": {
     "title": "Claim Your Flight Compensation",
@@ -38,7 +43,40 @@
     "feature2Title": "Legal Expertise",
     "feature2Description": "CE 261/2004 and Israeli law compliance",
     "feature3Title": "Fast and Simple",
-    "feature3Description": "3-minute form"
+    "feature3Description": "3-minute form",
+    "hero": {
+      "badge": "Up to €600 guaranteed compensation",
+      "subtitle": "in just 3 minutes",
+      "howItWorksButton": "How It Works"
+    },
+    "trustIndicators": {
+      "successRate": "Success Rate",
+      "satisfiedClients": "Satisfied Clients",
+      "recovered": "Recovered"
+    },
+    "stats": {
+      "claimsProcessed": "Claims Processed",
+      "thisMonth": "+12% this month",
+      "inProgress": "In Progress",
+      "avgDelay": "Average 48h",
+      "approvedClaims": "Approved Claims",
+      "successRate70": "70% success rate",
+      "totalRecovered": "Total Recovered",
+      "thisMonthAmount": "+€8,500 this month"
+    },
+    "process": {
+      "simpleAndFast": "simple and fast",
+      "description": "In just 3 steps, claim your compensation"
+    },
+    "whyChooseUs": {
+      "title": "Why Choose Us?",
+      "description": "Thousands of passengers trust us"
+    },
+    "finalCta": {
+      "title": "Ready to claim your money?",
+      "description": "Join thousands of passengers who have already claimed their compensation",
+      "button": "Start Now"
+    }
   },
   "auth": {
     "loginTitle": "Login to Your Account",
@@ -59,7 +97,22 @@
     "logout": "Logout",
     "loginError": "Invalid email or password",
     "registerError": "Registration error",
-    "passwordMismatch": "Passwords do not match"
+    "passwordMismatch": "Passwords do not match",
+    "emailNotVerified": "Your email is not verified. Please check your inbox.",
+    "resendVerification": "Resend verification email",
+    "verificationSent": "Verification email sent successfully!",
+    "verificationError": "Error sending email"
+  },
+  "verifyEmail": {
+    "title": "Verify Your Email",
+    "verifying": "Verifying...",
+    "success": "Email verified successfully!",
+    "successMessage": "Your email address has been verified. You can now log in.",
+    "error": "Verification error",
+    "invalidToken": "The verification link is invalid or has expired.",
+    "expiredToken": "The verification link has expired. Please request a new link.",
+    "goToLogin": "Go to login",
+    "requestNewLink": "Request a new link"
   },
   "claim": {
     "title": "New Claim",
@@ -297,6 +350,194 @@
     "download": "Download",
     "confirmStatusChange": "Are you sure you want to change the status?",
     "statusUpdated": "Status updated successfully",
-    "statusUpdateError": "Error updating status"
+    "statusUpdateError": "Error updating status",
+    "loadError": "Error loading claims:",
+    "csvHeaders": {
+      "number": "Number",
+      "status": "Status",
+      "flight": "Flight",
+      "date": "Date",
+      "type": "Type",
+      "amount": "Amount",
+      "client": "Client",
+      "email": "Email"
+    },
+    "claimsTitle": "Claims Management",
+    "claimsCount": "claim(s)",
+    "exportCsv": "Export CSV",
+    "claimsSearchPlaceholder": "Search by number, flight, client...",
+    "tableHeaders": {
+      "number": "No.",
+      "client": "Client",
+      "flight": "Flight",
+      "date": "Flight Date",
+      "type": "Type",
+      "amount": "Amount",
+      "status": "Status",
+      "actions": "Actions"
+    },
+    "noClaimsFound": "No claims found",
+    "pagination": {
+      "previous": "Previous",
+      "next": "Next",
+      "showing": "Showing {start} to {end} of {total}",
+      "page": "Page"
+    }
+  },
+  "testimonials": {
+    "title": "Client Testimonials",
+    "subtitle": "Discover the experiences of our satisfied clients",
+    "recovered": "recovered",
+    "items": [
+      {
+        "quote": "I recovered €600 for my cancelled flight to Barcelona in just 3 weeks. The process was simple and the team very professional. Highly recommend!",
+        "amount": "€600"
+      },
+      {
+        "quote": "Exceptional service! My flight to Paris was 5h late. The team handled everything and I received my compensation without any effort.",
+        "amount": "€400"
+      },
+      {
+        "quote": "Overbooked flight, denied boarding... I was lost. Compensation Pro handled everything. Transparent process and responsive team. Thank you!",
+        "amount": "€600"
+      }
+    ],
+    "stats": {
+      "successRate": "Success Rate",
+      "satisfiedClients": "Satisfied Clients",
+      "recovered": "Recovered",
+      "avgTime": "Average Time"
+    }
+  },
+  "faq": {
+    "title": "Frequently Asked Questions",
+    "subtitle": "Everything you need to know about compensation for disrupted flights",
+    "items": [
+      {
+        "question": "Am I entitled to compensation?",
+        "answer": "You are entitled to compensation if your flight was delayed by more than 3 hours, cancelled or if you were denied boarding. Flights departing from or arriving in the EU are covered by EC Regulation 261/2004. Flights from/to Israel are covered by the Israeli Aviation Services Law of 2012."
+      },
+      {
+        "question": "How much can I receive?",
+        "answer": "The amount depends on the flight distance: • Less than 1500 km: €250 (EU) or ₪500 (Israel) • 1500-3500 km: €400 (EU) or ₪700 (Israel) • More than 3500 km: €600 (EU) or ₪1000 (Israel). We automatically calculate the optimal amount for your situation."
+      },
+      {
+        "question": "How long does the process take?",
+        "answer": "On average, the process takes between 4 to 8 weeks once your file is complete. We handle all communications with the airline and keep you informed at every step."
+      },
+      {
+        "question": "What documents do I need to provide?",
+        "answer": "You will need: • Boarding pass (mandatory) • Booking confirmation • ID or passport • Proof of delay/cancellation (if available). You can upload these documents directly from your personal space."
+      },
+      {
+        "question": "What happens if my claim fails?",
+        "answer": "If we fail to obtain your compensation, you pay nothing. Our service works on a \"no win, no fee\" basis. You only pay our commission (25% incl. VAT) if we recover your compensation."
+      },
+      {
+        "question": "Is there a time limit to make a claim?",
+        "answer": "Yes, you have up to 3 years after the flight date to make a claim under EC Regulation 261/2004, and up to 5 years under Israeli law. However, we recommend making your claim as soon as possible."
+      },
+      {
+        "question": "Do extraordinary circumstances cancel my right?",
+        "answer": "Airlines often invoke \"extraordinary circumstances\" (extreme weather, air traffic control strikes, etc.) to refuse compensation. Our team of legal experts examines each case to determine if this excuse is valid. In many cases, we manage to obtain compensation despite these arguments."
+      },
+      {
+        "question": "Can I claim for multiple passengers?",
+        "answer": "Yes, you can create a claim for each passenger affected by the disruption. Each passenger is entitled to individual compensation. If you were traveling as a family, you can multiply the compensation amount by the number of passengers."
+      },
+      {
+        "question": "How will I receive my compensation?",
+        "answer": "Once the airline agrees to pay, we deduct our commission (25% incl. VAT) and transfer the remaining amount directly to your bank account. You typically receive payment within 7 to 14 days of the airline's agreement."
+      },
+      {
+        "question": "Can I track the progress of my claim?",
+        "answer": "Absolutely! You have a personal space where you can see the status of your claim in real-time, upload additional documents, and communicate with our team via integrated messaging. You also receive email notifications at each important step."
+      }
+    ],
+    "notFoundQuestion": "Can't find your answer?",
+    "support247": "Our team is here to help 24/7",
+    "contactUs": "Contact Us",
+    "startClaim": "Start My Claim"
+  },
+  "pricing": {
+    "title": "Transparent Pricing",
+    "subtitle": "No upfront fees. You only pay if we win.",
+    "guarantee": "\"No Win, No Fee\" Guarantee",
+    "commission": "commission",
+    "commissionNote": "Only charged on recovered amount (VAT included)",
+    "exampleTitle": "Practical Example",
+    "exampleRecovered": "Compensation Recovered",
+    "youReceive": "You Receive",
+    "ourCommission": "Our Commission",
+    "included": {
+      "title": "What's Included",
+      "item1": "Free case evaluation",
+      "item2": "Complete claim management",
+      "item3": "Communication with the airline",
+      "item4": "Real-time tracking",
+      "item5": "24/7 customer support",
+      "item6": "Legal proceedings if necessary",
+      "item7": "No hidden fees",
+      "item8": "Direct payment to your account"
+    },
+    "comparisonTitle": "Comparison with Other Solutions",
+    "whyChooseTitle": "Why Choose Compensation Pro?",
+    "whyChooseDescription": "We combine legal expertise, modern technology and exceptional customer service to maximize your chances of obtaining your compensation. Our bilingual French-Hebrew platform is unique in the market."
+  },
+  "airlines": {
+    "title": "Airlines Covered",
+    "subtitle": "We handle claims for all airlines operating in Europe and Israel",
+    "andMore": "And many more...",
+    "coverageNote": "We cover all airlines operating in Europe and Israel",
+    "stats": {
+      "airlines": "Airlines",
+      "coverage": "Europe & Israel Coverage",
+      "support": "Support Available"
+    }
+  },
+  "messages": {
+    "title": "Messages",
+    "communicateWith": "Communicate with",
+    "client": "the client",
+    "ourTeam": "our team",
+    "noMessages": "No messages yet",
+    "startConversation": "Send a message to start the conversation",
+    "adminBadge": "Admin",
+    "placeholder": "Type your message...",
+    "send": "Send",
+    "sendHint": "Press Enter to send, Shift+Enter for new line",
+    "time": {
+      "now": "Just now",
+      "minutesAgo": "{minutes}min ago",
+      "hoursAgo": "{hours}h ago",
+      "daysAgo": "{days}d ago"
+    }
+  },
+  "autocomplete": {
+    "airport": {
+      "placeholder": "Search by code, city or country...",
+      "noResults": "No airport found"
+    },
+    "airline": {
+      "placeholder": "Search by code or name...",
+      "noResults": "No airline found"
+    }
+  },
+  "footer": {
+    "description": "The leading platform to claim your compensation for delayed, cancelled or overbooked flights.",
+    "usefulLinks": "Useful Links",
+    "legal": "Legal",
+    "copyright": "© 2025 Compensation Pro. All rights reserved.",
+    "links": {
+      "about": "About",
+      "howItWorks": "How It Works",
+      "faq": "FAQ",
+      "contact": "Contact"
+    },
+    "legalLinks": {
+      "terms": "Terms of Service",
+      "privacy": "Privacy Policy",
+      "cookies": "Cookies"
+    }
   }
 }

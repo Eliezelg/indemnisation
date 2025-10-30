@@ -3,7 +3,7 @@
 # Script de téléchargement automatique des médias premium
 # Note: Certaines sources nécessitent un téléchargement manuel depuis le navigateur
 
-echo "🎬 Téléchargement des médias premium pour Indemnisation Pro"
+echo "🎬 Téléchargement des médias premium pour SkyLex"
 echo "============================================================="
 echo ""
 

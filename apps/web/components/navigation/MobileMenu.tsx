@@ -172,7 +172,7 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
                   support@indemnisation-pro.com
                 </a>
                 <div className="pt-4 text-xs text-gray-500">
-                  © 2025 Indemnisation Pro
+                  © 2025 SkyLex
                 </div>
               </div>
             </div>

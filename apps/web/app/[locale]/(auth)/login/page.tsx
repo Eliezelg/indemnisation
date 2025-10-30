@@ -14,10 +14,15 @@ export default function LoginPage() {
   });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [showResendButton, setShowResendButton] = useState(false);
+  const [resendSuccess, setResendSuccess] = useState(false);
+  const [resendLoading, setResendLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+    setShowResendButton(false);
+    setResendSuccess(false);
     setLoading(true);
 
     try {
@@ -32,7 +37,12 @@ export default function LoginPage() {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message || t('loginError'));
+        const errorMessage = data.message || t('loginError');
+        // Check if error is about email verification
+        if (errorMessage.includes('vérifié') || errorMessage.includes('verified') || errorMessage.includes('מאומת')) {
+          setShowResendButton(true);
+        }
+        throw new Error(errorMessage);
       }
 
       localStorage.setItem('accessToken', data.accessToken);
@@ -47,6 +57,34 @@ export default function LoginPage() {
     }
   };
 
+  const handleResendVerification = async () => {
+    setResendLoading(true);
+    setResendSuccess(false);
+
+    try {
+      const response = await fetch('http://localhost:3001/auth/resend-verification', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email: formData.email }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || t('verificationError'));
+      }
+
+      setResendSuccess(true);
+      setError('');
+    } catch (err: any) {
+      setError(err.message || t('verificationError'));
+    } finally {
+      setResendLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white flex items-center justify-center px-4">
       <div className="max-w-md w-full bg-white rounded-lg shadow-lg p-8">
@@ -57,6 +95,26 @@ export default function LoginPage() {
         {error && (
           <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded mb-4">
             {error}
+          </div>
+        )}
+
+        {resendSuccess && (
+          <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded mb-4">
+            {t('verificationSent')}
+          </div>
+        )}
+
+        {showResendButton && (
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+            <p className="text-sm text-blue-800 mb-3">{t('emailNotVerified')}</p>
+            <button
+              type="button"
+              onClick={handleResendVerification}
+              disabled={resendLoading}
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition-colors disabled:bg-blue-300 disabled:cursor-not-allowed text-sm"
+            >
+              {resendLoading ? '...' : t('resendVerification')}
+            </button>
           </div>
         )}
 
