@@ -3,7 +3,7 @@
  * Centralized API URL configuration
  */
 
-export const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+export const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://indem.webpro200.com/api';
 
 export const getApiUrl = (path: string): string => {
   // Remove leading slash if present

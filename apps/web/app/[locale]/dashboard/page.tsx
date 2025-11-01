@@ -59,10 +59,10 @@ export default function DashboardPage() {
 
       try {
         const [userRes, claimsRes] = await Promise.all([
-          fetch('http://localhost:3001/auth/me', {
+          fetch('https://indem.webpro200.com/api/auth/me', {
             headers: { 'Authorization': `Bearer ${token}` },
           }),
-          fetch('http://localhost:3001/claims', {
+          fetch('https://indem.webpro200.com/api/claims', {
             headers: { 'Authorization': `Bearer ${token}` },
           }),
         ]);

@@ -109,7 +109,7 @@ export default function NewClaimPage() {
 
     try {
       const response = await fetch(
-        `http://localhost:3001/flight-api/search?flightNumber=${encodeURIComponent(flightNumber)}&date=${encodeURIComponent(date)}`
+        `https://indem.webpro200.com/api/flight-api/search?flightNumber=${encodeURIComponent(flightNumber)}&date=${encodeURIComponent(date)}`
       );
 
       if (!response.ok) {
@@ -285,7 +285,7 @@ export default function NewClaimPage() {
         },
       };
 
-      const response = await fetch('http://localhost:3001/claims', {
+      const response = await fetch('https://indem.webpro200.com/api/claims', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

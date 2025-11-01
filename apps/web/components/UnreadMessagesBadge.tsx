@@ -22,7 +22,7 @@ export default function UnreadMessagesBadge({ className = '' }: UnreadMessagesBa
       const token = localStorage.getItem('access_token');
       if (!token) return;
 
-      const response = await fetch('http://localhost:3001/messages/unread-count', {
+      const response = await fetch('https://indem.webpro200.com/api/messages/unread-count', {
         headers: {
           Authorization: `Bearer ${token}`,
         },

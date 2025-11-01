@@ -90,7 +90,7 @@ export default function AdminClaimDetailPage() {
     try {
       const token = localStorage.getItem('accessToken');
       const response = await fetch(
-        `http://localhost:3001/admin/documents/${documentId}/download`,
+        `https://indem.webpro200.com/api/admin/documents/${documentId}/download`,
         {
           method: 'GET',
           headers: {
@@ -123,7 +123,7 @@ export default function AdminClaimDetailPage() {
   const fetchClaim = async () => {
     try {
       const token = localStorage.getItem('accessToken');
-      const response = await fetch(`http://localhost:3001/admin/claims/${id}`, {
+      const response = await fetch(`https://indem.webpro200.com/api/admin/claims/${id}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
@@ -146,7 +146,7 @@ export default function AdminClaimDetailPage() {
     setUpdating(true);
     try {
       const token = localStorage.getItem('accessToken');
-      const response = await fetch(`http://localhost:3001/claims/${claim.id}`, {
+      const response = await fetch(`https://indem.webpro200.com/api/claims/${claim.id}`, {
         method: 'PATCH',
         headers: {
           'Authorization': `Bearer ${token}`,

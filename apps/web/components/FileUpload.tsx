@@ -91,7 +91,7 @@ export default function FileUpload({
       formData.append('documentType', documentType);
 
       const token = localStorage.getItem('accessToken');
-      const response = await fetch('http://localhost:3001/documents/upload', {
+      const response = await fetch('https://indem.webpro200.com/api/documents/upload', {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${token}`,

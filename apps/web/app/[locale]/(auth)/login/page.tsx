@@ -26,7 +26,7 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
-      const response = await fetch('http://localhost:3001/auth/login', {
+      const response = await fetch('https://indem.webpro200.com/api/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -62,7 +62,7 @@ export default function LoginPage() {
     setResendSuccess(false);
 
     try {
-      const response = await fetch('http://localhost:3001/auth/resend-verification', {
+      const response = await fetch('https://indem.webpro200.com/api/auth/resend-verification', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

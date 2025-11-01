@@ -58,7 +58,7 @@ export default function AdminClaimsPage() {
   const fetchClaims = async () => {
     try {
       const token = localStorage.getItem('accessToken');
-      const response = await fetch('http://localhost:3001/admin/claims', {
+      const response = await fetch('https://indem.webpro200.com/api/admin/claims', {
         headers: {
           'Authorization': `Bearer ${token}`,
         },

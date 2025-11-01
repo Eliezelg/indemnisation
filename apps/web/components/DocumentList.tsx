@@ -19,7 +19,7 @@ export default function DocumentList({ claimId, onDocumentsChange }: DocumentLis
     try {
       setLoading(true);
       const token = localStorage.getItem('accessToken');
-      const response = await fetch(`http://localhost:3001/documents/claim/${claimId}`, {
+      const response = await fetch(`https://indem.webpro200.com/api/documents/claim/${claimId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -52,7 +52,7 @@ export default function DocumentList({ claimId, onDocumentsChange }: DocumentLis
 
     try {
       const token = localStorage.getItem('accessToken');
-      const response = await fetch(`http://localhost:3001/documents/${documentId}`, {
+      const response = await fetch(`https://indem.webpro200.com/api/documents/${documentId}`, {
         method: 'DELETE',
         headers: {
           Authorization: `Bearer ${token}`,
@@ -77,7 +77,7 @@ export default function DocumentList({ claimId, onDocumentsChange }: DocumentLis
 
       // Fetch the file with authorization header
       const response = await fetch(
-        `http://localhost:3001/documents/${documentId}/download`,
+        `https://indem.webpro200.com/api/documents/${documentId}/download`,
         {
           method: 'GET',
           headers: {

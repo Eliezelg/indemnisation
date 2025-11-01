@@ -49,8 +49,8 @@ export default function UsersPage() {
       const headers = { 'Authorization': `Bearer ${token}` };
 
       const [usersRes, statsRes] = await Promise.all([
-        fetch('http://localhost:3001/admin/users', { headers }),
-        fetch('http://localhost:3001/admin/users/stats', { headers }),
+        fetch('https://indem.webpro200.com/api/admin/users', { headers }),
+        fetch('https://indem.webpro200.com/api/admin/users/stats', { headers }),
       ]);
 
       if (usersRes.ok) {

@@ -67,9 +67,9 @@ export default function StatisticsPage() {
       const headers = { Authorization: `Bearer ${token}` };
 
       const [overviewRes, monthlyRes, airlinesRes] = await Promise.all([
-        fetch('http://localhost:3001/admin/stats/overview', { headers }),
-        fetch(`http://localhost:3001/admin/stats/claims-by-month?months=${timeRange}`, { headers }),
-        fetch('http://localhost:3001/admin/stats/top-airlines?limit=10', { headers }),
+        fetch('https://indem.webpro200.com/api/admin/stats/overview', { headers }),
+        fetch(`https://indem.webpro200.com/api/admin/stats/claims-by-month?months=${timeRange}`, { headers }),
+        fetch('https://indem.webpro200.com/api/admin/stats/top-airlines?limit=10', { headers }),
       ]);
 
       if (overviewRes.ok) {

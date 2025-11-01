@@ -82,7 +82,7 @@ export default function ClaimDetailsPage() {
       }
 
       try {
-        const response = await fetch(`http://localhost:3001/claims/${params.id}`, {
+        const response = await fetch(`https://indem.webpro200.com/api/claims/${params.id}`, {
           headers: {
             'Authorization': `Bearer ${token}`,
           },
@@ -115,7 +115,7 @@ export default function ClaimDetailsPage() {
     try {
       const token = localStorage.getItem('accessToken');
 
-      const response = await fetch(`http://localhost:3001/claims/${claim.id}/submit`, {
+      const response = await fetch(`https://indem.webpro200.com/api/claims/${claim.id}/submit`, {
         method: 'PATCH',
         headers: {
           'Authorization': `Bearer ${token}`,

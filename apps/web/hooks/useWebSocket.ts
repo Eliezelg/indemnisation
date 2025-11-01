@@ -40,7 +40,7 @@ export function useWebSocket(options: UseWebSocketOptions = {}): UseWebSocketRet
     if (!token) return;
 
     // Connect to WebSocket server
-    const wsUrl = process.env.NEXT_PUBLIC_API_URL?.replace(/^http/, 'ws') || 'ws://localhost:3001';
+    const wsUrl = process.env.NEXT_PUBLIC_API_URL?.replace(/^http/, 'ws') || 'ws://indem.webpro200.com/api';
     const socket = io(`${wsUrl}/messages`, {
       auth: { token },
       transports: ['websocket', 'polling'],

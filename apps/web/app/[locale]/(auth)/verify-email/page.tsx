@@ -24,7 +24,7 @@ export default function VerifyEmailPage() {
 
       try {
         const response = await fetch(
-          `http://localhost:3001/auth/verify-email?token=${token}`,
+          `https://indem.webpro200.com/api/auth/verify-email?token=${token}`,
         );
 
         const data = await response.json();

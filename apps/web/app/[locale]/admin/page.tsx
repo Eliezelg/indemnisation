@@ -66,10 +66,10 @@ export default function AdminDashboard() {
       const headers = { 'Authorization': `Bearer ${token}` };
 
       const [overviewRes, monthlyRes, airlinesRes, recentRes] = await Promise.all([
-        fetch('http://localhost:3001/admin/stats/overview', { headers }),
-        fetch('http://localhost:3001/admin/stats/claims-by-month?months=6', { headers }),
-        fetch('http://localhost:3001/admin/stats/top-airlines?limit=5', { headers }),
-        fetch('http://localhost:3001/admin/stats/recent-claims?limit=10', { headers }),
+        fetch('https://indem.webpro200.com/api/admin/stats/overview', { headers }),
+        fetch('https://indem.webpro200.com/api/admin/stats/claims-by-month?months=6', { headers }),
+        fetch('https://indem.webpro200.com/api/admin/stats/top-airlines?limit=5', { headers }),
+        fetch('https://indem.webpro200.com/api/admin/stats/recent-claims?limit=10', { headers }),
       ]);
 
       if (overviewRes.ok) {

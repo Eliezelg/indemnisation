@@ -64,7 +64,7 @@ export default function MessageThread({
     try {
       const token = localStorage.getItem('access_token');
       const response = await fetch(
-        `http://localhost:3001/messages/claim/${claimId}`,
+        `https://indem.webpro200.com/api/messages/claim/${claimId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -94,7 +94,7 @@ export default function MessageThread({
   const markAsRead = async (messageId: string) => {
     try {
       const token = localStorage.getItem('access_token');
-      await fetch(`http://localhost:3001/messages/${messageId}/read`, {
+      await fetch(`https://indem.webpro200.com/api/messages/${messageId}/read`, {
         method: 'PATCH',
         headers: {
           Authorization: `Bearer ${token}`,
@@ -112,7 +112,7 @@ export default function MessageThread({
     setSending(true);
     try {
       const token = localStorage.getItem('access_token');
-      const response = await fetch('http://localhost:3001/messages', {
+      const response = await fetch('https://indem.webpro200.com/api/messages', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

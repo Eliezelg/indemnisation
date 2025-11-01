@@ -104,7 +104,7 @@ export default function MessageThreadWebSocket({
     try {
       const token = localStorage.getItem('accessToken');
       const response = await fetch(
-        `http://localhost:3001/messages/claim/${claimId}`,
+        `https://indem.webpro200.com/api/messages/claim/${claimId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -139,7 +139,7 @@ export default function MessageThreadWebSocket({
     setSending(true);
     try {
       const token = localStorage.getItem('accessToken');
-      const response = await fetch('http://localhost:3001/messages', {
+      const response = await fetch('https://indem.webpro200.com/api/messages', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

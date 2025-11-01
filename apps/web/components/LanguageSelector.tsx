@@ -25,7 +25,7 @@ export default function LanguageSelector() {
     const token = localStorage.getItem('accessToken');
     if (token) {
       try {
-        await fetch('http://localhost:3001/users/me/locale', {
+        await fetch('https://indem.webpro200.com/api/users/me/locale', {
           method: 'PATCH',
           headers: {
             'Content-Type': 'application/json',

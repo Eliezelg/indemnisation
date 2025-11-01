@@ -39,7 +39,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const login = async (email: string, password: string) => {
-    const response = await fetch('http://localhost:3001/auth/login', {
+    const response = await fetch('https://indem.webpro200.com/api/auth/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password }),
@@ -60,7 +60,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const register = async (userData: any) => {
-    const response = await fetch('http://localhost:3001/auth/register', {
+    const response = await fetch('https://indem.webpro200.com/api/auth/register', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(userData),
