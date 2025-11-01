@@ -40,7 +40,8 @@ export function useWebSocket(options: UseWebSocketOptions = {}): UseWebSocketRet
     if (!token) return;
 
     // Connect to WebSocket server
-    const socket = io('http://localhost:3001/messages', {
+    const wsUrl = process.env.NEXT_PUBLIC_API_URL?.replace(/^http/, 'ws') || 'ws://localhost:3001';
+    const socket = io(`${wsUrl}/messages`, {
       auth: { token },
       transports: ['websocket', 'polling'],
     });

@@ -11,7 +11,9 @@ import {
   FolderOpen,
   Settings,
   BarChart3,
-  LogOut
+  LogOut,
+  Menu,
+  X
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -28,6 +30,7 @@ export default function AdminSidebar({ locale }: SidebarProps) {
   const pathname = usePathname();
   const router = useRouter();
   const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     // Get user info from localStorage (stored during login)
@@ -90,11 +93,29 @@ export default function AdminSidebar({ locale }: SidebarProps) {
 
   return (
     <>
+      {/* Mobile menu button */}
+      <button
+        onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+        className="lg:hidden fixed top-4 left-4 z-50 p-2 rounded-md bg-white border border-gray-200 shadow-sm"
+      >
+        {isMobileMenuOpen ? (
+          <X className="h-6 w-6 text-gray-600" />
+        ) : (
+          <Menu className="h-6 w-6 text-gray-600" />
+        )}
+      </button>
+
       {/* Mobile sidebar backdrop */}
-      <div className="lg:hidden fixed inset-0 bg-gray-900/80 z-40" aria-hidden="true" />
+      {isMobileMenuOpen && (
+        <div
+          className="lg:hidden fixed inset-0 bg-gray-900/80 z-40"
+          aria-hidden="true"
+          onClick={() => setIsMobileMenuOpen(false)}
+        />
+      )}
 
       {/* Sidebar */}
-      <aside className="fixed inset-y-0 left-0 z-50 w-64 bg-white border-r border-gray-200 lg:block">
+      <aside className={`fixed inset-y-0 left-0 z-50 w-64 bg-white border-r border-gray-200 transition-transform duration-300 ease-in-out lg:translate-x-0 ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} lg:block`}>
         {/* Logo */}
         <div className="flex h-16 items-center justify-center border-b border-gray-200 px-6">
           <h2 className="text-xl font-bold text-blue-600">
@@ -110,6 +131,7 @@ export default function AdminSidebar({ locale }: SidebarProps) {
               <Link
                 key={item.name}
                 href={item.href}
+                onClick={() => setIsMobileMenuOpen(false)}
                 className={`
                   flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors
                   ${
