@@ -1,9 +1,11 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 import { Search, Filter, Download, Eye } from 'lucide-react';
 import Link from 'next/link';
+import { formatCurrency } from '@/lib/currency';
+import type { Locale, Jurisdiction } from '@/lib/currency';
 
 interface Claim {
   id: string;
@@ -15,6 +17,7 @@ interface Claim {
   arrivalAirport: string;
   disruptionType: string;
   recommendedAmount: number;
+  jurisdiction: Jurisdiction;
   submittedAt: string | null;
   user: {
     firstName: string;
@@ -40,6 +43,7 @@ const disruptionColors: Record<string, string> = {
 };
 
 export default function AdminClaimsPage() {
+  const currentLocale = useLocale() as Locale;
   const t = useTranslations('admin');
   const tStatus = useTranslations('status');
   const tDisruption = useTranslations('disruption');
@@ -288,7 +292,7 @@ export default function AdminClaimsPage() {
                       </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                      {claim.recommendedAmount ? Number(claim.recommendedAmount).toFixed(2) : '0.00'} €
+                      {formatCurrency(claim.recommendedAmount, claim.jurisdiction, currentLocale)}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                       <Link

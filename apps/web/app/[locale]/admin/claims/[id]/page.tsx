@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 import {
   ArrowLeft,
   FileText,
@@ -18,6 +18,8 @@ import {
   AlertCircle,
 } from 'lucide-react';
 import Link from 'next/link';
+import { formatCurrency, getJurisdictionAmount } from '@/lib/currency';
+import type { Jurisdiction, Locale } from '@/lib/currency';
 
 interface Claim {
   id: string;
@@ -32,6 +34,9 @@ interface Claim {
   delayDuration: number | null;
   numberOfPassengers: number;
   recommendedAmount: number;
+  calculatedAmountEU: number | null;
+  calculatedAmountIL: number | null;
+  jurisdiction: Jurisdiction;
   hasContactedCompany: boolean;
   companyContactDetails: string | null;
   additionalExpenses: Array<{
@@ -74,6 +79,7 @@ export default function AdminClaimDetailPage() {
   const params = useParams();
   const router = useRouter();
   const { id, locale } = params;
+  const currentLocale = useLocale() as Locale;
   const t = useTranslations('admin');
   const tStatus = useTranslations('status');
 
@@ -284,7 +290,12 @@ export default function AdminClaimDetailPage() {
                 <div className="text-sm text-gray-500">{t('recommendedAmount')}</div>
                 <div className="font-medium text-green-600 flex items-center gap-2">
                   <Euro size={16} />
-                  {claim.recommendedAmount ? Number(claim.recommendedAmount).toFixed(2) : '0.00'} €
+                  {getJurisdictionAmount(
+                    claim.calculatedAmountEU,
+                    claim.calculatedAmountIL,
+                    claim.jurisdiction,
+                    currentLocale
+                  )}
                 </div>
               </div>
             </div>
