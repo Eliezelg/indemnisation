@@ -51,6 +51,7 @@ export class ClaimsService {
         airline: dto.airline,
         disruptionType: dto.disruptionType,
         delayMinutes: dto.delayMinutes,
+        numberOfPassengers: dto.numberOfPassengers ?? 1,
         hasContactedCompany: dto.hasContactedCompany ?? false,
         companyContactDetails: dto.companyContactDetails,
         additionalExpenses: dto.additionalExpenses as any,

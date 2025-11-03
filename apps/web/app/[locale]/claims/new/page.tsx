@@ -91,6 +91,7 @@ export default function NewClaimPage() {
     // Step 2: Disruption
     disruptionType: '',
     delayMinutes: '',
+    numberOfPassengers: '1',
 
     // Step 3: Passenger
     firstName: '',
@@ -285,6 +286,7 @@ export default function NewClaimPage() {
         airline: formData.airline || undefined,
         disruptionType: formData.disruptionType,
         delayMinutes: formData.delayMinutes ? parseInt(formData.delayMinutes) : undefined,
+        numberOfPassengers: formData.numberOfPassengers ? parseInt(formData.numberOfPassengers) : 1,
         hasContactedCompany: formData.hasContactedCompany === 'true',
         companyContactDetails: formData.hasContactedCompany === 'true' ? formData.companyContactDetails : undefined,
         additionalExpenses: formData.additionalExpenses.length > 0 ? formData.additionalExpenses : undefined,
@@ -526,6 +528,26 @@ export default function NewClaimPage() {
                         </p>
                       </div>
                     )}
+
+                    {/* Number of Passengers */}
+                    <div className="mt-4">
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        {t('numberOfPassengers')} *
+                      </label>
+                      <input
+                        type="number"
+                        name="numberOfPassengers"
+                        value={formData.numberOfPassengers}
+                        onChange={handleChange}
+                        min="1"
+                        placeholder={t('numberOfPassengersPlaceholder')}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        required
+                      />
+                      <p className="text-sm text-gray-500 mt-1">
+                        {t('numberOfPassengersHint')}
+                      </p>
+                    </div>
                   </div>
 
                   <div className="mt-6 flex space-x-4">

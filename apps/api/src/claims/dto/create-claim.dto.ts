@@ -27,6 +27,11 @@ export class CreateClaimDto {
   delayMinutes?: number;
 
   @IsOptional()
+  @IsInt()
+  @Min(1)
+  numberOfPassengers?: number;
+
+  @IsOptional()
   @IsBoolean()
   hasContactedCompany?: boolean;
 

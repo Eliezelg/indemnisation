@@ -29,6 +29,7 @@ interface Claim {
   airline: string;
   disruptionType: string;
   delayDuration: number | null;
+  numberOfPassengers: number;
   recommendedAmount: number;
   hasContactedCompany: boolean;
   companyContactDetails: string | null;
@@ -254,6 +255,13 @@ export default function AdminClaimDetailPage() {
               <div>
                 <div className="text-sm text-gray-500">Type de perturbation</div>
                 <div className="font-medium">{claim.disruptionType}</div>
+              </div>
+              <div>
+                <div className="text-sm text-gray-500">Nombre de passagers</div>
+                <div className="font-medium flex items-center gap-2">
+                  <User size={16} />
+                  {claim.numberOfPassengers} {claim.numberOfPassengers > 1 ? 'passagers' : 'passager'}
+                </div>
               </div>
               <div>
                 <div className="text-sm text-gray-500">Aéroport de départ</div>

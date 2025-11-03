@@ -79,6 +79,7 @@ model Claim {
   // Disruption details
   disruptionType       DisruptionType
   delayMinutes         Int?
+  numberOfPassengers   Int            @default(1) // Number of passengers affected
 
   // Company contact
   hasContactedCompany  Boolean        @default(false)
