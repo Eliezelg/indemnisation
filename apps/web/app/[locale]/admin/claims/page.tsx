@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useTranslations } from 'next-intl';
 import { Search, Filter, Download, Eye } from 'lucide-react';
 import Link from 'next/link';
 
@@ -39,6 +40,10 @@ const disruptionColors: Record<string, string> = {
 };
 
 export default function AdminClaimsPage() {
+  const t = useTranslations('admin');
+  const tStatus = useTranslations('status');
+  const tDisruption = useTranslations('disruption');
+
   const [claims, setClaims] = useState<Claim[]>([]);
   const [filteredClaims, setFilteredClaims] = useState<Claim[]>([]);
   const [loading, setLoading] = useState(true);
@@ -69,7 +74,7 @@ export default function AdminClaimsPage() {
         setClaims(data);
       }
     } catch (error) {
-      console.error('Erreur lors du chargement des réclamations:', error);
+      console.error(t('loadError'), error);
     } finally {
       setLoading(false);
     }
@@ -101,7 +106,16 @@ export default function AdminClaimsPage() {
 
   const exportToCSV = () => {
     const csvContent = [
-      ['Numéro', 'Statut', 'Vol', 'Date', 'Type', 'Montant', 'Client', 'Email'].join(','),
+      [
+        t('csvHeaders.number'),
+        t('csvHeaders.status'),
+        t('csvHeaders.flight'),
+        t('csvHeaders.date'),
+        t('csvHeaders.type'),
+        t('csvHeaders.amount'),
+        t('csvHeaders.client'),
+        t('csvHeaders.email')
+      ].join(','),
       ...filteredClaims.map((claim) =>
         [
           claim.claimNumber,
@@ -134,7 +148,7 @@ export default function AdminClaimsPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="text-gray-600">Chargement...</div>
+        <div className="text-gray-600">{t('loading')}</div>
       </div>
     );
   }
@@ -144,9 +158,9 @@ export default function AdminClaimsPage() {
       {/* En-tête */}
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Gestion des réclamations</h1>
+          <h1 className="text-2xl font-bold text-gray-900">{t('claimsTitle')}</h1>
           <p className="text-gray-600 mt-1">
-            {filteredClaims.length} réclamation{filteredClaims.length > 1 ? 's' : ''}
+            {filteredClaims.length} {t('claimsCount')}
           </p>
         </div>
         <button
@@ -154,7 +168,7 @@ export default function AdminClaimsPage() {
           className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
         >
           <Download size={20} />
-          Exporter CSV
+          {t('exportCsv')}
         </button>
       </div>
 
@@ -166,7 +180,7 @@ export default function AdminClaimsPage() {
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
             <input
               type="text"
-              placeholder="Rechercher par numéro, vol, client..."
+              placeholder={t('claimsSearchPlaceholder')}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
@@ -181,13 +195,13 @@ export default function AdminClaimsPage() {
               onChange={(e) => setStatusFilter(e.target.value)}
               className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
             >
-              <option value="ALL">Tous les statuts</option>
-              <option value="DRAFT">Brouillon</option>
-              <option value="SUBMITTED">Soumis</option>
-              <option value="IN_REVIEW">En révision</option>
-              <option value="APPROVED">Approuvé</option>
-              <option value="REJECTED">Rejeté</option>
-              <option value="PAID">Payé</option>
+              <option value="ALL">{t('allStatuses')}</option>
+              <option value="DRAFT">{tStatus('draft')}</option>
+              <option value="SUBMITTED">{tStatus('submitted')}</option>
+              <option value="IN_REVIEW">{tStatus('in_review')}</option>
+              <option value="APPROVED">{tStatus('approved')}</option>
+              <option value="REJECTED">{tStatus('rejected')}</option>
+              <option value="PAID">{tStatus('paid')}</option>
             </select>
           </div>
         </div>
@@ -200,28 +214,28 @@ export default function AdminClaimsPage() {
             <thead className="bg-gray-50 border-b border-gray-200">
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Numéro
+                  {t('tableHeaders.number')}
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Client
+                  {t('tableHeaders.client')}
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Vol
+                  {t('tableHeaders.flight')}
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Date
+                  {t('tableHeaders.date')}
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Type
+                  {t('tableHeaders.type')}
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Statut
+                  {t('tableHeaders.status')}
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Montant
+                  {t('tableHeaders.amount')}
                 </th>
                 <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Actions
+                  {t('tableHeaders.actions')}
                 </th>
               </tr>
             </thead>
@@ -229,7 +243,7 @@ export default function AdminClaimsPage() {
               {currentClaims.length === 0 ? (
                 <tr>
                   <td colSpan={8} className="px-6 py-12 text-center text-gray-500">
-                    Aucune réclamation trouvée
+                    {t('noClaimsFound')}
                   </td>
                 </tr>
               ) : (
@@ -261,7 +275,7 @@ export default function AdminClaimsPage() {
                           disruptionColors[claim.disruptionType] || 'bg-gray-100 text-gray-800'
                         }`}
                       >
-                        {claim.disruptionType}
+                        {tDisruption(claim.disruptionType.toLowerCase())}
                       </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
@@ -270,7 +284,7 @@ export default function AdminClaimsPage() {
                           statusColors[claim.status] || 'bg-gray-100 text-gray-800'
                         }`}
                       >
-                        {claim.status}
+                        {tStatus(claim.status.toLowerCase())}
                       </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
@@ -282,7 +296,7 @@ export default function AdminClaimsPage() {
                         className="inline-flex items-center gap-1 text-indigo-600 hover:text-indigo-900 transition-colors"
                       >
                         <Eye size={16} />
-                        Voir
+                        {t('view')}
                       </Link>
                     </td>
                   </tr>
@@ -301,22 +315,24 @@ export default function AdminClaimsPage() {
                 disabled={currentPage === 1}
                 className="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Précédent
+                {t('pagination.previous')}
               </button>
               <button
                 onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
                 disabled={currentPage === totalPages}
                 className="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Suivant
+                {t('pagination.next')}
               </button>
             </div>
             <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
               <div>
                 <p className="text-sm text-gray-700">
-                  Affichage de <span className="font-medium">{startIndex + 1}</span> à{' '}
-                  <span className="font-medium">{Math.min(endIndex, filteredClaims.length)}</span> sur{' '}
-                  <span className="font-medium">{filteredClaims.length}</span> résultats
+                  {t('pagination.showing', {
+                    start: startIndex + 1,
+                    end: Math.min(endIndex, filteredClaims.length),
+                    total: filteredClaims.length
+                  })}
                 </p>
               </div>
               <div>
@@ -326,7 +342,7 @@ export default function AdminClaimsPage() {
                     disabled={currentPage === 1}
                     className="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    Précédent
+                    {t('pagination.previous')}
                   </button>
                   {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
                     <button
@@ -346,7 +362,7 @@ export default function AdminClaimsPage() {
                     disabled={currentPage === totalPages}
                     className="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    Suivant
+                    {t('pagination.next')}
                   </button>
                 </nav>
               </div>
