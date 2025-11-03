@@ -128,6 +128,7 @@ export default function AirlineAutocomplete({
     onChange(airline.code);
     setIsOpen(false);
     setAirlines([]);
+    inputRef.current?.blur(); // Remove focus to prevent reopening
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {

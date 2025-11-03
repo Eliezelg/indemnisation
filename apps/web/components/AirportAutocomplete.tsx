@@ -130,6 +130,7 @@ export default function AirportAutocomplete({
     onChange(airport.code);
     setIsOpen(false);
     setAirports([]);
+    inputRef.current?.blur(); // Remove focus to prevent reopening
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
