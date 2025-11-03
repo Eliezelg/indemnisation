@@ -6,24 +6,15 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { DocumentType, DocumentStatus } from '@prisma/client';
-import * as fs from 'fs/promises';
+import { R2StorageService } from './r2-storage.service';
 import * as path from 'path';
 
 @Injectable()
 export class DocumentsService {
-  private readonly uploadDir = path.join(process.cwd(), 'uploads', 'documents');
-
-  constructor(private prisma: PrismaService) {
-    this.ensureUploadDirExists();
-  }
-
-  private async ensureUploadDirExists() {
-    try {
-      await fs.mkdir(this.uploadDir, { recursive: true });
-    } catch (error) {
-      console.error('Failed to create upload directory:', error);
-    }
-  }
+  constructor(
+    private prisma: PrismaService,
+    private r2Storage: R2StorageService,
+  ) {}
 
   async uploadDocument(
     file: Express.Multer.File,
@@ -70,10 +61,14 @@ export class DocumentsService {
     // Generate unique filename
     const fileExt = path.extname(file.originalname);
     const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}${fileExt}`;
-    const filePath = path.join(this.uploadDir, fileName);
 
-    // Save file to disk
-    await fs.writeFile(filePath, file.buffer);
+    // Upload to R2
+    const fileUrl = await this.r2Storage.uploadFile(
+      file.buffer,
+      fileName,
+      file.mimetype,
+      'documents',
+    );
 
     // Save document metadata to database
     const document = await this.prisma.document.create({
@@ -82,7 +77,7 @@ export class DocumentsService {
         fileName: file.originalname,
         fileType: file.mimetype,
         fileSize: file.size,
-        filePath: fileName, // Store relative path
+        filePath: fileUrl, // Store R2 URL
         documentType,
       },
     });
@@ -124,12 +119,11 @@ export class DocumentsService {
       throw new ForbiddenException("Vous n'avez pas accès à ce document");
     }
 
-    // Delete file from disk
-    const filePath = path.join(this.uploadDir, document.filePath);
+    // Delete file from R2
     try {
-      await fs.unlink(filePath);
+      await this.r2Storage.deleteFile(document.filePath);
     } catch (error) {
-      console.error('Failed to delete file from disk:', error);
+      console.error('Failed to delete file from R2:', error);
     }
 
     // Delete from database
@@ -154,16 +148,11 @@ export class DocumentsService {
       throw new ForbiddenException("Vous n'avez pas accès à ce document");
     }
 
-    const filePath = path.join(this.uploadDir, document.filePath);
-
-    try {
-      await fs.access(filePath);
-    } catch {
-      throw new NotFoundException('Fichier non trouvé sur le serveur');
-    }
+    // Generate signed URL for download
+    const signedUrl = await this.r2Storage.getSignedDownloadUrl(document.filePath);
 
     return {
-      filePath,
+      fileUrl: signedUrl,
       fileName: document.fileName,
       fileType: document.fileType,
     };
@@ -218,16 +207,11 @@ export class DocumentsService {
       throw new NotFoundException('Document non trouvé');
     }
 
-    const filePath = path.join(this.uploadDir, document.filePath);
-
-    try {
-      await fs.access(filePath);
-    } catch {
-      throw new NotFoundException('Fichier non trouvé sur le serveur');
-    }
+    // Generate signed URL for download
+    const signedUrl = await this.r2Storage.getSignedDownloadUrl(document.filePath);
 
     return {
-      filePath,
+      fileUrl: signedUrl,
       fileName: document.fileName,
       fileType: document.fileType,
     };

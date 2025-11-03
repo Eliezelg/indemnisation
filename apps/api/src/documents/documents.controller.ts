@@ -77,17 +77,16 @@ export class DocumentsController {
   async downloadDocument(
     @Param('id') documentId: string,
     @GetUser('id') userId: string,
-    @Res() res: FastifyReply,
   ) {
-    const { filePath, fileName, fileType } =
+    const { fileUrl, fileName, fileType } =
       await this.documentsService.getDocumentFile(documentId, userId);
 
-    const fs = require('fs');
-    const stream = fs.createReadStream(filePath);
-
-    res.header('Content-Type', fileType);
-    res.header('Content-Disposition', `attachment; filename="${fileName}"`);
-    return res.send(stream);
+    // Return the signed URL for client-side download
+    return {
+      url: fileUrl,
+      fileName,
+      fileType,
+    };
   }
 
   @Delete(':id')
