@@ -45,7 +45,7 @@
     "feature3Title": "Fast and Simple",
     "feature3Description": "3-minute form",
     "hero": {
-      "badge": "Up to €600 guaranteed compensation",
+      "badge": "Up to €600 or ₪3580 guaranteed compensation",
       "subtitle": "in just 3 minutes",
       "howItWorksButton": "How It Works"
     },
@@ -419,7 +419,7 @@
       },
       {
         "question": "How much can I receive?",
-        "answer": "The amount depends on the flight distance: • Less than 1500 km: €250 (EU) or ₪500 (Israel) • 1500-3500 km: €400 (EU) or ₪700 (Israel) • More than 3500 km: €600 (EU) or ₪1000 (Israel). We automatically calculate the optimal amount for your situation."
+        "answer": "The amount depends on the flight distance: • Less than 1500 km: €250 (EU) or ₪1490 (Israel) • 1500-3500 km: €400 (EU) or ₪2390 (Israel) • More than 3500 km: €600 (EU) or ₪3580 (Israel). We automatically calculate the optimal amount for your situation."
       },
       {
         "question": "How long does the process take?",

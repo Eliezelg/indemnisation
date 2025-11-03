@@ -45,7 +45,7 @@
     "feature3Title": "Rapide et simple",
     "feature3Description": "Formulaire en 3 minutes",
     "hero": {
-      "badge": "Jusqu'à 600€ d'indemnisation garantie",
+      "badge": "Jusqu'à 600€ ou 3580₪ d'indemnisation garantie",
       "subtitle": "en 3 minutes chrono",
       "howItWorksButton": "Comment ça marche"
     },
@@ -502,7 +502,7 @@
       },
       {
         "question": "Combien puis-je recevoir ?",
-        "answer": "Le montant dépend de la distance du vol : • Moins de 1500 km : 250€ (EU) ou 500₪ (Israël) • 1500-3500 km : 400€ (EU) ou 700₪ (Israël) • Plus de 3500 km : 600€ (EU) ou 1000₪ (Israël). Nous calculons automatiquement le montant optimal selon votre situation."
+        "answer": "Le montant dépend de la distance du vol : • Moins de 1500 km : 250€ (EU) ou 1490₪ (Israël) • 1500-3500 km : 400€ (EU) ou 2390₪ (Israël) • Plus de 3500 km : 600€ (EU) ou 3580₪ (Israël). Nous calculons automatiquement le montant optimal selon votre situation."
       },
       {
         "question": "Combien de temps prend le processus ?",
