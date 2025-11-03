@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import {
   ArrowLeft,
   FileText,
@@ -69,19 +70,12 @@ const statusColors: Record<string, string> = {
   PAID: 'bg-purple-100 text-purple-800',
 };
 
-const statusLabels: Record<string, string> = {
-  DRAFT: 'Brouillon',
-  SUBMITTED: 'Soumis',
-  IN_REVIEW: 'En révision',
-  APPROVED: 'Approuvé',
-  REJECTED: 'Rejeté',
-  PAID: 'Payé',
-};
-
 export default function AdminClaimDetailPage() {
   const params = useParams();
   const router = useRouter();
   const { id, locale } = params;
+  const t = useTranslations('admin');
+  const tStatus = useTranslations('status');
 
   const [claim, setClaim] = useState<Claim | null>(null);
   const [loading, setLoading] = useState(true);
@@ -108,7 +102,7 @@ export default function AdminClaimDetailPage() {
       );
 
       if (!response.ok) {
-        throw new Error('Erreur lors du téléchargement');
+        throw new Error(t('downloadError'));
       }
 
       const blob = await response.blob();
@@ -124,7 +118,7 @@ export default function AdminClaimDetailPage() {
         document.body.removeChild(a);
       }, 100);
     } catch (err: any) {
-      alert(err.message || 'Erreur lors du téléchargement');
+      alert(err.message || t('downloadError'));
     }
   };
 
@@ -142,7 +136,7 @@ export default function AdminClaimDetailPage() {
         setClaim(data);
       }
     } catch (error) {
-      console.error('Erreur lors du chargement de la réclamation:', error);
+      console.error(t('loadClaimError'), error);
     } finally {
       setLoading(false);
     }
@@ -165,11 +159,11 @@ export default function AdminClaimDetailPage() {
 
       if (response.ok) {
         await fetchClaim();
-        alert(`Statut changé vers: ${statusLabels[newStatus]}`);
+        alert(`${t('statusUpdated')}: ${tStatus(newStatus.toLowerCase())}`);
       }
     } catch (error) {
-      console.error('Erreur lors de la mise à jour:', error);
-      alert('Erreur lors de la mise à jour du statut');
+      console.error(t('updateError'), error);
+      alert(t('statusUpdateError'));
     } finally {
       setUpdating(false);
     }
@@ -178,7 +172,7 @@ export default function AdminClaimDetailPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="text-gray-600">Chargement...</div>
+        <div className="text-gray-600">{t('loading')}</div>
       </div>
     );
   }
@@ -187,13 +181,13 @@ export default function AdminClaimDetailPage() {
     return (
       <div className="text-center py-12">
         <AlertCircle className="mx-auto h-12 w-12 text-gray-400" />
-        <h3 className="mt-2 text-sm font-medium text-gray-900">Réclamation introuvable</h3>
+        <h3 className="mt-2 text-sm font-medium text-gray-900">{t('notFound')}</h3>
         <div className="mt-6">
           <Link
             href={`/${locale}/admin/claims`}
             className="text-indigo-600 hover:text-indigo-500"
           >
-            Retour à la liste
+            {t('backToList')}
           </Link>
         </div>
       </div>
@@ -212,14 +206,14 @@ export default function AdminClaimDetailPage() {
         </button>
         <div className="flex-1">
           <h1 className="text-2xl font-bold text-gray-900">{claim.claimNumber}</h1>
-          <p className="text-gray-600 mt-1">Détails de la réclamation</p>
+          <p className="text-gray-600 mt-1">{t('claimDetails')}</p>
         </div>
         <span
           className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
             statusColors[claim.status]
           }`}
         >
-          {statusLabels[claim.status]}
+          {tStatus(claim.status.toLowerCase())}
         </span>
       </div>
 
@@ -230,19 +224,19 @@ export default function AdminClaimDetailPage() {
           <div className="bg-white rounded-lg shadow-sm p-6">
             <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
               <Plane size={20} />
-              Informations du vol
+              {t('flightInfo')}
             </h2>
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <div className="text-sm text-gray-500">Numéro de vol</div>
+                <div className="text-sm text-gray-500">{t('flightNumber')}</div>
                 <div className="font-medium font-mono">{claim.flightNumber}</div>
               </div>
               <div>
-                <div className="text-sm text-gray-500">Compagnie aérienne</div>
+                <div className="text-sm text-gray-500">{t('airline')}</div>
                 <div className="font-medium">{claim.airline}</div>
               </div>
               <div>
-                <div className="text-sm text-gray-500">Date du vol</div>
+                <div className="text-sm text-gray-500">{t('flightDate')}</div>
                 <div className="font-medium flex items-center gap-2">
                   <Calendar size={16} />
                   {new Date(claim.flightDate).toLocaleDateString('fr-FR', {
@@ -253,25 +247,25 @@ export default function AdminClaimDetailPage() {
                 </div>
               </div>
               <div>
-                <div className="text-sm text-gray-500">Type de perturbation</div>
+                <div className="text-sm text-gray-500">{t('disruptionType')}</div>
                 <div className="font-medium">{claim.disruptionType}</div>
               </div>
               <div>
-                <div className="text-sm text-gray-500">Nombre de passagers</div>
+                <div className="text-sm text-gray-500">{t('numberOfPassengers')}</div>
                 <div className="font-medium flex items-center gap-2">
                   <User size={16} />
-                  {claim.numberOfPassengers} {claim.numberOfPassengers > 1 ? 'passagers' : 'passager'}
+                  {claim.numberOfPassengers} {claim.numberOfPassengers > 1 ? t('passengers') : t('passenger')}
                 </div>
               </div>
               <div>
-                <div className="text-sm text-gray-500">Aéroport de départ</div>
+                <div className="text-sm text-gray-500">{t('departureAirport')}</div>
                 <div className="font-medium flex items-center gap-2">
                   <MapPin size={16} />
                   {claim.departureAirport}
                 </div>
               </div>
               <div>
-                <div className="text-sm text-gray-500">Aéroport d&apos;arrivée</div>
+                <div className="text-sm text-gray-500">{t('arrivalAirport')}</div>
                 <div className="font-medium flex items-center gap-2">
                   <MapPin size={16} />
                   {claim.arrivalAirport}
@@ -279,15 +273,15 @@ export default function AdminClaimDetailPage() {
               </div>
               {claim.delayDuration && (
                 <div>
-                  <div className="text-sm text-gray-500">Durée du retard</div>
+                  <div className="text-sm text-gray-500">{t('delayDuration')}</div>
                   <div className="font-medium flex items-center gap-2">
                     <Clock size={16} />
-                    {claim.delayDuration} minutes
+                    {claim.delayDuration} {t('minutes')}
                   </div>
                 </div>
               )}
               <div>
-                <div className="text-sm text-gray-500">Montant recommandé</div>
+                <div className="text-sm text-gray-500">{t('recommendedAmount')}</div>
                 <div className="font-medium text-green-600 flex items-center gap-2">
                   <Euro size={16} />
                   {claim.recommendedAmount ? Number(claim.recommendedAmount).toFixed(2) : '0.00'} €
@@ -300,28 +294,28 @@ export default function AdminClaimDetailPage() {
           <div className="bg-white rounded-lg shadow-sm p-6">
             <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
               <User size={20} />
-              Informations du passager
+              {t('passengerInfo')}
             </h2>
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <div className="text-sm text-gray-500">Nom complet</div>
+                <div className="text-sm text-gray-500">{t('fullName')}</div>
                 <div className="font-medium">
                   {claim.user.firstName} {claim.user.lastName}
                 </div>
               </div>
               <div>
-                <div className="text-sm text-gray-500">Email</div>
+                <div className="text-sm text-gray-500">{t('email')}</div>
                 <div className="font-medium">{claim.user.email}</div>
               </div>
               {claim.user.phone && (
                 <div>
-                  <div className="text-sm text-gray-500">Téléphone</div>
+                  <div className="text-sm text-gray-500">{t('phone')}</div>
                   <div className="font-medium">{claim.user.phone}</div>
                 </div>
               )}
               {claim.user.birthDate && (
                 <div>
-                  <div className="text-sm text-gray-500">Date de naissance</div>
+                  <div className="text-sm text-gray-500">{t('birthDate')}</div>
                   <div className="font-medium">
                     {new Date(claim.user.birthDate).toLocaleDateString('fr-FR')}
                   </div>
@@ -329,7 +323,7 @@ export default function AdminClaimDetailPage() {
               )}
               {claim.user.nationality && (
                 <div>
-                  <div className="text-sm text-gray-500">Nationalité</div>
+                  <div className="text-sm text-gray-500">{t('nationality')}</div>
                   <div className="font-medium">{claim.user.nationality}</div>
                 </div>
               )}
@@ -340,11 +334,11 @@ export default function AdminClaimDetailPage() {
           <div className="bg-white rounded-lg shadow-sm p-6">
             <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
               <MessageSquare size={20} />
-              Contact avec la compagnie
+              {t('companyContact')}
             </h2>
             <div className="space-y-4">
               <div>
-                <div className="text-sm text-gray-500 mb-2">A contacté la compagnie ?</div>
+                <div className="text-sm text-gray-500 mb-2">{t('hasContactedCompany')}</div>
                 <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm font-medium ${
                   claim.hasContactedCompany
                     ? 'bg-green-100 text-green-800'
@@ -353,19 +347,19 @@ export default function AdminClaimDetailPage() {
                   {claim.hasContactedCompany ? (
                     <>
                       <Check size={16} />
-                      Oui
+                      {t('yes')}
                     </>
                   ) : (
                     <>
                       <X size={16} />
-                      Non
+                      {t('no')}
                     </>
                   )}
                 </div>
               </div>
               {claim.hasContactedCompany && claim.companyContactDetails && (
                 <div>
-                  <div className="text-sm text-gray-500 mb-2">Détails du contact</div>
+                  <div className="text-sm text-gray-500 mb-2">{t('contactDetails')}</div>
                   <div className="p-3 bg-gray-50 rounded-lg text-sm whitespace-pre-wrap">
                     {claim.companyContactDetails}
                   </div>
@@ -379,22 +373,22 @@ export default function AdminClaimDetailPage() {
             <div className="bg-white rounded-lg shadow-sm p-6">
               <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
                 <Euro size={20} />
-                Frais supplémentaires
+                {t('additionalExpenses')}
               </h2>
               <div className="space-y-3">
                 {claim.additionalExpenses.map((expense, index) => (
                   <div key={index} className="p-4 border border-gray-200 rounded-lg">
                     <div className="grid grid-cols-3 gap-4">
                       <div>
-                        <div className="text-sm text-gray-500">Type</div>
+                        <div className="text-sm text-gray-500">{t('expenseType')}</div>
                         <div className="font-medium">{expense.type}</div>
                       </div>
                       <div>
-                        <div className="text-sm text-gray-500">Montant</div>
+                        <div className="text-sm text-gray-500">{t('expenseAmount')}</div>
                         <div className="font-medium text-green-600">{expense.amount} €</div>
                       </div>
                       <div className="col-span-1">
-                        <div className="text-sm text-gray-500">Description</div>
+                        <div className="text-sm text-gray-500">{t('expenseDescription')}</div>
                         <div className="text-sm">{expense.description}</div>
                       </div>
                     </div>
@@ -402,7 +396,7 @@ export default function AdminClaimDetailPage() {
                 ))}
                 <div className="pt-3 border-t border-gray-200">
                   <div className="flex justify-between items-center">
-                    <div className="text-sm font-medium text-gray-700">Total des frais</div>
+                    <div className="text-sm font-medium text-gray-700">{t('totalExpenses')}</div>
                     <div className="text-lg font-bold text-green-600">
                       {claim.additionalExpenses.reduce((sum, exp) => sum + parseFloat(exp.amount || '0'), 0).toFixed(2)} €
                     </div>
@@ -416,10 +410,10 @@ export default function AdminClaimDetailPage() {
           <div className="bg-white rounded-lg shadow-sm p-6">
             <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
               <FileText size={20} />
-              Documents ({claim.documents.length})
+              {t('documentsCount', { count: claim.documents.length })}
             </h2>
             {claim.documents.length === 0 ? (
-              <p className="text-gray-500">Aucun document téléchargé</p>
+              <p className="text-gray-500">{t('noDocuments')}</p>
             ) : (
               <div className="space-y-2">
                 {claim.documents.map((doc) => (
@@ -440,7 +434,7 @@ export default function AdminClaimDetailPage() {
                       onClick={() => handleDownloadDocument(doc.id, doc.fileName)}
                       className="text-indigo-600 hover:text-indigo-900 text-sm font-medium transition-colors"
                     >
-                      Télécharger
+                      {t('download')}
                     </button>
                   </div>
                 ))}
@@ -453,7 +447,7 @@ export default function AdminClaimDetailPage() {
         <div className="space-y-6">
           {/* Actions rapides */}
           <div className="bg-white rounded-lg shadow-sm p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Actions</h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">{t('quickActions')}</h3>
             <div className="space-y-2">
               {claim.status === 'SUBMITTED' && (
                 <button
@@ -462,7 +456,7 @@ export default function AdminClaimDetailPage() {
                   className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors disabled:opacity-50"
                 >
                   <AlertCircle size={16} />
-                  Mettre en révision
+                  {t('putInReview')}
                 </button>
               )}
               {(claim.status === 'IN_REVIEW' || claim.status === 'SUBMITTED') && (
@@ -473,7 +467,7 @@ export default function AdminClaimDetailPage() {
                     className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50"
                   >
                     <Check size={16} />
-                    Approuver
+                    {t('approve')}
                   </button>
                   <button
                     onClick={() => updateStatus('REJECTED')}
@@ -481,7 +475,7 @@ export default function AdminClaimDetailPage() {
                     className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors disabled:opacity-50"
                   >
                     <X size={16} />
-                    Rejeter
+                    {t('reject')}
                   </button>
                 </>
               )}
@@ -492,7 +486,7 @@ export default function AdminClaimDetailPage() {
                   className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors disabled:opacity-50"
                 >
                   <Euro size={16} />
-                  Marquer comme payé
+                  {t('markPaid')}
                 </button>
               )}
             </div>
@@ -500,10 +494,10 @@ export default function AdminClaimDetailPage() {
 
           {/* Historique */}
           <div className="bg-white rounded-lg shadow-sm p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Historique</h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">{t('history')}</h3>
             <div className="space-y-3 text-sm">
               <div>
-                <div className="text-gray-500">Créée le</div>
+                <div className="text-gray-500">{t('createdOn')}</div>
                 <div className="font-medium">
                   {new Date(claim.createdAt).toLocaleDateString('fr-FR', {
                     day: 'numeric',
@@ -516,7 +510,7 @@ export default function AdminClaimDetailPage() {
               </div>
               {claim.submittedAt && (
                 <div>
-                  <div className="text-gray-500">Soumise le</div>
+                  <div className="text-gray-500">{t('submittedOn')}</div>
                   <div className="font-medium">
                     {new Date(claim.submittedAt).toLocaleDateString('fr-FR', {
                       day: 'numeric',
@@ -529,7 +523,7 @@ export default function AdminClaimDetailPage() {
                 </div>
               )}
               <div>
-                <div className="text-gray-500">Dernière mise à jour</div>
+                <div className="text-gray-500">{t('lastUpdated')}</div>
                 <div className="font-medium">
                   {new Date(claim.updatedAt).toLocaleDateString('fr-FR', {
                     day: 'numeric',
@@ -547,13 +541,13 @@ export default function AdminClaimDetailPage() {
           <div className="bg-white rounded-lg shadow-sm p-6">
             <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
               <MessageSquare size={20} />
-              Notes internes
+              {t('internalNotes')}
             </h3>
-            <p className="text-sm text-gray-500 mb-3">Fonctionnalité à venir</p>
+            <p className="text-sm text-gray-500 mb-3">{t('featureComingSoon')}</p>
             <textarea
               value={note}
               onChange={(e) => setNote(e.target.value)}
-              placeholder="Ajouter une note interne..."
+              placeholder={t('addNotePlaceholder')}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-sm"
               rows={4}
               disabled
@@ -562,7 +556,7 @@ export default function AdminClaimDetailPage() {
               disabled
               className="mt-2 w-full px-4 py-2 bg-gray-300 text-gray-600 rounded-lg cursor-not-allowed"
             >
-              Ajouter une note
+              {t('addNote')}
             </button>
           </div>
         </div>
