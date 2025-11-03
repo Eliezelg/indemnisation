@@ -40,6 +40,7 @@ export class CompensationService {
    * @param disruptionType - Type of disruption
    * @param delayMinutes - Delay in minutes (optional)
    * @param airlineCode - Airline code (optional)
+   * @param flightDate - Date of the flight (optional, for war exemption check)
    * @returns Complete compensation calculation result
    */
   async calculateCompensation(
@@ -48,6 +49,7 @@ export class CompensationService {
     disruptionType: DisruptionType,
     delayMinutes?: number,
     airlineCode?: string,
+    flightDate?: Date,
   ): Promise<CompensationResult> {
     // Calculate distance between airports
     const distance = await this.distanceService.calculateDistance(
@@ -89,6 +91,7 @@ export class CompensationService {
         distance,
         disruptionType,
         delayMinutes,
+        flightDate,
       );
       calculatedAmountIL = ilResult.ils;
     }

@@ -28,12 +28,14 @@ export class ClaimsService {
     });
 
     // Calculate compensation
+    const flightDate = new Date(dto.flightDate);
     const compensation = await this.compensationService.calculateCompensation(
       dto.departureAirport,
       dto.arrivalAirport,
       dto.disruptionType,
       dto.delayMinutes,
       dto.airline,
+      flightDate,
     );
 
     // Generate unique claim number
