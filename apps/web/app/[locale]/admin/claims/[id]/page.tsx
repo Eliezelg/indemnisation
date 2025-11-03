@@ -30,6 +30,13 @@ interface Claim {
   disruptionType: string;
   delayDuration: number | null;
   recommendedAmount: number;
+  hasContactedCompany: boolean;
+  companyContactDetails: string | null;
+  additionalExpenses: Array<{
+    type: string;
+    amount: string;
+    description: string;
+  }> | null;
   createdAt: string;
   submittedAt: string | null;
   updatedAt: string;
@@ -320,6 +327,82 @@ export default function AdminClaimDetailPage() {
               )}
             </div>
           </div>
+
+          {/* Contact avec la compagnie */}
+          <div className="bg-white rounded-lg shadow-sm p-6">
+            <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+              <MessageSquare size={20} />
+              Contact avec la compagnie
+            </h2>
+            <div className="space-y-4">
+              <div>
+                <div className="text-sm text-gray-500 mb-2">A contacté la compagnie ?</div>
+                <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm font-medium ${
+                  claim.hasContactedCompany
+                    ? 'bg-green-100 text-green-800'
+                    : 'bg-gray-100 text-gray-800'
+                }`}>
+                  {claim.hasContactedCompany ? (
+                    <>
+                      <Check size={16} />
+                      Oui
+                    </>
+                  ) : (
+                    <>
+                      <X size={16} />
+                      Non
+                    </>
+                  )}
+                </div>
+              </div>
+              {claim.hasContactedCompany && claim.companyContactDetails && (
+                <div>
+                  <div className="text-sm text-gray-500 mb-2">Détails du contact</div>
+                  <div className="p-3 bg-gray-50 rounded-lg text-sm whitespace-pre-wrap">
+                    {claim.companyContactDetails}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Frais supplémentaires */}
+          {claim.additionalExpenses && claim.additionalExpenses.length > 0 && (
+            <div className="bg-white rounded-lg shadow-sm p-6">
+              <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                <Euro size={20} />
+                Frais supplémentaires
+              </h2>
+              <div className="space-y-3">
+                {claim.additionalExpenses.map((expense, index) => (
+                  <div key={index} className="p-4 border border-gray-200 rounded-lg">
+                    <div className="grid grid-cols-3 gap-4">
+                      <div>
+                        <div className="text-sm text-gray-500">Type</div>
+                        <div className="font-medium">{expense.type}</div>
+                      </div>
+                      <div>
+                        <div className="text-sm text-gray-500">Montant</div>
+                        <div className="font-medium text-green-600">{expense.amount} €</div>
+                      </div>
+                      <div className="col-span-1">
+                        <div className="text-sm text-gray-500">Description</div>
+                        <div className="text-sm">{expense.description}</div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+                <div className="pt-3 border-t border-gray-200">
+                  <div className="flex justify-between items-center">
+                    <div className="text-sm font-medium text-gray-700">Total des frais</div>
+                    <div className="text-lg font-bold text-green-600">
+                      {claim.additionalExpenses.reduce((sum, exp) => sum + parseFloat(exp.amount || '0'), 0).toFixed(2)} €
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* Documents */}
           <div className="bg-white rounded-lg shadow-sm p-6">

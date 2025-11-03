@@ -1,4 +1,4 @@
-import { IsString, IsDateString, IsEnum, IsOptional, IsInt, Min, IsObject } from 'class-validator';
+import { IsString, IsDateString, IsEnum, IsOptional, IsInt, Min, IsObject, IsBoolean, IsArray } from 'class-validator';
 import { DisruptionType } from '@prisma/client';
 
 export class CreateClaimDto {
@@ -25,6 +25,22 @@ export class CreateClaimDto {
   @IsInt()
   @Min(0)
   delayMinutes?: number;
+
+  @IsOptional()
+  @IsBoolean()
+  hasContactedCompany?: boolean;
+
+  @IsOptional()
+  @IsString()
+  companyContactDetails?: string;
+
+  @IsOptional()
+  @IsArray()
+  additionalExpenses?: Array<{
+    type: string;
+    amount: string;
+    description: string;
+  }>;
 
   @IsObject()
   passengerInfo: {

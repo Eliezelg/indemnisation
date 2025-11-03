@@ -98,6 +98,15 @@ export default function NewClaimPage() {
     email: '',
     phone: '',
     bookingReference: '',
+
+    // Step 4: Company contact and expenses
+    hasContactedCompany: 'false',
+    companyContactDetails: '',
+    additionalExpenses: [] as Array<{
+      type: string;
+      amount: string;
+      description: string;
+    }>,
   });
 
   const searchFlightInfo = async (flightNumber: string, date: string) => {
@@ -276,6 +285,9 @@ export default function NewClaimPage() {
         airline: formData.airline || undefined,
         disruptionType: formData.disruptionType,
         delayMinutes: formData.delayMinutes ? parseInt(formData.delayMinutes) : undefined,
+        hasContactedCompany: formData.hasContactedCompany === 'true',
+        companyContactDetails: formData.hasContactedCompany === 'true' ? formData.companyContactDetails : undefined,
+        additionalExpenses: formData.additionalExpenses.length > 0 ? formData.additionalExpenses : undefined,
         passengerInfo: {
           firstName: formData.firstName,
           lastName: formData.lastName,
@@ -301,7 +313,7 @@ export default function NewClaimPage() {
       }
 
       setResult(data);
-      setStep(4); // Documents upload step
+      setStep(5); // Documents upload step
     } catch (err: any) {
       setError(err.message || tCommon('error'));
     } finally {
@@ -310,11 +322,11 @@ export default function NewClaimPage() {
   };
 
   const handleSkipDocuments = () => {
-    setStep(5); // Skip to results
+    setStep(6); // Skip to results
   };
 
   const handleContinueToResults = () => {
-    setStep(5); // Go to results after uploading documents
+    setStep(6); // Go to results after uploading documents
   };
 
   return (
@@ -334,16 +346,16 @@ export default function NewClaimPage() {
       <div className="container mx-auto px-4 py-12">
         <div className="max-w-2xl mx-auto">
           {/* Progress Bar */}
-          {step < 4 && (
+          {step < 5 && (
             <div className="mb-8">
               <div className="flex justify-between items-center mb-2">
-                <span className="text-sm font-medium text-gray-700">{t('stepProgress', { current: step, total: 3 })}</span>
-                <span className="text-sm text-gray-500">{Math.round((step / 3) * 100)}%</span>
+                <span className="text-sm font-medium text-gray-700">{t('stepProgress', { current: step, total: 4 })}</span>
+                <span className="text-sm text-gray-500">{Math.round((step / 4) * 100)}%</span>
               </div>
               <div className="w-full bg-gray-200 rounded-full h-2">
                 <div
                   className="bg-blue-600 h-2 rounded-full transition-all duration-300"
-                  style={{ width: `${(step / 3) * 100}%` }}
+                  style={{ width: `${(step / 4) * 100}%` }}
                 ></div>
               </div>
             </div>
@@ -625,6 +637,180 @@ export default function NewClaimPage() {
                       {tCommon('previous')}
                     </button>
                     <button
+                      type="button"
+                      onClick={handleNext}
+                      className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-md transition-colors"
+                    >
+                      {tCommon('next')}
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {/* Step 4: Company Contact and Additional Expenses */}
+              {step === 4 && (
+                <div>
+                  <h2 className="text-2xl font-bold text-gray-900 mb-6">
+                    {t('step4Title')}
+                  </h2>
+
+                  <div className="space-y-6">
+                    {/* Company Contact Question */}
+                    <div className="border border-gray-200 rounded-lg p-4">
+                      <label className="block text-md font-semibold text-gray-900 mb-3">
+                        {t('hasContactedCompany')} *
+                      </label>
+                      <div className="space-y-2">
+                        <label className="flex items-center">
+                          <input
+                            type="radio"
+                            name="hasContactedCompany"
+                            value="true"
+                            checked={formData.hasContactedCompany === 'true'}
+                            onChange={handleChange}
+                            className="mr-2"
+                          />
+                          <span>{tCommon('yes')}</span>
+                        </label>
+                        <label className="flex items-center">
+                          <input
+                            type="radio"
+                            name="hasContactedCompany"
+                            value="false"
+                            checked={formData.hasContactedCompany === 'false'}
+                            onChange={handleChange}
+                            className="mr-2"
+                          />
+                          <span>{tCommon('no')}</span>
+                        </label>
+                      </div>
+
+                      {formData.hasContactedCompany === 'true' && (
+                        <div className="mt-4">
+                          <label className="block text-sm font-medium text-gray-700 mb-1">
+                            {t('companyContactDetails')}
+                          </label>
+                          <textarea
+                            name="companyContactDetails"
+                            value={formData.companyContactDetails}
+                            onChange={(e) => setFormData(prev => ({ ...prev, companyContactDetails: e.target.value }))}
+                            rows={4}
+                            placeholder={t('companyContactPlaceholder')}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          />
+                          <p className="text-xs text-gray-500 mt-1">
+                            {t('companyContactNote')}
+                          </p>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Additional Expenses */}
+                    <div className="border border-gray-200 rounded-lg p-4">
+                      <h3 className="text-md font-semibold text-gray-900 mb-3">
+                        {t('additionalExpenses')}
+                      </h3>
+                      <p className="text-sm text-gray-600 mb-4">
+                        {t('additionalExpensesDescription')}
+                      </p>
+
+                      {formData.additionalExpenses.map((expense, index) => (
+                        <div key={index} className="mb-4 p-3 bg-gray-50 rounded-md">
+                          <div className="grid grid-cols-2 gap-3 mb-2">
+                            <div>
+                              <label className="block text-xs font-medium text-gray-700 mb-1">
+                                {t('expenseType')}
+                              </label>
+                              <select
+                                value={expense.type}
+                                onChange={(e) => {
+                                  const newExpenses = [...formData.additionalExpenses];
+                                  newExpenses[index].type = e.target.value;
+                                  setFormData(prev => ({ ...prev, additionalExpenses: newExpenses }));
+                                }}
+                                className="w-full px-2 py-1 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              >
+                                <option value="">{t('selectType')}</option>
+                                <option value="TICKET">{t('newTicket')}</option>
+                                <option value="TAXI">{t('taxi')}</option>
+                                <option value="HOTEL">{t('hotel')}</option>
+                                <option value="FOOD">{t('food')}</option>
+                                <option value="OTHER">{t('otherExpense')}</option>
+                              </select>
+                            </div>
+                            <div>
+                              <label className="block text-xs font-medium text-gray-700 mb-1">
+                                {t('amount')} (€)
+                              </label>
+                              <input
+                                type="number"
+                                value={expense.amount}
+                                onChange={(e) => {
+                                  const newExpenses = [...formData.additionalExpenses];
+                                  newExpenses[index].amount = e.target.value;
+                                  setFormData(prev => ({ ...prev, additionalExpenses: newExpenses }));
+                                }}
+                                className="w-full px-2 py-1 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                placeholder="0.00"
+                              />
+                            </div>
+                          </div>
+                          <div>
+                            <label className="block text-xs font-medium text-gray-700 mb-1">
+                              {t('description')}
+                            </label>
+                            <input
+                              type="text"
+                              value={expense.description}
+                              onChange={(e) => {
+                                const newExpenses = [...formData.additionalExpenses];
+                                newExpenses[index].description = e.target.value;
+                                setFormData(prev => ({ ...prev, additionalExpenses: newExpenses }));
+                              }}
+                              className="w-full px-2 py-1 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              placeholder={t('expenseDescriptionPlaceholder')}
+                            />
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              const newExpenses = formData.additionalExpenses.filter((_, i) => i !== index);
+                              setFormData(prev => ({ ...prev, additionalExpenses: newExpenses }));
+                            }}
+                            className="mt-2 text-sm text-red-600 hover:text-red-700"
+                          >
+                            {t('removeExpense')}
+                          </button>
+                        </div>
+                      ))}
+
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setFormData(prev => ({
+                            ...prev,
+                            additionalExpenses: [
+                              ...prev.additionalExpenses,
+                              { type: '', amount: '', description: '' }
+                            ]
+                          }));
+                        }}
+                        className="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-2 px-4 rounded-md transition-colors"
+                      >
+                        + {t('addExpense')}
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="mt-6 flex space-x-4">
+                    <button
+                      type="button"
+                      onClick={handleBack}
+                      className="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-3 px-4 rounded-md transition-colors"
+                    >
+                      {tCommon('previous')}
+                    </button>
+                    <button
                       type="submit"
                       disabled={loading}
                       className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-md transition-colors disabled:bg-blue-300 disabled:cursor-not-allowed"
@@ -635,8 +821,8 @@ export default function NewClaimPage() {
                 </div>
               )}
 
-              {/* Step 4: Upload Documents */}
-              {step === 4 && result && (
+              {/* Step 5: Upload Documents */}
+              {step === 5 && result && (
                 <div>
                   <h2 className="text-2xl font-bold text-gray-900 mb-2">
                     {tDocs('uploadDocuments')}
@@ -796,8 +982,8 @@ export default function NewClaimPage() {
                 </div>
               )}
 
-              {/* Step 5: Results */}
-              {step === 5 && result && (
+              {/* Step 6: Results */}
+              {step === 6 && result && (
                 <div>
                   <div className="text-center mb-8">
                     <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">

@@ -80,6 +80,13 @@ model Claim {
   disruptionType       DisruptionType
   delayMinutes         Int?
 
+  // Company contact
+  hasContactedCompany  Boolean        @default(false)
+  companyContactDetails String?       @db.Text
+
+  // Additional expenses
+  additionalExpenses   Json?          // Array of expenses: {type, amount, description, receipt}
+
   // Passenger info (JSON for flexibility)
   passengerInfo        Json
 
@@ -199,6 +206,8 @@ enum DocumentType {
   BOOKING_CONFIRMATION // Confirmation de réservation
   ID_DOCUMENT         // Pièce d'identité
   PROOF_OF_DELAY      // Preuve du retard (certificat de retard)
+  COMPANY_COMMUNICATION // Communications avec la compagnie
+  EXPENSE_RECEIPT     // Reçu de frais additionnels
   OTHER               // Autre document
 }
 
