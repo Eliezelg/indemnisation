@@ -214,10 +214,10 @@ export default function Home() {
                 {t('ctaButton')}
                 <ArrowRight className="ml-2 w-5 h-5" />
               </Link>
-              <button className="border-2 border-white/30 text-white hover:bg-white/10 backdrop-blur-md px-8 py-4 rounded-lg text-lg font-semibold flex items-center transition-all">
+              <a href="#how-it-works" className="border-2 border-white/30 text-white hover:bg-white/10 backdrop-blur-md px-8 py-4 rounded-lg text-lg font-semibold inline-flex items-center transition-all">
                 <Play className="mr-2 w-5 h-5" />
                 {t('hero.howItWorksButton')}
-              </button>
+              </a>
             </motion.div>
 
             {/* Trust Indicators */}
