@@ -75,6 +75,7 @@ export class CompensationService {
     let calculatedAmountIL: number | null = null;
     let euEligible = false;
     let israelEligible = false;
+    let israelWarExemption = false;
 
     if (jurisdiction === 'EU' || jurisdiction === 'BOTH') {
       euEligible = true;
@@ -94,6 +95,7 @@ export class CompensationService {
         flightDate,
       );
       calculatedAmountIL = ilResult.ils;
+      israelWarExemption = ilResult.warExemption || false;
     }
 
     // Determine recommended amount (highest compensation)
@@ -105,7 +107,12 @@ export class CompensationService {
       // Both jurisdictions apply - recommend the higher one
       const ilsInEur = this.israelCalculator.convertToEUR(calculatedAmountIL);
 
-      if (calculatedAmountEU >= ilsInEur) {
+      if (israelWarExemption && calculatedAmountIL === 0) {
+        // Israeli compensation not available due to war exemption
+        recommendedAmount = calculatedAmountEU;
+        currency = 'EUR';
+        reasoning = `BOTH_WAR_EXEMPTION|${calculatedAmountEU}|${calculatedAmountIL}|${ilsInEur}`;
+      } else if (calculatedAmountEU >= ilsInEur) {
         recommendedAmount = calculatedAmountEU;
         currency = 'EUR';
         reasoning = `BOTH_EU_BETTER|${calculatedAmountEU}|${calculatedAmountIL}|${ilsInEur}`;
@@ -119,10 +126,14 @@ export class CompensationService {
       currency = 'EUR';
       reasoning = `EU_ONLY|${calculatedAmountEU}`;
     } else if (israelEligible) {
-      recommendedAmount = calculatedAmountIL;
-      currency = 'ILS';
-      const eurEquiv = this.israelCalculator.convertToEUR(calculatedAmountIL);
-      reasoning = `IL_ONLY|${calculatedAmountIL}|${eurEquiv}`;
+      if (israelWarExemption && calculatedAmountIL === 0) {
+        reasoning = 'IL_WAR_EXEMPTION';
+      } else {
+        recommendedAmount = calculatedAmountIL;
+        currency = 'ILS';
+        const eurEquiv = this.israelCalculator.convertToEUR(calculatedAmountIL);
+        reasoning = `IL_ONLY|${calculatedAmountIL}|${eurEquiv}`;
+      }
     } else {
       reasoning = 'NO_JURISDICTION';
     }

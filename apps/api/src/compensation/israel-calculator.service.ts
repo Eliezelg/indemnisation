@@ -121,17 +121,18 @@ export class IsraelCalculatorService {
    * @param disruptionType - Type of disruption
    * @param delayMinutes - Delay in minutes
    * @param flightDate - Date of the flight (optional, for war exemption check)
-   * @returns Object with ILS and EUR amounts
+   * @returns Object with ILS and EUR amounts, and optional exemption reason
    */
   calculateBoth(
     distance: number,
     disruptionType: DisruptionType,
     delayMinutes?: number,
     flightDate?: Date,
-  ): { ils: number; eur: number } {
+  ): { ils: number; eur: number; warExemption?: boolean } {
+    const warExemption = flightDate ? this.isWarExemptionPeriod(flightDate) : false;
     const ils = this.calculate(distance, disruptionType, delayMinutes, flightDate);
     const eur = this.convertToEUR(ils);
-    return { ils, eur };
+    return { ils, eur, warExemption };
   }
 
   /**

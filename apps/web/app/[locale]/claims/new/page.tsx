@@ -66,6 +66,10 @@ export default function NewClaimPage() {
           eurEquiv: parts[2],
           euAmount: parts[3]
         });
+      case 'BOTH_WAR_EXEMPTION':
+        return tDetail('bothWarExemption', {
+          euAmount: parts[1]
+        });
       case 'EU_ONLY':
         return tDetail('euOnly', { amount: parts[1] });
       case 'IL_ONLY':
@@ -73,6 +77,8 @@ export default function NewClaimPage() {
           amount: parts[1],
           eurEquiv: parts[2]
         });
+      case 'IL_WAR_EXEMPTION':
+        return tDetail('ilWarExemption');
       case 'NO_JURISDICTION':
         return tDetail('noJurisdiction');
       default:
